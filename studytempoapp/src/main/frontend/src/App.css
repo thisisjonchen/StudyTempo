@@ -1,0 +1,51 @@
+.container {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: start;
+  margin-top: -2.5rem;
+}
+
+.clock {
+  display: block;
+}
+
+.tagline {
+  font-size: 1.5rem;
+  color: #494949;
+}
+
+.playing {
+  display: block;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  margin-top: -5vh;
+}
+
+.SpotifyLogin {
+  font-weight: bold;
+  padding: 0 2rem 0 2rem;
+  border-radius: 50px;
+  border-width:2px;
+  font-size: 0.875rem;
+  background-color: white;
+}
+
+.SpotifyLogo {
+  display: inline-block;
+  height: 20px;
+  padding: 10px 15px 10px 10px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+
+
