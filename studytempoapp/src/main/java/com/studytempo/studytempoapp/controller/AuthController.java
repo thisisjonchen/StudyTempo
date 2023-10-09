@@ -1,6 +1,5 @@
 package com.studytempo.studytempoapp.controller;
 
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -8,7 +7,6 @@ import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
-import se.michaelthelin.spotify.model_objects.specification.Context;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
@@ -16,7 +14,8 @@ import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTra
 import java.io.IOException;
 import java.net.URI;
 @RestController
-@RequestMapping("/api")
+@CrossOrigin(origins ="http://localhost:3000")
+@RequestMapping("/api") //   CORS allow React to fetch Endpoint
 public class AuthController {
 
     //  specify clientID & clientSecret from Spotify Dev
@@ -34,8 +33,7 @@ public class AuthController {
             .build();
 
     //  send HTTP request to Spotify to retrieve User Info using specified client details
-    @CrossOrigin(origins ="http://localhost:3000") //   CORS allow React to fetch Endpoint
-    @GetMapping("/login")
+    @GetMapping("login")
     @ResponseBody
     public String spotifyLogin() {
         AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
@@ -47,9 +45,10 @@ public class AuthController {
     }
 
     //  retrieve User Tokens to request User-specific data
-    @GetMapping(value = "get-user-code")
-    public String getSpotifyUserCode(@RequestParam("code") String userCode, HttpServletResponse response) throws IOException {
-        AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(userCode).build();
+    @GetMapping( value = "get-user-code/")
+    public String getSpotifyUserCode(@RequestParam(value = "code") String userCode, HttpServletResponse response) throws IOException {
+        AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(userCode)
+                .build();
 
         //  check to see if Tokens are available
         try {
@@ -64,22 +63,22 @@ public class AuthController {
             System.out.println("Error " + e.getMessage());
         }
 
-        response.sendRedirect("http://localhost:3000");
+        response.sendRedirect("http://localhost:3000/");
         return spotifyApi.getAccessToken();
     }
 
-    @GetMapping(value = "user-currently-playing")
-    public Context getUserCurrent() {
+    @GetMapping("user-currently-playing")
+    public String getUserCurrent() {
 
         final GetUsersCurrentlyPlayingTrackRequest getUsersCurrentlyPlayingTrackRequest = spotifyApi.getUsersCurrentlyPlayingTrack().build();
 
         try {
             final CurrentlyPlaying currentlyPlaying = getUsersCurrentlyPlayingTrackRequest.execute();
-            return currentlyPlaying.getContext();
+            return currentlyPlaying.getItem().getName();
         } catch (Exception e) {
             System.out.println("Something went wrong: " + e.getMessage());
         }
 
-        return null;
+        return "";
     }
 }

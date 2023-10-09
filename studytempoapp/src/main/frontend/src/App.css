@@ -5,17 +5,13 @@
   align-items: center;
   justify-content: center;
   text-align: start;
-  margin-top: -2.5rem;
 }
 
 .clock {
-  display: block;
+  margin-top: 1.5rem;
+  position: absolute;
 }
 
-.tagline {
-  font-size: 1.5rem;
-  color: #494949;
-}
 
 .playing {
   display: block;
@@ -23,11 +19,11 @@
   margin: 0;
 }
 
-.login {
+.spotify {
   display: flex;
   justify-content: center;
   vertical-align: middle;
-  margin-top: -5vh;
+  margin-top: -10vh;
 }
 
 .SpotifyLogin {

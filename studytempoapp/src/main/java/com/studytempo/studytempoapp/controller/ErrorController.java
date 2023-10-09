@@ -3,10 +3,12 @@ package com.studytempo.studytempoapp.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
 @Controller
-public class LandingController {
-    @GetMapping("/")
-    public String spotifyLogin() {
-        return null;
+public class ErrorController {
+
+    @GetMapping("/error")
+    public void error() {
+
     }
 }

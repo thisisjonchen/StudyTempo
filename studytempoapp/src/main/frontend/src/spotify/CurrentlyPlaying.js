@@ -1,22 +1,26 @@
 import {useEffect, useState} from "react";
+import "./Spotify.css";
 
 function CurrentlyPlaying() {
-    const[currentlyPlaying, setCurrentlyPlaying] = useState();
+    const [currentlyPlaying, setCurrentlyPlaying] = useState();
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/user-currently-playing")
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                setCurrentlyPlaying(data)
-            })
+
+        setInterval(() => {
+            fetch("http://localhost:8080/api/user-currently-playing")
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    setCurrentlyPlaying(data);
+                })
+        }, 2000)
+
     }, []);
 
     return(
         <div>
-            <h2>{currentlyPlaying}</h2>
+            <h5>{currentlyPlaying}</h5>
         </div>
     );
 }
-
 export default CurrentlyPlaying;
