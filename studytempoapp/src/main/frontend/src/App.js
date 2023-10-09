@@ -2,7 +2,8 @@ import "./clock/Clock.css";
 import "./App.css";
 import {SpotifyLogin, SpotifyLoginCheck} from "./spotify/SpotifyLogin";
 import SpotifyLogo from "./spotify/SpotifyLogo.png";
-import CurrentlyPlaying from "./spotify/CurrentlyPlaying";
+import Visualizer from "./spotify/visualizer.gif";
+import {CurrentlyPlayingSong} from "./spotify/CurrentlyPlaying";
 import Clock from "./clock/Clock";
 
 function App() {
@@ -11,7 +12,10 @@ function App() {
           <div className="container">
             <div className="clock">
                 <Clock />
-                <CurrentlyPlaying />
+                <div className="playing">
+                    <CurrentlyPlayingSong />
+                    <img src={Visualizer} className="visualizer"/>
+                </div>
             </div>
           </div>
           <div className="spotify">

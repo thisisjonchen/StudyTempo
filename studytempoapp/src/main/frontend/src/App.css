@@ -14,11 +14,19 @@
 
 
 .playing {
-  display: block;
+  display: flex;
+  align-items: center;
   font-size: 1.5rem;
   margin: 0;
 }
 
+.visualizer {
+  padding: 10px;
+  height: 25px;
+  filter: invert();
+}
+
+/* Spotify */
 .spotify {
   display: flex;
   justify-content: center;

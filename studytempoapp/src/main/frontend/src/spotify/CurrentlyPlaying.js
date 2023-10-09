@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import "./Spotify.css";
 
-function CurrentlyPlaying() {
+function CurrentlyPlayingSong() {
     const [currentlyPlaying, setCurrentlyPlaying] = useState();
 
     useEffect(() => {
@@ -23,4 +23,5 @@ function CurrentlyPlaying() {
         </div>
     );
 }
-export default CurrentlyPlaying;
+
+export {CurrentlyPlayingSong};
