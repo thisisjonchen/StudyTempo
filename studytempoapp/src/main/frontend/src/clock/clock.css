@@ -1,7 +1,7 @@
 .center-clock {
     font-weight: bold;
     font-size: 10rem;
-    color: #2a2a2a;
+    color: #000000;
     margin: 0;
     line-height: .5;
 }
@@ -9,9 +9,12 @@
 h2 span {
     display: inline-block;
     vertical-align: middle;
+
+}
+.hour, .minute, .second {
+    width: 150px;
 }
 
 .second {
     color: #5b5b5b;
-    width: 150px;
 }

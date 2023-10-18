@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import "./Clock.css";
+import "./clock.css";
 
 function Clock() {
   const [hour, setHour] = useState()
@@ -27,8 +27,9 @@ function Clock() {
 
   }, [])
 
+  //:<span className="second">{second}</span>
   return (
-        <h2 className="center-clock"><span>{hour}</span>:<span>{minute}</span>:<span className="second">{second}</span></h2>
+        <h2 className="center-clock"><span>{hour}</span>:<span>{minute}</span></h2>
   );
 }
-export default Clock;
+export {Clock};

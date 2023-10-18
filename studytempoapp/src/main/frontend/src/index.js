@@ -1,9 +1,12 @@
-import React from 'react';
-import './index.css';
-import ReactDOM from 'react-dom';
-import App from './App.js';
+import React from "react";
+import * as ReactDOM from "react-dom/client";
+import "./index.css";
+import StudyTempo from "./App.js";
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+    <React.StrictMode>
+        <StudyTempo />
+    </React.StrictMode>
 );
+

@@ -1,55 +1,105 @@
+.fullscreen-enabled {
+  background-color: #f3f3f3;
+}
+/* --divs-- */
+div .dark {
+    background-color: #f3f3f3;
+    filter: invert(100%) hue-rotate(180deg);
+    .fullscreen-enabled {
+      filter: invert(100%) hue-rotate(180deg);
+    }
+}
+div .light {
+  filter: none;
+}
+/* --divs-- */
+
+/* --headers-- */
+.header {
+  min-height: 15vh;
+  display: flex;
+  margin-left: 2em;
+  align-items: flex-start;
+}
+.header .bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.header button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border-color: transparent;
+  margin: 1em 1em 0 -0.5em;
+  font-weight: bold;
+}
+.header button span {
+  font-weight: normal;
+}
+/* --headers-- */
+
+/* --container/center-- */
 .container {
-  min-height: 100vh;
-  width: 100vw;
+  min-height: 70vh;
+  max-width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: start;
 }
-
 .clock {
-  margin-top: 1.5rem;
-  position: absolute;
-}
-
-
-.playing {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  font-size: 1.5rem;
-  margin: 0;
+  margin-top: 1rem;
 }
+/* --container/center-- */
 
-.visualizer {
-  padding: 10px;
-  height: 25px;
-  filter: invert();
-}
-
-/* Spotify */
-.spotify {
+/* --footer-- */
+.footer {
+  min-height: 15vh;
   display: flex;
   justify-content: center;
+  align-items: center;
   vertical-align: middle;
-  margin-top: -10vh;
 }
+/* --footer-- */
 
-.SpotifyLogin {
-  font-weight: bold;
-  padding: 0 2rem 0 2rem;
-  border-radius: 50px;
-  border-width:2px;
-  font-size: 0.875rem;
-  background-color: white;
-}
-
-.SpotifyLogo {
+/* --icons-- */
+.icon {
   display: inline-block;
   height: 20px;
-  padding: 10px 15px 10px 10px;
+  padding: 10px;
   vertical-align: middle;
-  text-align: center;
 }
+.sticon {
+  height: 35px;
+  padding: 5px;
+  vertical-align: middle;
+}
+/* --icons-- */
 
+/* --Spotify-- */
+.spotifyLogin {
+  font-weight: bold;
+  font-size: 0.875rem;
+  padding: 0 2em 0 2em;
+  border-radius: 50px;
+  border-width: 2px;
+  background-color: transparent;
+}
+/* --Spotify-- */
 
-
+/* --visibility-- */
+.show {
+  opacity: 100;
+  padding: 0 10px 0 0;
+  height: 20px;
+  filter: invert();
+}
+.hide {
+  opacity: 0;
+}
+/* --visibility-- */

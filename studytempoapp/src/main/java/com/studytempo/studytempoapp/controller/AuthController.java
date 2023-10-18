@@ -7,12 +7,15 @@ import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
+import se.michaelthelin.spotify.requests.data.player.SkipUsersPlaybackToNextTrackRequest;
 
 import java.io.IOException;
 import java.net.URI;
+
 @RestController
 @CrossOrigin(origins ="http://localhost:3000")
 @RequestMapping("/api") //   CORS allow React to fetch Endpoint
@@ -24,7 +27,7 @@ public class AuthController {
 
     //  specify URI matching Spotify Dev URI
     //  BRUH: was missing trailing slash in redirectUri on Spotify Dev Portal
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code/");
+private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code/");
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientID)
@@ -67,6 +70,26 @@ public class AuthController {
         return spotifyApi.getAccessToken();
     }
 
+    //  refresh tokens
+    @PostMapping("refresh-token")
+    public String refreshSpotifyUserToken() {
+        AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
+                .build();
+        //  try token refresh
+        try {
+            final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
+
+            // Set access and refresh token for further "spotifyApi" object usage
+            spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+
+            System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
+        } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return spotifyApi.getAccessToken();
+}
+
+    //  get user currently playing track
     @GetMapping("user-currently-playing")
     public String getUserCurrent() {
 
@@ -79,6 +102,22 @@ public class AuthController {
             System.out.println("Something went wrong: " + e.getMessage());
         }
 
+        return "";
+    }
+
+
+    //  skip track
+    @PostMapping
+    public String skipCurrentTrack() {
+        final SkipUsersPlaybackToNextTrackRequest skipUsersPlaybackToNextTrackRequest = spotifyApi
+                .skipUsersPlaybackToNextTrack().build();
+        try {
+            final String req = skipUsersPlaybackToNextTrackRequest.execute();
+            return req;
+        }
+        catch (Exception e) {
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
         return "";
     }
 }
