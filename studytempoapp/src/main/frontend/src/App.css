@@ -27,13 +27,12 @@ div .light {
   justify-content: flex-end;
   align-items: flex-start;
 }
-.header button {
+button {
   display: flex;
   align-items: center;
   background-color: transparent;
   border-color: transparent;
   margin: 1em 1em 0 -0.5em;
-  font-weight: bold;
 }
 .header button span {
   font-weight: normal;
@@ -69,7 +68,6 @@ div .light {
 
 /* --icons-- */
 .icon {
-  display: inline-block;
   height: 20px;
   padding: 10px;
   vertical-align: middle;
@@ -79,16 +77,29 @@ div .light {
   padding: 5px;
   vertical-align: middle;
 }
+.spotifyIcon {
+  height: 20px;
+  padding: 10px 10px 10px 0;
+  filter: invert(100%) hue-rotate(180deg);
+}
+.playerIcons {
+  height: 25px;
+  padding: 5px;
+  vertical-align: middle;
+}
 /* --icons-- */
 
 /* --Spotify-- */
-.spotifyLogin {
+.header .spotifyLogin  {
+  display: flex;
+  align-items: center;
+  margin: 2em 2em 0 0;
+  padding: 0 1em 0 1em;
   font-weight: bold;
   font-size: 0.875rem;
-  padding: 0 2em 0 2em;
   border-radius: 50px;
-  border-width: 2px;
-  background-color: transparent;
+  color: white;
+  background-color: black;
 }
 /* --Spotify-- */
 

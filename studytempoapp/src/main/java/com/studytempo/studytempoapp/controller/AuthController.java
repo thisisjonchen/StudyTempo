@@ -12,6 +12,8 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
 import se.michaelthelin.spotify.requests.data.player.SkipUsersPlaybackToNextTrackRequest;
+import se.michaelthelin.spotify.requests.data.player.SkipUsersPlaybackToPreviousTrackRequest;
+import se.michaelthelin.spotify.requests.data.player.StartResumeUsersPlaybackRequest;
 
 import java.io.IOException;
 import java.net.URI;
@@ -40,7 +42,7 @@ private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localh
     @ResponseBody
     public String spotifyLogin() {
         AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
-                .scope("user-read-private, user-read-email, user-read-currently-playing")
+                .scope("user-read-private, user-read-email, user-read-currently-playing, streaming")
                 .show_dialog(true)
                 .build();
         final URI uri = authorizationCodeUriRequest.execute();
@@ -105,19 +107,41 @@ private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localh
         return "";
     }
 
-
     //  skip track
-    @PostMapping
-    public String skipCurrentTrack() {
+    @PostMapping("skip")
+    public void skipTrack() {
         final SkipUsersPlaybackToNextTrackRequest skipUsersPlaybackToNextTrackRequest = spotifyApi
                 .skipUsersPlaybackToNextTrack().build();
         try {
-            final String req = skipUsersPlaybackToNextTrackRequest.execute();
-            return req;
+            skipUsersPlaybackToNextTrackRequest.execute();
         }
         catch (Exception e) {
             System.out.println("Something went wrong: " + e.getMessage());
         }
-        return "";
+    }
+
+    //  previous track
+    @PostMapping("back")
+    public void previousTrack() {
+        final SkipUsersPlaybackToPreviousTrackRequest skipUsersPlaybackToPreviousTrackRequest = spotifyApi
+                .skipUsersPlaybackToPreviousTrack().build();
+        try {
+            skipUsersPlaybackToPreviousTrackRequest.execute();
+        }
+        catch (Exception e) {
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("play-pause")
+    public void playPauseTrack() {
+        final StartResumeUsersPlaybackRequest startResumeUsersPlaybackRequest = spotifyApi.
+                startResumeUsersPlayback().build();
+        try {
+            startResumeUsersPlaybackRequest.execute();
+        }
+        catch (Exception e) {
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
     }
 }
