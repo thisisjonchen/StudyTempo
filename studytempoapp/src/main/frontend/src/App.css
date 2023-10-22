@@ -1,6 +1,12 @@
 .fullscreen-enabled {
   background-color: #f3f3f3;
 }
+
+button {
+  display: flex;
+  align-items: center;
+}
+
 /* --divs-- */
 div .dark {
     background-color: #f3f3f3;
@@ -12,30 +18,42 @@ div .dark {
 div .light {
   filter: none;
 }
+
+div .background {
+  background-image: url("./assets/wallpapers/ghiblifall.jpg");
+  background-size: cover;
+  .clock {
+    opacity: 80%;
+  }
+}
 /* --divs-- */
 
 /* --headers-- */
 .header {
   min-height: 15vh;
   display: flex;
-  margin-left: 2em;
-  align-items: flex-start;
+  align-items: center;
+  opacity: 60%;
+  padding: 0 32px 0 32px;
 }
 .header .bar {
-  width: 100%;
+  width: 60%;
   display: flex;
   justify-content: flex-end;
-  align-items: flex-start;
 }
-button {
+.logo {
+  width: 40%;
+}
+.header button {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   background-color: transparent;
   border-color: transparent;
-  margin: 1em 1em 0 -0.5em;
 }
 .header button span {
-  font-weight: normal;
+  font-weight: bold;
+  padding-left: 5px;
 }
 /* --headers-- */
 
@@ -62,7 +80,16 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  vertical-align: middle;
+  opacity: 60%;
+  padding: 0 32px 0 32px;
+}
+.player {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+}
+.divider {
+  width: 30%;
 }
 /* --footer-- */
 
@@ -70,47 +97,53 @@ button {
 .icon {
   height: 20px;
   padding: 10px;
-  vertical-align: middle;
 }
 .sticon {
   height: 35px;
   padding: 5px;
-  vertical-align: middle;
 }
 .spotifyIcon {
   height: 20px;
   padding: 10px 10px 10px 0;
   filter: invert(100%) hue-rotate(180deg);
 }
-.playerIcons {
+.player Button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border-color: transparent;
   height: 25px;
-  padding: 5px;
-  vertical-align: middle;
+  padding: 20px;
+}
+.play {
+  content:url("./player/icons/playicon.png");
+}
+.pause {
+  content:url("./player/icons/pauseicon.png");
 }
 /* --icons-- */
 
 /* --Spotify-- */
-.header .spotifyLogin  {
+.spotifyLogin {
   display: flex;
   align-items: center;
-  margin: 2em 2em 0 0;
+  margin-right: 1em;
   padding: 0 1em 0 1em;
   font-weight: bold;
   font-size: 0.875rem;
   border-radius: 50px;
   color: white;
-  background-color: black;
+  background-color: black !important;
 }
-/* --Spotify-- */
-
-/* --visibility-- */
-.show {
-  opacity: 100;
+.visualizer {
   padding: 0 10px 0 0;
   height: 20px;
   filter: invert();
 }
+/* --Spotify-- */
+
+/* --visibility-- */
 .hide {
-  opacity: 0;
+  display: none !important;
 }
 /* --visibility-- */

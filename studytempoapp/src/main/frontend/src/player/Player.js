@@ -26,17 +26,37 @@ function SkipBack() {
         console.log(err)
     }
 }
-
+function GetIsPlayingOnLoad() {
+    fetch("http://localhost:8080/api/is-playing")
+        .then(response => response.json())
+        .then(isPlaying => {
+            if(isPlaying) {
+                document.getElementById("PlayPause").className = "pause";
+            } else {
+                document.getElementById("PlayPause").className = "play";
+            }
+        });
+}
 function PlayPause() {
     try {
         fetch("http://localhost:8080/api/play-pause", {
             method: "PUT",
             headers: headers
         })
+        GetIsPlayingOnLoad();
     }
     catch (err) {
         console.log(err)
     }
+    fetch("http://localhost:8080/api/is-playing")
+        .then(response => response.json())
+        .then(isPlaying => {
+            if(isPlaying) {
+                document.getElementById("PlayPause").className = "play";
+            } else {
+                document.getElementById("PlayPause").className = "pause";
+            }
+        });
 }
 
-export {SkipNext, SkipBack, PlayPause};
+export {SkipNext, SkipBack, PlayPause, GetIsPlayingOnLoad};
