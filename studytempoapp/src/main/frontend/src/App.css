@@ -7,6 +7,24 @@ button {
   align-items: center;
 }
 
+h5 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+h6 {
+  font-size: 1rem;
+  text-align: start;
+  font-weight: normal;
+  margin: 0;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* --divs-- */
 div .dark {
     background-color: #f3f3f3;
@@ -32,17 +50,28 @@ div .background {
 .header {
   min-height: 15vh;
   display: flex;
-  align-items: center;
-  opacity: 60%;
+  align-items: flex-start;
   padding: 0 32px 0 32px;
 }
 .header .bar {
-  width: 60%;
+  width: 33%;
   display: flex;
   justify-content: flex-end;
+  margin-top: 32px;
+  opacity: 50%;
 }
 .logo {
-  width: 40%;
+  width: 33%;
+  margin-top: 32px;
+  opacity: 50%;
+}
+.timer {
+  width: 34%;
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  padding: 16px;
+  color: #FF9500;
 }
 .header button {
   display: flex;
@@ -78,19 +107,63 @@ div .background {
 .footer {
   min-height: 15vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 60%;
+  align-items: flex-end;
   padding: 0 32px 0 32px;
 }
 .player {
   display: flex;
   justify-content: center;
+  margin-bottom: 32px;
+  opacity: 50%;
+}
+.playerContainer {
   width: 40%;
 }
-.divider {
+.content {
+  margin-bottom: 32px;
   width: 30%;
+  filter: none !important;
 }
+
+/* --timer-- */
+.timerControl {
+  display: flex;
+  height: max-content;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 32px;
+  width: 30%;
+  padding: 0 10px 10px 0;
+}
+.timerControl button {
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border-color: transparent;
+  height: 25px;
+  padding: 10px;
+  opacity: 50%;
+}
+
+.timerControl .stop {
+  border-radius: 50px;
+  margin-left: 5px;
+  color:white;
+  background-color: #ff4b4b !important;
+  opacity: 100% !important;
+}
+
+.timerControl .start {
+  border-radius: 50px;
+  margin-left: 5px;
+  color:white;
+  background-color: #1cd04f !important;
+  opacity: 100% !important;
+}
+
+/* --timer-- */
 /* --footer-- */
 
 /* --icons-- */
@@ -107,19 +180,9 @@ div .background {
   padding: 10px 10px 10px 0;
   filter: invert(100%) hue-rotate(180deg);
 }
-.player Button {
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-  border-color: transparent;
-  height: 25px;
-  padding: 20px;
-}
-.play {
-  content:url("./player/icons/playicon.png");
-}
-.pause {
-  content:url("./player/icons/pauseicon.png");
+.timerIcon {
+  height: 20px;
+  padding: 5px;
 }
 /* --icons-- */
 
@@ -139,6 +202,20 @@ div .background {
   padding: 0 10px 0 0;
   height: 20px;
   filter: invert();
+}
+.player Button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border-color: transparent;
+  height: 25px;
+  padding: 20px;
+}
+.play {
+  content:url("./player/icons/playicon.png");
+}
+.pause {
+  content:url("./player/icons/pauseicon.png");
 }
 /* --Spotify-- */
 

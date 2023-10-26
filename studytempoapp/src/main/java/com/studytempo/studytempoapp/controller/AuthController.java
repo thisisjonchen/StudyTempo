@@ -18,6 +18,7 @@ import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins ="http://localhost:3000") //  CORS allow React to fetch Endpoint
@@ -26,7 +27,7 @@ public class AuthController {
 
     //  specify clientID & clientSecret from Spotify Dev
     private static final String clientID = "ea74b10d170848169662fc6fc322359d";
-    private static final String clientSecret = "147a578893a2420f9a4f4d862e8d5f76";
+    private static final String clientSecret = "e5f18fd7b1e64e10a83956a03c50ea49";
 
     //  specify URI matching Spotify Dev URI
     //  BRUH: was missing trailing slash in redirectUri on Spotify Dev Portal
@@ -52,9 +53,9 @@ public class AuthController {
     }
 
     //  retrieve User Tokens to request User-specific data
-    @GetMapping( value = "get-user-code/")
-    public String getSpotifyUserCode(@RequestParam(value = "code") String userCode, HttpServletResponse response) throws IOException {
-        AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(userCode)
+    @RequestMapping( value = "get-user-code/", params = "code")
+    public String getSpotifyUserCode(@RequestParam String code, HttpServletResponse response) throws IOException {
+        AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code)
                 .build();
 
         //  check to see if Tokens are available
@@ -68,13 +69,15 @@ public class AuthController {
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error " + e.getMessage());
+            return e.getMessage();
         }
 
         response.sendRedirect("http://localhost:3000/");
         return spotifyApi.getAccessToken();
     }
     // if denied
-    public void error(@RequestParam(value = "error") String error, HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "get-user-code/", params = "error")
+    public void error(@RequestParam String error, HttpServletResponse response) throws IOException {
         response.sendRedirect("http://localhost:3000/");
     }
 
@@ -95,7 +98,15 @@ public class AuthController {
             System.out.println("Error: " + e.getMessage());
         }
         return spotifyApi.getAccessToken();
-}
+    }
+
+    @GetMapping("is-token-valid")
+    public String getIsTokenValid() {
+        if (!spotifyApi.getAccessToken().isEmpty()) {
+            return "valid";
+        }
+        return "invalid";
+    }
 
     //  get user currently playing track
     @GetMapping("user-currently-playing")
@@ -129,15 +140,13 @@ public class AuthController {
     // returns playlist name
     @GetMapping("user-current-playlist")
     public String getPlaylist() {
-        final GetPlaylistRequest getPlaylistRequest = spotifyApi.getPlaylist(getUserCurrentPlaylistID())
-                .fields("name")
-                .build();
+        final GetPlaylistRequest getPlaylistRequest = spotifyApi.getPlaylist(getUserCurrentPlaylistID()).build();
         try {
             final Playlist playlist = getPlaylistRequest.execute(); // hung up here
             return playlist.getName();
         }
         catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Something went wrong: " + e.getMessage());
         }
         return "";
     }

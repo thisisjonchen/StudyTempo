@@ -2,20 +2,6 @@ button {
     font-size: 1.5rem;
 }
 
-h5 {
-    color: black;
-    font-size: 1.5rem;
-    margin: 0;
-}
-
-h6 {
-    color: black;
-    font-size: 1rem;
-    text-align: start;
-    font-weight: normal;
-    margin: 0;
-}
-
 .playing {
     display: flex;
     align-items: center;
@@ -28,8 +14,5 @@ h6 {
     flex-direction: column;
     text-align: start;
     padding: 10px 0 10px 10px;
-}
-.playlistContainer {
-    width: 30%;
 }
 

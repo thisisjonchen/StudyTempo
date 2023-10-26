@@ -1,67 +1,80 @@
 import React, {useEffect, useState} from "react";
 import "./Player.css";
-import Visualizer from "./visualizer.gif";
 import {GetIsPlayingOnLoad} from "./Player";
-function CurrentlyPlaying() {
-    const [currentlyPlaying, setCurrentlyPlaying] = useState();
+import Visualizer from "./visualizer.gif";
 
+function IsLoggedIn() {
+    fetch("http://localhost:8080/api/is-token-valid")
+        .then(response => response.text())
+        .then(response => {
+            if (response === "valid") {
+                useEffect(() => {
+                    setInterval(CurrentPlaylist, 10000);
+                    setInterval(CurrentSong, 4000);
+                }, [])
+            }
+        })
+}
+
+function CurrentSong() {
+    const [currentSong, setCurrentSong] = useState();
     useEffect(() => {
         setInterval(() => {
             fetch("http://localhost:8080/api/user-currently-playing")
                 .then(response => response.text())
                 .then(data => {
-                    if(data) {
+                    if (data) {
                         document.getElementById("SpotifyLoginBtn").className = "hide";
                         document.getElementById("Visualizer").className = "visualizer";
+                        document.getElementById("Playlist").className = "playlist";
+                        document.getElementById("PlayerControl").className = "player"
+                        GetIsPlayingOnLoad();
                     } else {
                         document.getElementById("SpotifyLoginBtn").className = "spotifyLogin"
                         document.getElementById("Visualizer").className = "hide";
+                        document.getElementById("Playlist").className = "hide";
+                        document.getElementById("PlayerControl").className = "hide";
                     }
                     let trimmedSong = data
                         .replace(/^(.{40}[^\s]*).*/, "$1") // limits char count to 40
                         .split("(From")[0] // removes all including and after "(From
                         .split("(from")[0] // removes all including and after "(from
                         .replace(/,$/, ""); // removes comma at end if needed
-                    setCurrentlyPlaying(trimmedSong);
-                    GetIsPlayingOnLoad();
+                    setCurrentSong(trimmedSong);
                 })
-        }, 2000)
+        }, 4000);
+    })
 
-    }, []);
-
-    return(
+    return (
         <div className="playing">
-            <img src={Visualizer} id="Visualizer" className="hide"/>
-            <h5>{currentlyPlaying}</h5>
+            <img src={Visualizer} id="Visualizer" className="visualizer"/>
+            <h5>{currentSong}</h5>
         </div>
     );
 }
 
 function CurrentPlaylist() {
     const [currentPlaylist, setCurrentPlaylist] = useState();
-
     useEffect(() => {
         setInterval(() => {
             fetch("http://localhost:8080/api/user-current-playlist")
                 .then(response => response.text())
                 .then(data => {
                     if (data === "") {
-                        setCurrentPlaylist("Singles")
+                        setCurrentPlaylist("Single")
                     } else {
-                        let trimmedPlaylist = data.replace(/(?![*#0-9]+)[\p{Emoji}\p{Emoji_Modifier}\p{Emoji_Component}\p{Emoji_Modifier_Base}\p{Emoji_Presentation}]/gu, ""); // removes emojis
-                        setCurrentPlaylist(trimmedPlaylist);
+                        setCurrentPlaylist(data);
                     }
                 })
-        }, 2000)
+        }, 10000)
     }, []);
 
     return(
-        <div className="playlistContainer">
-            <div id="Playlist" className="playlist">
-                <h6>Playlist</h6>
-                <h5>{currentPlaylist}</h5>
-            </div>
+        <div>
+            <h6>Playing from</h6>
+            <h5>{currentPlaylist}</h5>
         </div>
+
     );
 }
-export {CurrentlyPlaying, CurrentPlaylist};
+export {CurrentSong, CurrentPlaylist};
