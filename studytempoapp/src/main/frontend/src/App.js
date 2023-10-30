@@ -7,9 +7,8 @@ import SpotifyLogo from "./player/icons/SpotifyLogo.png";
 import StudyTempoLogo from "./assets/stlogo.png";
 import SkipNextIcon from "./player/icons/skipnexticon.png";
 import SkipBackIcon from "./player/icons/skipbackicon.png";
-import Visualizer from "./player/visualizer.gif";
 import {CreateSpotifyToken, RefreshSpotifyToken} from "./player/SpotifyLogin";
-import {CurrentSong, CurrentPlaylist} from "./player/CurrentlyPlaying";
+import {CurrentPlaylist, CurrentSong} from "./player/CurrentlyPlaying";
 import {Clock} from "./clock/clock";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
 import {useState} from "react";
@@ -28,11 +27,18 @@ function StudyTempo() {
     const handle = useFullScreenHandle();
     const [isFullScreen, setFullScreen] = useState(false);
     const [darkPref, setDarkPref] = useState(localStorage.getItem("darkPref"));
+
+    // timer
     const [timer, setTimer] = useState(Date.now);
     const countdownRef = useRef(null);
     const setRef = (countdown) => {countdownRef.current = countdown;};
     const countdownApi = countdownRef.current?.getApi();
 
+    // timer break
+    const [breakTime, setBreakTime] = useState(localStorage.getItem("breakTimePref"));
+
+
+    // misc functions
      function FullScreenBtn() {
         if (isFullScreen) {handle.exit();}
         else {handle.enter();}
@@ -64,17 +70,15 @@ function StudyTempo() {
                           <button onClick={FullScreenBtn} className="fullscreenBtn"><img src={FullscreenIcon} className="icon"/></button>
                       </div>
                   </div>
-                  <div className="container">
-                      <div className="clock" onLoad={RefreshSpotifyToken}>
+                  <div className="container" onLoad={RefreshSpotifyToken}>
+                      <div className="clock">
                           <Clock/>
                           <CurrentSong/>
                       </div>
                   </div>
                   <div className="footer">
                       <div className="content">
-                          <div id="Playlist" className="playlist">
-                              <CurrentPlaylist/>
-                          </div>
+                          <CurrentPlaylist/>
                       </div>
                       <div className="playerContainer">
                           <div id="PlayerControl" className="hide">
@@ -88,10 +92,48 @@ function StudyTempo() {
                           <button onClick={() => {setTimer(Date.now() + 1500000); countdownApi?.stop();}}>25</button>
                           <button onClick={() => {setTimer(Date.now() + 1800000); countdownApi?.stop();}}>30</button>
                           <button onClick={() => {setTimer(Date.now() + 2700000); countdownApi?.stop();}}>45</button>
+                          <button onClick={() => {setTimer(Date.now() + 3599000); countdownApi?.stop();}}>60</button>
                           <button id="timerStart" className={countdownApi?.isPaused ? "start" : "stop"} onClick={countdownApi?.start}>Start</button>
                       </div>
                   </div>
               </FullScreen>
+              <div className="settings">
+                  <div className="settingsContainer">
+                      <div className="settingsHeader">
+                          <div className="settingsHeaderItem"><h1>Settings</h1></div>
+                          <div className="settingsHeaderItem" style={{justifyContent: "flex-end"}}>
+                              <img src={SpotifyLogo} className="icon"/>
+                              <h5>Having Problems with Spotify?</h5>
+                              <button className="textButton" onClick={CreateSpotifyToken}>Try Logging in Again</button>
+                          </div>
+                      </div>
+                      <div className="settingsItem">
+                          <h5>Dark Mode</h5>
+                          <label className="switch">
+                              <input type="checkbox" onChange={DarkModeSwitch} checked={darkPref === "true"}/>
+                                  <span className="slider"></span>
+                          </label>
+                      </div>
+                      <div id="TimerSettings">
+                          <div className="settingsItem">
+                              <h5>Timer</h5>
+                          </div>
+                          <div className="settingsSubItem">
+                              <h5>Auto-Restart</h5>
+                              <label className="switch">
+                                  <input type="checkbox"/>
+                                  <span className="slider"></span>
+                              </label>
+                          </div>
+                          <div className="settingsSubItem">
+                              <h5>Break-Time</h5>
+                              <input id="breakSlider" type="range" min="0" max="30" defaultValue={breakTime} step="0.5" className="sliderRange"
+                                     onChange={breakTimeSlider => {setBreakTime(breakTimeSlider.target.value); localStorage.setItem("breakTimePref", breakTimeSlider.target.value);}}/>
+                              <h5 id="BreakTime">{breakTime} Minutes</h5>
+                          </div>
+                      </div>
+                  </div>
+              </div>
           </div>
       );
 }

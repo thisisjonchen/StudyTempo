@@ -1,40 +1,40 @@
-.fullscreen-enabled {
-  background-color: #f3f3f3;
-}
-
-button {
-  display: flex;
-  align-items: center;
-}
-
-h5 {
-  font-size: 1.5rem;
-  margin: 0;
-}
-
-h6 {
-  font-size: 1rem;
-  text-align: start;
-  font-weight: normal;
-  margin: 0;
-}
-
 .centered {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
 /* --divs-- */
+.fullscreen-enabled {
+  background-color: #f3f3f3;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
 div .dark {
     background-color: #f3f3f3;
     filter: invert(100%) hue-rotate(180deg);
     .fullscreen-enabled {
       filter: invert(100%) hue-rotate(180deg);
+      -webkit-transition: .4s;
+      transition: .4s;
     }
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 div .light {
   filter: none;
+  background-color: #f3f3f3;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 
 div .background {
@@ -72,17 +72,6 @@ div .background {
   margin-top: 32px;
   padding: 16px;
   color: #FF9500;
-}
-.header button {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: transparent;
-  border-color: transparent;
-}
-.header button span {
-  font-weight: bold;
-  padding-left: 5px;
 }
 /* --headers-- */
 
@@ -138,15 +127,10 @@ div .background {
 .timerControl button {
   font-weight: bold;
   font-size: 1rem;
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-  border-color: transparent;
   height: 25px;
   padding: 10px;
   opacity: 50%;
 }
-
 .timerControl .stop {
   border-radius: 50px;
   margin-left: 5px;
@@ -154,7 +138,6 @@ div .background {
   background-color: #ff4b4b !important;
   opacity: 100% !important;
 }
-
 .timerControl .start {
   border-radius: 50px;
   margin-left: 5px;
@@ -162,9 +145,39 @@ div .background {
   background-color: #1cd04f !important;
   opacity: 100% !important;
 }
-
 /* --timer-- */
 /* --footer-- */
+
+/* --settings-- */
+.settings {
+  height: 60vh;
+  background: white;
+  padding: 32px;
+}
+.settingsHeader {
+  display: flex;
+}
+.settingsHeaderItem {
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+.settingsContainer {
+  padding: 0 10px 0 10px;
+}
+.settingsItem {
+  display: flex;
+  align-items: center;
+  padding: 0 0 20px 10px;
+}
+.settingsSubItem {
+  display: flex;
+  align-items: center;
+  margin-top: -15px;
+  padding: 0 0 20px 40px;
+  color: #5b5b5b;
+}
+/* --settings-- */
 
 /* --icons-- */
 .icon {
@@ -204,10 +217,6 @@ div .background {
   filter: invert();
 }
 .player Button {
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-  border-color: transparent;
   height: 25px;
   padding: 20px;
 }
@@ -224,3 +233,117 @@ div .background {
   display: none !important;
 }
 /* --visibility-- */
+
+/* --fonts & generic buttons-- */
+h5 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+h6 {
+  font-size: 1rem;
+  text-align: start;
+  font-weight: normal;
+  margin: 0;
+}
+button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: transparent;
+  border-color: transparent;
+}
+button:hover {
+  cursor: pointer;
+}
+button span {
+  font-weight: bold;
+  padding-left: 5px;
+}
+.textButton {
+  background-color: transparent;
+  border-color: transparent;
+  text-decoration: underline;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+  margin: 0 10px 0 10px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 17px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 0;
+  bottom: 0;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #000000;
+}
+
+input:checked + .slider {
+  background-color: #1cd04f;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #1cd04f;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+.sliderRange {
+  -webkit-appearance: none;
+  width: 100px;
+  height: 17px;
+  margin: 0 10px 0 10px;
+  border-radius: 17px;
+  background: #ccc;
+  outline: none;
+  -webkit-transition: .4s;
+  transition: opacity .4s;
+}
+
+.sliderRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 5px #000000;
+  cursor: pointer;
+}
+.sliderRange::-moz-range-thumb {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 5px #000000;
+  cursor: pointer;
+}
+
+
+/* --fonts & generic buttons-- */

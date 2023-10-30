@@ -1,13 +1,17 @@
+import {CurrentSong} from "./CurrentlyPlaying";
+
 function CreateSpotifyToken() {
-    fetch("http://localhost:8080/api/login")
-        .then((response) => response.text())
-        .then(response => {
-            window.location = response;
-            setInterval(RefreshSpotifyToken, 3500000)
-        })
-        .catch(error => {
-            console.error("Fetch error:", error);
-        });
+    try {
+        fetch("http://localhost:8080/api/login")
+            .then((response) => response.text())
+            .then(response => {
+                window.location = response;
+                setInterval(RefreshSpotifyToken, 3500000)
+            })
+    }
+    catch (err) {
+            console.log(err)
+        }
 }
 
 function RefreshSpotifyToken() {

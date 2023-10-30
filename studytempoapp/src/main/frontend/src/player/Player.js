@@ -49,15 +49,25 @@ function PlayPause() {
 }
 
 function GetIsPlayingOnLoad() {
-    fetch("http://localhost:8080/api/is-playing")
-        .then(response => response.json())
-        .then(isPlaying => {
-            if(isPlaying) {
-                document.getElementById("PlayPause").className = "pause";
-            } else {
-                document.getElementById("PlayPause").className = "play";
+    fetch("http://localhost:8080/api/is-token-valid")
+        .then(response => response.text())
+        .then(data => {
+            if (data === "valid") {
+                try {
+                    fetch("http://localhost:8080/api/is-playing")
+                        .then(response => response.json())
+                        .then(isPlaying => {
+                            if (isPlaying) {
+                                document.getElementById("PlayPause").className = "pause";
+                            } else {
+                                document.getElementById("PlayPause").className = "play";
+                            }
+                        });
+                } catch (err) {
+                    console.log(err);
+                }
             }
-        });
+        })
 }
 
 export {SkipNext, SkipBack, PlayPause, GetIsPlayingOnLoad};

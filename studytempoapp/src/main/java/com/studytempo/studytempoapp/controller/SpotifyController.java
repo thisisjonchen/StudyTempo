@@ -18,12 +18,11 @@ import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins ="http://localhost:3000") //  CORS allow React to fetch Endpoint
 @RequestMapping("/api")
-public class AuthController {
+public class SpotifyController {
 
     //  specify clientID & clientSecret from Spotify Dev
     private static final String clientID = "ea74b10d170848169662fc6fc322359d";
@@ -102,14 +101,14 @@ public class AuthController {
 
     @GetMapping("is-token-valid")
     public String getIsTokenValid() {
-        if (!spotifyApi.getAccessToken().isEmpty()) {
+        if (!(spotifyApi.getAccessToken() == null)) {
             return "valid";
         }
         return "invalid";
     }
 
     //  get user currently playing track
-    @GetMapping("user-currently-playing")
+    @GetMapping("currently-playing")
     public String getUserCurrent() {
         final GetUsersCurrentlyPlayingTrackRequest getUsersCurrentlyPlayingTrackRequest = spotifyApi.getUsersCurrentlyPlayingTrack().build();
         try {
@@ -123,7 +122,7 @@ public class AuthController {
     }
 
     // get user currently playing track id for use in getPlaylist
-    @GetMapping("user-current-playlist-id")
+    @GetMapping("current-playlist-id")
     public String getUserCurrentPlaylistID() {
         final GetInformationAboutUsersCurrentPlaybackRequest getInformationAboutUsersCurrentPlaybackRequest = spotifyApi.getInformationAboutUsersCurrentPlayback().build();
 
@@ -138,7 +137,7 @@ public class AuthController {
     }
 
     // returns playlist name
-    @GetMapping("user-current-playlist")
+    @GetMapping("current-playlist")
     public String getPlaylist() {
         final GetPlaylistRequest getPlaylistRequest = spotifyApi.getPlaylist(getUserCurrentPlaylistID()).build();
         try {
