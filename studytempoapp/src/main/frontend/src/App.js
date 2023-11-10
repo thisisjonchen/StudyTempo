@@ -1,6 +1,6 @@
 import "./clock/time.css";
 import "./App.css";
-import React, {useEffect, useRef} from "react"
+import React, {useRef, useState} from "react"
 import FullscreenIcon from "./assets/fullscreen.png";
 import DarkIcon from "./assets/dark.png";
 import SpotifyLogo from "./player/icons/SpotifyLogo.png";
@@ -8,12 +8,11 @@ import StudyTempoLogo from "./assets/stlogo.png";
 import SkipNextIcon from "./player/icons/skipnexticon.png";
 import SkipBackIcon from "./player/icons/skipbackicon.png";
 import {CreateSpotifyToken, RefreshSpotifyToken} from "./player/SpotifyLogin";
-import {CurrentPlaylist, CurrentSong} from "./player/CurrentlyPlaying";
+import {CurrentPlaylist, CurrentSong, GetIsPlayingOnLoad} from "./player/CurrentlyPlaying";
 import {Clock} from "./clock/clock";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
-import {useState} from "react";
-import {GetIsPlayingOnLoad, PlayPause, SkipBack, SkipNext} from "./player/Player";
-import Countdown, {CountdownApi} from "react-countdown";
+import {PlayPause, SkipBack, SkipNext} from "./player/Player";
+import Countdown from "react-countdown";
 import {timerRenderer} from "./clock/timer";
 
 function StudyTempo() {
@@ -54,7 +53,9 @@ function StudyTempo() {
             localStorage.setItem("darkPref", "false");
         }
     }
-      return (
+
+
+    return (
           <div className={darkPref === "true" ? "dark" : "light"}>
               <FullScreen handle={handle}>
                   <div className="header">
@@ -83,7 +84,7 @@ function StudyTempo() {
                       <div className="playerContainer">
                           <div id="PlayerControl" className="hide">
                               <button onClick={SkipBack}><img src={SkipBackIcon} className="playerIcons"/></button>
-                              <button onClick={PlayPause}><img id="PlayPause" className="play" onLoad={GetIsPlayingOnLoad()}/></button>
+                              <button onClick={PlayPause}><img id="PlayPause" className="play" onLoad={() => GetIsPlayingOnLoad}/></button>
                               <button onClick={SkipNext}><img src={SkipNextIcon} className="playerIcons"/></button>
                           </div>
                       </div>

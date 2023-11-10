@@ -1,11 +1,10 @@
-
 const headers = {
     "Content-Type": "application/json",
     "Access-Control-Origin": "*"
 }
 function SkipNext() {
     try {
-        fetch("http://localhost:8080/api/skip", {
+        fetch("http://localhost:8080/player/skip", {
             method: "POST",
             headers: headers
         })
@@ -17,7 +16,7 @@ function SkipNext() {
 
 function SkipBack() {
     try {
-        fetch("http://localhost:8080/api/back", {
+        fetch("http://localhost:8080/player/back", {
             method: "POST",
             headers: headers
         })
@@ -28,46 +27,14 @@ function SkipBack() {
 }
 function PlayPause() {
     try {
-        fetch("http://localhost:8080/api/play-pause", {
+        fetch("http://localhost:8080/player/play-pause", {
             method: "PUT",
             headers: headers
         })
-        GetIsPlayingOnLoad();
     }
     catch (err) {
         console.log(err)
     }
-    fetch("http://localhost:8080/api/is-playing")
-        .then(response => response.json())
-        .then(isPlaying => {
-            if(isPlaying) {
-                document.getElementById("PlayPause").className = "play";
-            } else {
-                document.getElementById("PlayPause").className = "pause";
-            }
-        });
 }
 
-function GetIsPlayingOnLoad() {
-    fetch("http://localhost:8080/api/is-token-valid")
-        .then(response => response.text())
-        .then(data => {
-            if (data === "valid") {
-                try {
-                    fetch("http://localhost:8080/api/is-playing")
-                        .then(response => response.json())
-                        .then(isPlaying => {
-                            if (isPlaying) {
-                                document.getElementById("PlayPause").className = "pause";
-                            } else {
-                                document.getElementById("PlayPause").className = "play";
-                            }
-                        });
-                } catch (err) {
-                    console.log(err);
-                }
-            }
-        })
-}
-
-export {SkipNext, SkipBack, PlayPause, GetIsPlayingOnLoad};
+export {SkipNext, SkipBack, PlayPause};

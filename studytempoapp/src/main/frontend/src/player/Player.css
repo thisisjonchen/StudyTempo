@@ -5,14 +5,33 @@ button {
 .playing {
     display: flex;
     align-items: center;
-    margin: 0;
-    height: 125px;
 }
 
 .playlist {
     display: flex;
+    align-items: center;
+}
+
+.playlistTitle {
+    display: flex;
     flex-direction: column;
     text-align: start;
     padding: 10px 0 10px 10px;
+}
+
+.dark .playlistCover {
+    height: 50px;
+    width: 50px;
+    filter: invert(100%) hue-rotate(180deg);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.playlistCover {
+    height: 50px;
+    width: 50px;
+    filter: none;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 

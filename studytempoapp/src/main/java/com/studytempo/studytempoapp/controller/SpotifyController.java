@@ -7,21 +7,16 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
-import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
-import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlayingContext;
-import se.michaelthelin.spotify.model_objects.specification.Playlist;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
-import se.michaelthelin.spotify.requests.data.player.*;
-import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 
 import java.io.IOException;
 import java.net.URI;
 
 @RestController
 @CrossOrigin(origins ="http://localhost:3000") //  CORS allow React to fetch Endpoint
-@RequestMapping("/api")
+@RequestMapping("/auth")
 public class SpotifyController {
 
     //  specify clientID & clientSecret from Spotify Dev
@@ -30,10 +25,10 @@ public class SpotifyController {
 
     //  specify URI matching Spotify Dev URI
     //  BRUH: was missing trailing slash in redirectUri on Spotify Dev Portal
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code/");
+    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/auth/get-user-code/");
 
 
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
+    public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientID)
             .setClientSecret(clientSecret)
             .setRedirectUri(redirectUri)
@@ -63,7 +58,6 @@ public class SpotifyController {
 
             //  sets access and refresh tokens for Spotify API usage
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-            spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
@@ -82,21 +76,21 @@ public class SpotifyController {
 
     //  refresh tokens
     @PostMapping("refresh-token")
-    public String refreshSpotifyUserToken() {
+    public void refreshSpotifyUserToken() {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
                 .build();
         //  try token refresh
         try {
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
 
-            // Set access and refresh token for further "spotifyApi" object usage
+            // Set access and refresh token for further "spotifyApi" object usage...sets both access and refresh tokens as refresh token can only be used once
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+            spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        return spotifyApi.getAccessToken();
     }
 
     @GetMapping("is-token-valid")
@@ -105,109 +99,5 @@ public class SpotifyController {
             return "valid";
         }
         return "invalid";
-    }
-
-    //  get user currently playing track
-    @GetMapping("currently-playing")
-    public String getUserCurrent() {
-        final GetUsersCurrentlyPlayingTrackRequest getUsersCurrentlyPlayingTrackRequest = spotifyApi.getUsersCurrentlyPlayingTrack().build();
-        try {
-            final CurrentlyPlaying currentlyPlaying = getUsersCurrentlyPlayingTrackRequest.execute();
-            return currentlyPlaying.getItem().getName();
-        } catch (Exception e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-
-        return "";
-    }
-
-    // get user currently playing track id for use in getPlaylist
-    @GetMapping("current-playlist-id")
-    public String getUserCurrentPlaylistID() {
-        final GetInformationAboutUsersCurrentPlaybackRequest getInformationAboutUsersCurrentPlaybackRequest = spotifyApi.getInformationAboutUsersCurrentPlayback().build();
-
-        try {
-            final CurrentlyPlayingContext currentlyPlayingContext = getInformationAboutUsersCurrentPlaybackRequest.execute();
-            String input = currentlyPlayingContext.getContext().getUri();
-            String[] id = input.split("playlist:");
-            return id[id.length - 1];
-        } catch (Exception ignored) {
-        }
-        return "";
-    }
-
-    // returns playlist name
-    @GetMapping("current-playlist")
-    public String getPlaylist() {
-        final GetPlaylistRequest getPlaylistRequest = spotifyApi.getPlaylist(getUserCurrentPlaylistID()).build();
-        try {
-            final Playlist playlist = getPlaylistRequest.execute(); // hung up here
-            return playlist.getName();
-        }
-        catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-        return "";
-    }
-
-    // check if playing
-    @GetMapping("is-playing")
-    public boolean isPlaying() {
-        final GetUsersCurrentlyPlayingTrackRequest getUsersCurrentlyPlayingTrackRequest = spotifyApi.getUsersCurrentlyPlayingTrack().build();
-
-        try {
-            final CurrentlyPlaying currentlyPlaying = getUsersCurrentlyPlayingTrackRequest.execute();
-            return currentlyPlaying.getIs_playing();
-        } catch (Exception e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-
-        return false;
-    }
-
-    //  skip track
-    @PostMapping("skip")
-    public void skipTrack() {
-        final SkipUsersPlaybackToNextTrackRequest skipUsersPlaybackToNextTrackRequest = spotifyApi
-                .skipUsersPlaybackToNextTrack().build();
-        try {
-            skipUsersPlaybackToNextTrackRequest.execute();
-        }
-        catch (Exception e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-    }
-
-    //  previous track
-    @PostMapping("back")
-    public void previousTrack() {
-        final SkipUsersPlaybackToPreviousTrackRequest skipUsersPlaybackToPreviousTrackRequest = spotifyApi
-                .skipUsersPlaybackToPreviousTrack().build();
-        try {
-            skipUsersPlaybackToPreviousTrackRequest.execute();
-        }
-        catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-    }
-
-    // play/pause track
-    @PutMapping("play-pause")
-    public void playPauseTrack() {
-        final StartResumeUsersPlaybackRequest startResumeUsersPlaybackRequest = spotifyApi.
-                startResumeUsersPlayback().build();
-        final PauseUsersPlaybackRequest pauseUsersPlaybackRequest = spotifyApi.
-                pauseUsersPlayback().build();
-        try {
-            if (isPlaying()) {
-                pauseUsersPlaybackRequest.execute();
-            }
-            else {
-                startResumeUsersPlaybackRequest.execute();
-            }
-        }
-        catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
     }
 }

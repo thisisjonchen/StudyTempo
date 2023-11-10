@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import "./Player.css";
-import {GetIsPlayingOnLoad} from "./Player";
 import Visualizer from "./visualizer.gif";
 import {RefreshSpotifyToken} from "./SpotifyLogin";
 
 function CurrentSong() {
     const [currentSong, setCurrentSong] = useState("");
     useEffect(() => {
-        fetch("http://localhost:8080/api/is-token-valid")
+        fetch("http://localhost:8080/auth/is-token-valid")
             .then(response => response.text())
             .then(data => {
                 if (data === "valid") {
@@ -15,7 +14,7 @@ function CurrentSong() {
                     document.getElementById("SpotifyLoginBtn").className = "hide";
                     setInterval(() => {
                         console.log("play")
-                        fetch("http://localhost:8080/api/currently-playing")
+                        fetch("http://localhost:8080/player/current-song")
                             .then(resp => resp.text())
                             .then(song => {
                                 if (song) {
@@ -33,7 +32,7 @@ function CurrentSong() {
                                     .replace(/,$/, ""); // removes comma at end if needed
                                 setCurrentSong(trimmedSong);
                             })
-                    }, 5000);
+                    }, 3000);
                 }
                 else {
                     document.getElementById("SpotifyLoginBtn").className = "spotifyLogin"
@@ -52,12 +51,12 @@ function CurrentSong() {
 function CurrentPlaylist() {
     const [currentPlaylist, setCurrentPlaylist] = useState();
     useEffect(() => {
-        fetch("http://localhost:8080/api/is-token-valid")
+        fetch("http://localhost:8080/auth/is-token-valid")
             .then(response => response.text())
             .then(data => {
                 if (data === "valid") {
                     setInterval(() => {
-                        fetch("http://localhost:8080/api/current-playlist")
+                        fetch("http://localhost:8080/player/current-playlist")
                             .then(resp => resp.text())
                             .then(playlist => {
                                 if (playlist) {
@@ -72,11 +71,50 @@ function CurrentPlaylist() {
     }, []);
     return (
         <div id="Playlist" className="hide">
-            <h6>Playing from</h6>
-            <h5>{currentPlaylist}</h5>
+            <img className="playlistCover" src={CurrentPlaylistCover()}/>
+            <div className="playlistTitle">
+                <h6>Playing from</h6>
+                <h5>{currentPlaylist}</h5>
+            </div>
         </div>
     );
 }
 
+function CurrentPlaylistCover() {
+    const [playlistCover, setPlaylistCover] = useState();
+    fetch("http://localhost:8080/player/current-playlist-cover")
+        .then(response => response.text())
+        .then(data => {
+            if (data) {
+                setPlaylistCover(data)
+            } else {
+                setPlaylistCover("")
+            }
+        })
+    return playlistCover
+}
 
-export {CurrentSong, CurrentPlaylist};
+function GetIsPlayingOnLoad() {
+    fetch("http://localhost:8080/auth/is-token-valid")
+        .then(response => response.text())
+        .then(data => {
+            if (data === "valid") {
+                try {
+                    fetch("http://localhost:8080/player/is-playing")
+                        .then(response => response.json())
+                        .then(isPlaying => {
+                            if (isPlaying) {
+                                document.getElementById("PlayPause").className = "pause";
+                            } else {
+                                document.getElementById("PlayPause").className = "play";
+                            }
+                        });
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        })
+}
+
+
+export {CurrentSong, CurrentPlaylist, GetIsPlayingOnLoad};

@@ -1,8 +1,6 @@
-import {CurrentSong} from "./CurrentlyPlaying";
-
 function CreateSpotifyToken() {
     try {
-        fetch("http://localhost:8080/api/login")
+        fetch("http://localhost:8080/auth/login")
             .then((response) => response.text())
             .then(response => {
                 window.location = response;
@@ -21,7 +19,7 @@ function RefreshSpotifyToken() {
     }
 
     try {
-        fetch("http://localhost:8080/api/refresh-token", {
+        fetch("http://localhost:8080/auth/refresh-token", {
             method: "POST",
             headers: headers
         })

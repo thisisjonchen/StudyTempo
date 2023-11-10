@@ -88,7 +88,6 @@ div .background {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 1rem;
 }
 /* --container/center-- */
 
@@ -150,7 +149,7 @@ div .background {
 
 /* --settings-- */
 .settings {
-  height: 60vh;
+  height: 55vh;
   background: white;
   padding: 32px;
 }
