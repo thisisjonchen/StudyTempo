@@ -58,6 +58,7 @@ public class SpotifyController {
 
             //  sets access and refresh tokens for Spotify API usage
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+            spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
@@ -85,7 +86,6 @@ public class SpotifyController {
 
             // Set access and refresh token for further "spotifyApi" object usage...sets both access and refresh tokens as refresh token can only be used once
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-            spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
