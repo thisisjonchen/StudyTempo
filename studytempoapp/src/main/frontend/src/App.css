@@ -13,12 +13,6 @@ body::-webkit-scrollbar {
 }
 
 /* --divs-- */
-.fullscreen-enabled {
-  background-color: #f3f3f3;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
 div .dark {
     background-color: #f3f3f3;
     filter: invert(100%) hue-rotate(180deg);
@@ -30,9 +24,37 @@ div .dark {
   -webkit-transition: .4s;
   transition: .4s;
 }
+
 div .light {
-  filter: none;
   background-color: #f3f3f3;
+  filter: none;
+  .fullscreen-enabled {
+    background-color: #f3f3f3;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+div .alert {
+  background-color: #ffe2af;
+  .fullscreen-enabled {
+    background-color: #ffe2af;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+div .stop {
+  background-color: #ff8383;
+  .fullscreen-enabled {
+    background-color: #ff8383;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -48,7 +70,7 @@ div .background {
 
 /* --headers-- */
 .header {
-  min-height: 15vh;
+  min-height: 20vh;
   display: flex;
   align-items: flex-start;
   padding: 0 32px 0 32px;
@@ -65,19 +87,23 @@ div .background {
   margin-top: 32px;
   opacity: 50%;
 }
-.timer {
+
+.timerContainer {
   width: 34%;
   display: flex;
   justify-content: center;
   margin-top: 32px;
-  padding: 16px;
-  color: #FF9500;
+  padding: 16px 16px 0 16px;
+}
+.timer {
+  background-color: #FF9500;
+  border-radius: 50px;
 }
 /* --headers-- */
 
 /* --container/center-- */
 .container {
-  min-height: 70vh;
+  min-height: 60vh;
   max-width: 100vw;
   display: flex;
   align-items: center;
@@ -89,11 +115,21 @@ div .background {
   flex-direction: column;
   align-items: center;
 }
+
+.todo {
+  white-space:nowrap;
+  display:inline-block;
+  font-weight: bold;
+  font-size: 1rem;
+  background: rgba(255, 149, 0, 0.75);
+  width: min-content;
+  padding: 0 10px 0 10px;
+}
 /* --container/center-- */
 
 /* --footer-- */
 .footer {
-  min-height: 15vh;
+  min-height: 20vh;
   display: flex;
   align-items: flex-end;
   padding: 0 32px 0 32px;
@@ -127,21 +163,22 @@ div .background {
   font-weight: bold;
   font-size: 1rem;
   height: 25px;
-  padding: 10px;
   opacity: 50%;
 }
 .timerControl .stop {
+  padding: 5px;
   border-radius: 50px;
-  margin-left: 5px;
+  margin-left: 10px;
   color:white;
   background-color: #ff4b4b !important;
   opacity: 100% !important;
 }
 .timerControl .start {
+  padding: 10px;
   border-radius: 50px;
   margin-left: 5px;
   color:white;
-  background-color: #1cd04f !important;
+  background-color: #15a93f !important;
   opacity: 100% !important;
 }
 /* --timer-- */
@@ -150,7 +187,7 @@ div .background {
 /* --settings-- */
 .settings {
   height: 55vh;
-  background: white;
+  background: #ffffff;
   padding: 32px;
 }
 .settingsHeader {
@@ -158,7 +195,8 @@ div .background {
 }
 .settingsHeaderItem {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
   width: 50%;
 }
 .settingsContainer {
@@ -195,6 +233,7 @@ div .background {
 .timerIcon {
   height: 20px;
   padding: 5px;
+  filter: brightness(0%);
 }
 /* --icons-- */
 
@@ -250,9 +289,16 @@ button {
   justify-content: flex-start;
   background-color: transparent;
   border-color: transparent;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 button:hover {
   cursor: pointer;
+}
+button:active {
+  scale: 60%;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 button span {
   font-weight: bold;
@@ -262,6 +308,7 @@ button span {
   background-color: transparent;
   border-color: transparent;
   text-decoration: underline;
+  text-align: start;
 }
 .switch {
   position: relative;

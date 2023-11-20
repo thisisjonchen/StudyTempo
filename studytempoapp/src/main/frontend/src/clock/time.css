@@ -1,7 +1,6 @@
 .center-clock {
     font-weight: bold;
     font-size: 10rem;
-    color: #000000;
     margin: 0;
     line-height: 1.1;
 }
@@ -11,5 +10,5 @@
 }
 
 .secondTimer {
-    width: 50px;
+    width: 40px;
 }

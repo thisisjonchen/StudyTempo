@@ -18,11 +18,9 @@ function CurrentSong() {
                             .then(resp => resp.text())
                             .then(song => {
                                 if (song) {
-                                    document.getElementById("Visualizer").className = "visualizer";
                                     document.getElementById("Playlist").className = "playlist";
                                     GetIsPlayingOnLoad();
                                 } else {
-                                    document.getElementById("Visualizer").className = "hide";
                                     document.getElementById("Playlist").className = "hide";
                                 }
                                 let trimmedSong = song
@@ -49,7 +47,7 @@ function CurrentSong() {
 }
 
 function CurrentPlaylist() {
-    const [currentPlaylist, setCurrentPlaylist] = useState();
+    const [currentPlaylist, setCurrentPlaylist] = useState("");
     useEffect(() => {
         fetch("http://localhost:8080/auth/is-token-valid")
             .then(response => response.text())
@@ -70,11 +68,13 @@ function CurrentPlaylist() {
             },)
     }, []);
     return (
-        <div id="Playlist" className="hide">
-            <img className="playlistCover" src={CurrentPlaylistCover()}/>
-            <div className="playlistTitle">
-                <h6>Playing from</h6>
-                <h5>{currentPlaylist}</h5>
+        <div className="content">
+            <div id="Playlist" className="hide">
+                <img className="playlistCover" src={CurrentPlaylistCover()}/>
+                <div className="playlistTitle">
+                    <h6>Playing from</h6>
+                    <h5>{currentPlaylist}</h5>
+                </div>
             </div>
         </div>
     );
@@ -82,13 +82,23 @@ function CurrentPlaylist() {
 
 function CurrentPlaylistCover() {
     const [playlistCover, setPlaylistCover] = useState();
-    fetch("http://localhost:8080/player/current-playlist-cover")
+    fetch("http://localhost:8080/auth/is-token-valid")
         .then(response => response.text())
         .then(data => {
-            if (data) {
-                setPlaylistCover(data)
-            } else {
-                setPlaylistCover("")
+            if (data === "valid") {
+                try {
+                    fetch("http://localhost:8080/player/current-playlist-cover")
+                        .then(response => response.text())
+                        .then(data => {
+                            if (data) {
+                                setPlaylistCover(data)
+                            } else {
+                                setPlaylistCover("")
+                            }
+                        })
+                } catch (err) {
+                    console.log(err);
+                }
             }
         })
     return playlistCover
@@ -104,9 +114,11 @@ function GetIsPlayingOnLoad() {
                         .then(response => response.json())
                         .then(isPlaying => {
                             if (isPlaying) {
+                                document.getElementById("Visualizer").className = "visualizer";
                                 document.getElementById("PlayPause").className = "pause";
                             } else {
                                 document.getElementById("PlayPause").className = "play";
+                                document.getElementById("Visualizer").className = "hide";
                             }
                         });
                 } catch (err) {

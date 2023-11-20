@@ -33,5 +33,10 @@ button {
     filter: none;
     -webkit-transition: .4s;
     transition: .4s;
+    border-radius: 5px;
+}
+
+img[src=""] {
+    display: none;
 }
 

@@ -31,9 +31,7 @@ public class PlayerController {
             Playlist playlist = getPlaylistRequest.execute();
             this.playlist = playlist;
         }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+        catch (Exception ignored){}
     }
 
     //  get user currently playing track
@@ -42,19 +40,21 @@ public class PlayerController {
         fetchSpotify();
         try {
             return currentlyPlayingContext.getItem().getName();
-        } catch (Exception e) {
-            System.out.println("Something went wrong: " + e.getMessage());
         }
-
+        catch (Exception ignored){}
         return "";
     }
 
     // get user currently playing track id for use in getPlaylist
     @GetMapping("current-playlist-id")
     public String getUserCurrentPlaylistID() {
-        String input = currentlyPlayingContext.getContext().getUri();
-        String[] id = input.split("playlist:");
-        return id[id.length-1];
+        try {
+            String input = currentlyPlayingContext.getContext().getUri();
+            String[] id = input.split("playlist:");
+            return id[id.length-1];
+        }
+        catch (Exception ignored){}
+        return "";
     }
 
     // returns playlist name
@@ -63,9 +63,7 @@ public class PlayerController {
         try {
             return playlist.getName();
         }
-        catch(Exception e) {
-            System.out.println(e);
-        }
+        catch (Exception ignored){}
         return "";
     }
 
@@ -75,9 +73,7 @@ public class PlayerController {
             final Image[] images = playlist.getImages();
             return images[0].getUrl();
         }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+        catch (Exception ignored){}
         return "";
     }
 
@@ -132,6 +128,19 @@ public class PlayerController {
             else {
                 startResumeUsersPlaybackRequest.execute();
             }
+        }
+        catch (IOException | SpotifyWebApiException | ParseException e) {
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+    }
+
+    // explicit pause
+    @PutMapping("pause")
+    public void pauseTrack() {
+        final PauseUsersPlaybackRequest pauseUsersPlaybackRequest = spotifyApi.
+                pauseUsersPlayback().build();
+        try {
+            pauseUsersPlaybackRequest.execute();
         }
         catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Something went wrong: " + e.getMessage());
