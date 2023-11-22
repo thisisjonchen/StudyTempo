@@ -17,6 +17,7 @@ div .dark {
     background-color: #f3f3f3;
     filter: invert(100%) hue-rotate(180deg);
     .fullscreen-enabled {
+      background-color: #f3f3f3;
       filter: invert(100%) hue-rotate(180deg);
       -webkit-transition: .4s;
       transition: .4s;
@@ -57,14 +58,6 @@ div .stop {
   }
   -webkit-transition: .4s;
   transition: .4s;
-}
-
-div .background {
-  background-image: url("./assets/wallpapers/ghiblifall.jpg");
-  background-size: cover;
-  .clock {
-    opacity: 80%;
-  }
 }
 /* --divs-- */
 
@@ -186,6 +179,7 @@ div .background {
 
 /* --settings-- */
 .settings {
+  display: flex;
   height: 55vh;
   background: #ffffff;
   padding: 32px;
@@ -194,24 +188,23 @@ div .background {
   display: flex;
 }
 .settingsHeaderItem {
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  width: 50%;
 }
 .settingsContainer {
+  width: 50%;
   padding: 0 10px 0 10px;
 }
 .settingsItem {
   display: flex;
   align-items: center;
-  padding: 0 0 20px 10px;
+  padding: 0 0 10px 10px;
 }
 .settingsSubItem {
   display: flex;
   align-items: center;
-  margin-top: -15px;
-  padding: 0 0 20px 40px;
+  padding: 0 0 10px 40px;
   color: #5b5b5b;
 }
 /* --settings-- */

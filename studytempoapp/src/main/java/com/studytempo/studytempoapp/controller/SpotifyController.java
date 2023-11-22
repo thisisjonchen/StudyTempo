@@ -75,9 +75,16 @@ public class SpotifyController {
         response.sendRedirect("http://localhost:3000/");
     }
 
+    // get token
+    @GetMapping("get-token")
+    public String getSpotifyUserToken() {
+        System.out.println("Ping");
+        return spotifyApi.getAccessToken();
+    }
+
     //  refresh tokens
     @PostMapping("refresh-token")
-    public void refreshSpotifyUserToken() {
+    public String refreshSpotifyUserToken() {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
                 .build();
         //  try token refresh
@@ -86,11 +93,11 @@ public class SpotifyController {
 
             // Set access and refresh token for further "spotifyApi" object usage...sets both access and refresh tokens as refresh token can only be used once
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
+        return "";
     }
 
     @GetMapping("is-token-valid")

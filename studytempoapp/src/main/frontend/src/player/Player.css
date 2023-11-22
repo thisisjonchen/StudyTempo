@@ -40,3 +40,13 @@ img[src=""] {
     display: none;
 }
 
+.playbackSDKProfile {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 20px;
+    background: #f3f3f3;
+}
+
+

@@ -1,15 +1,17 @@
 package com.studytempo.studytempoapp.controller;
 
-import org.apache.hc.core5.http.ParseException;
-import org.springframework.web.bind.annotation.*;
-import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlayingContext;
 import se.michaelthelin.spotify.model_objects.specification.Image;
+import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Playlist;
-import se.michaelthelin.spotify.requests.data.player.*;
+import se.michaelthelin.spotify.model_objects.specification.PlaylistSimplified;
+import se.michaelthelin.spotify.requests.data.player.GetInformationAboutUsersCurrentPlaybackRequest;
+import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
-
-import java.io.IOException;
 
 import static com.studytempo.studytempoapp.controller.SpotifyController.spotifyApi;
 
@@ -25,24 +27,11 @@ public class PlayerController {
     public void fetchSpotify() {
         try {
             final GetInformationAboutUsersCurrentPlaybackRequest getInformationAboutUsersCurrentPlaybackRequest = spotifyApi.getInformationAboutUsersCurrentPlayback().build();
-            CurrentlyPlayingContext currentlyPlayingContext = getInformationAboutUsersCurrentPlaybackRequest.execute();
-            this.currentlyPlayingContext = currentlyPlayingContext;
             final GetPlaylistRequest getPlaylistRequest = spotifyApi.getPlaylist(getUserCurrentPlaylistID()).build();
             Playlist playlist = getPlaylistRequest.execute();
             this.playlist = playlist;
         }
         catch (Exception ignored){}
-    }
-
-    //  get user currently playing track
-    @GetMapping("current-song")
-    public String getUserCurrent() {
-        fetchSpotify();
-        try {
-            return currentlyPlayingContext.getItem().getName();
-        }
-        catch (Exception ignored){}
-        return "";
     }
 
     // get user currently playing track id for use in getPlaylist
@@ -52,16 +41,6 @@ public class PlayerController {
             String input = currentlyPlayingContext.getContext().getUri();
             String[] id = input.split("playlist:");
             return id[id.length-1];
-        }
-        catch (Exception ignored){}
-        return "";
-    }
-
-    // returns playlist name
-    @GetMapping("current-playlist")
-    public String getPlaylist() {
-        try {
-            return playlist.getName();
         }
         catch (Exception ignored){}
         return "";
@@ -77,73 +56,15 @@ public class PlayerController {
         return "";
     }
 
-    // check if playing
-    @GetMapping("is-playing")
-    public boolean isPlaying() {
+    @GetMapping("get-user-playlists")
+    public Paging<PlaylistSimplified> getUserPlaylists() {
+        final GetListOfCurrentUsersPlaylistsRequest getListOfCurrentUsersPlaylistsRequest = spotifyApi
+                .getListOfCurrentUsersPlaylists()
+                .limit(30)
+                .build();
         try {
-            return currentlyPlayingContext.getIs_playing();
-        } catch (Exception e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-        return false;
-    }
-
-    //  skip track
-    @PostMapping("skip")
-    public void skipTrack() {
-        final SkipUsersPlaybackToNextTrackRequest skipUsersPlaybackToNextTrackRequest = spotifyApi
-                .skipUsersPlaybackToNextTrack().build();
-        try {
-            skipUsersPlaybackToNextTrackRequest.execute();
-        }
-        catch (Exception e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-    }
-
-    //  previous track
-    @PostMapping("back")
-    public void previousTrack() {
-        final SkipUsersPlaybackToPreviousTrackRequest skipUsersPlaybackToPreviousTrackRequest = spotifyApi
-                .skipUsersPlaybackToPreviousTrack().build();
-        try {
-            skipUsersPlaybackToPreviousTrackRequest.execute();
-        }
-        catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-    }
-
-    // play/pause track
-    @PutMapping("play-pause")
-    public void playPauseTrack() {
-        final StartResumeUsersPlaybackRequest startResumeUsersPlaybackRequest = spotifyApi.
-                startResumeUsersPlayback().build();
-        final PauseUsersPlaybackRequest pauseUsersPlaybackRequest = spotifyApi.
-                pauseUsersPlayback().build();
-        try {
-            if (isPlaying()) {
-                pauseUsersPlaybackRequest.execute();
-            }
-            else {
-                startResumeUsersPlaybackRequest.execute();
-            }
-        }
-        catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-    }
-
-    // explicit pause
-    @PutMapping("pause")
-    public void pauseTrack() {
-        final PauseUsersPlaybackRequest pauseUsersPlaybackRequest = spotifyApi.
-                pauseUsersPlayback().build();
-        try {
-            pauseUsersPlaybackRequest.execute();
-        }
-        catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
+            return getListOfCurrentUsersPlaylistsRequest.execute();
+        } catch (Exception ignored){}
+        return null;
     }
 }
