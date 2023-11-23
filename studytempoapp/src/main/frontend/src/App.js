@@ -1,16 +1,17 @@
-import "./clock/time.css";
 import "./App.css";
-import "./player/Player.css"
-import React, {useRef, useState} from "react"
+import "./components/clock/time.css";
+import "./components/player/Player.css"
+import "./components/settings/Settings.css"
+import React, {useCallback, useEffect, useRef, useState} from "react"
 import StudyTempoLogo from "./assets/stlogo.png";
-import {Clock} from "./clock/clock";
+import {Clock} from "./components/clock/clock";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
-import {CountdownControl, timerRenderer} from "./clock/timer";
-import {Bar, Settings} from "./Settings";
+import {CountdownControl, timerRenderer} from "./components/clock/timer";
+import {Bar, Settings} from "./components/settings/Settings";
 import Countdown from "react-countdown";
-import {CurrentPlaylist, CurrentSong, PlaybackControl, UserPlaylists} from "./player/PlaybackSDK";
+import {CurrentPlaylist, CurrentSong, PlaybackControl} from "./components/player/PlaybackSDK";
 import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
-import {GetAuthToken} from "./player/PlayerAuth";
+import {RefreshSpotifyToken} from "./components/player/PlayerAuth";
 
 function StudyTempo() {
 
@@ -44,45 +45,64 @@ function StudyTempo() {
     const [isFullScreen, setFullScreen] = useState(false);
     const [darkPref, setDarkPref] = useState(localStorage.getItem("darkPref"));
 
+    // auth
+    try {
+        useEffect(() => {
+            fetch("http://localhost:8080/auth/get-token")
+                .then((response) => response.text())
+                .then(response => {
+                    localStorage.setItem("authToken", response)
+                })
+            setInterval(RefreshSpotifyToken, 3500000);
+        }, [])
+    }
+    catch (e) {}
+
     return (
         <WebPlaybackSDK
-            deviceName="StudyTempo"
-            getOAuthToken={GetAuthToken()}
-            volume={0.1}
             initialDeviceName="StudyTempo"
+            getOAuthToken={useCallback(callback => callback(localStorage.getItem("authToken")), [])}
+            initialVolume={0.1}
             connectOnInitialized={true}>
-          <div id="StudyTempo" className={darkPref === "true" ? "dark" : "light"}>
-              <FullScreen handle={handle}>
-                  <div className="header">
-                      <div className="logo">
-                          <button><img src={StudyTempoLogo} className="sticon"/><span>Study</span>Tempo</button>
-                      </div>
-                      <div className="timerContainer">
-                          <div id="Timer" className="timer">
-                              <Countdown date={timer} renderer={timerRenderer} ref={setRef}/>
-                          </div>
-                      </div>
-                      <Bar darkPref={darkPref} setDarkPref={setDarkPref} isFullScreen={isFullScreen} setFullScreen={setFullScreen} handle={handle}/>
-                  </div>
-                  <div className="container">
-                      <div className="clock">
-                          <h6 style={{fontWeight:"bold"}} className={showTODO === "true" ? "h6" : "hide"}>TO-DO: <span contentEditable="true" className="todo" suppressContentEditableWarning={true}>Enter a Task!</span></h6>
-                          <Clock/>
-                          <CurrentSong/>
-                      </div>
-                  </div>
-                  <div className="footer">
-                      <div className="content">
-                          <CurrentPlaylist/>
-                      </div>
-                      <div className="playerContainer"><PlaybackControl/></div>
-                      <CountdownControl timer={timer} setTimer={setTimer} countdownApi={countdownApi}/>
-                  </div>
-              </FullScreen>
-              <Settings breakTime={breakTime} setBreakTime={setBreakTime} darkPref={darkPref} setDarkPref={setDarkPref}
+            <div id="StudyTempo" className={darkPref === "true" ? "dark" : "light"}>
+                {/*Main*/}
+                <FullScreen handle={handle}>
+                    {/*Header*/}
+                    <div id="Header" className="header">
+                        <div id="HeaderContainer" className="headerContainer">
+                            <div id="Logo" className="logo"><button><img src={StudyTempoLogo} className="stIcon"/><span className="studyLogo">Study</span>Tempo</button></div>
+                            <div className="timerContainer">
+                                <Countdown date={timer} renderer={timerRenderer} ref={setRef}/>
+                            </div>
+                            <Bar darkPref={darkPref} setDarkPref={setDarkPref} isFullScreen={isFullScreen} setFullScreen={setFullScreen} handle={handle}/>
+                        </div>
+                    </div>
+                    {/*Header*/}
+                    {/*Middle*/}
+                    <div id="Middle" className="middleContainer">
+                        <div className="centerStack">
+                            <h6 className={showTODO === "true" ? "todoLabel" : "hide"}>TO-DO: <span contentEditable="true" className="todo" suppressContentEditableWarning={true}>Enter a Task!</span></h6>
+                            <Clock/>
+                            <CurrentSong/>
+                        </div>
+                    </div>
+                    {/*Middle*/}
+                    {/*Footer*/}
+                    <div id="Footer" className="footer">
+                        <div id="FooterContainer" className="footerContainer">
+                            <div className="content"><CurrentPlaylist/></div>
+                            <div className="playerContainer"><PlaybackControl/></div>
+                            <CountdownControl timer={timer} setTimer={setTimer} countdownApi={countdownApi}/>
+                        </div>
+                    </div>
+                    {/*Footer*/}
+                </FullScreen>
+                {/*Main*/}
+                {/*Settings*/}
+                <Settings breakTime={breakTime} setBreakTime={setBreakTime} darkPref={darkPref} setDarkPref={setDarkPref}
                 showTODO={showTODO} setShowTODO={setShowTODO}/>
-              <UserPlaylists/>
-          </div>
+                {/*Settings*/}
+            </div>
         </WebPlaybackSDK>
       );
 }

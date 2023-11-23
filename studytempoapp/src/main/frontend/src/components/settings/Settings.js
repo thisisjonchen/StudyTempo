@@ -1,8 +1,10 @@
-import SpotifyLogo from "./player/icons/SpotifyLogo.png";
-import {CreateSpotifyToken, IsLoggedIn} from "./player/PlayerAuth";
+import SpotifyLogo from "../player/icons/SpotifyLogo.png";
+import {CreateSpotifyToken, IsLoggedIn} from "../player/PlayerAuth";
 import React from "react";
-import DarkIcon from "./assets/dark.png";
-import FullscreenIcon from "./assets/fullscreen.png";
+import DarkIcon from "../../assets/dark.png";
+import FullscreenIcon from "../../assets/fullscreen.png";
+import {CurrentlyPlaying, GetUsername, UserPlaylists} from "../player/PlaybackSDK";
+import {usePlayerDevice} from "react-spotify-web-playback-sdk";
 
 function FullScreenBtn({isFullScreen, setFullScreen, handle}) {
     if (isFullScreen) {
@@ -40,17 +42,19 @@ function Bar({darkPref, setDarkPref, isFullScreen, setFullScreen, handle}) {
         <div className="bar">
             <button onClick={CreateSpotifyToken} id="SpotifyLoginBtn" className={loggedIn === "invalid" ? "spotifyLogin" : "hide"}><img src={SpotifyLogo} className="spotifyIcon"/>Login</button>
             <button onClick={() => DarkModeSwitch({darkPref, setDarkPref})}><img src={DarkIcon} className="icon"/></button>
-            <button onClick={() => FullScreenBtn({isFullScreen, setFullScreen, handle})} className="fullscreenBtn"><img src={FullscreenIcon} className="icon"/></button>
+            <button onClick={() => FullScreenBtn({isFullScreen, setFullScreen, handle})}><img src={FullscreenIcon} className="icon"/></button>
         </div>
     );
 }
 
 function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, setShowTODO}) {
+    const device = usePlayerDevice();
     return (
         <div className="settings">
+            {/*Left*/}
             <div className="settingsContainer">
                 <div className="settingsHeader">
-                    <div className="settingsHeaderItem"><h1 style={{margin:"0 0 20px 0"}}>Settings</h1></div>
+                    <h1>Settings</h1>
                 </div>
                 <div className="settingsItem">
                     <h5>Dark Mode</h5>
@@ -85,15 +89,22 @@ function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, set
                     </div>
                 </div>
             </div>
+            {/*Left*/}
             {/*Right*/}
             <div className="settingsContainer">
-                <div className="settingsHeader" style={{justifyContent:"flex-end"}}>
-                    <div className="settingsHeaderItem" style={{alignItems: "flex-end"}}>
-                        <div><h5 style={{fontWeight:"bold", textAlign:"right"}}><img src={SpotifyLogo} style={{height:"20px", padding:"0 10px 0 10px"}}/>Having Problems with Spotify?</h5></div>
-                        <button className="textButton" onClick={CreateSpotifyToken}>Try Logging in Again</button>
-                    </div>
+                <div className={device === null ? "hide" : "spotifyDetailedPane"}>
+                    <h1 className="username">Hello, {GetUsername()} <span>:)</span></h1>
+                    <h6>Ready to Grind? <span>Select a Playlist</span></h6>
+                    <CurrentlyPlaying/>
+                    <UserPlaylists/>
+                </div>
+                <div className="spotifyHelp">
+                    <img src={SpotifyLogo} className="spotifyIconHelp"/>
+                    <h5>Having Problems with Spotify?</h5>
+                    <button className="textButton" onClick={CreateSpotifyToken}>Try Logging in Again</button>
                 </div>
             </div>
+            {/*Right*/}
         </div>
     );
 }

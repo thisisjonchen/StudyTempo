@@ -1,4 +1,4 @@
-package com.studytempo.studytempoapp.controller;
+package com.studytempo.studytempoapp.spotifyControllers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.hc.core5.http.ParseException;
@@ -17,7 +17,7 @@ import java.net.URI;
 @RestController
 @CrossOrigin(origins ="http://localhost:3000") //  CORS allow React to fetch Endpoint
 @RequestMapping("/auth")
-public class SpotifyController {
+public class AuthController {
 
     //  specify clientID & clientSecret from Spotify Dev
     private static final String clientID = "ea74b10d170848169662fc6fc322359d";
@@ -78,7 +78,6 @@ public class SpotifyController {
     // get token
     @GetMapping("get-token")
     public String getSpotifyUserToken() {
-        System.out.println("Ping");
         return spotifyApi.getAccessToken();
     }
 

@@ -1,0 +1,33 @@
+
+/* --settings-- */
+.settings {
+    display: flex;
+    height: 100vh;
+    background: #ffffff;
+    padding: 48px 32px 32px 32px;
+}
+.settingsContainer {
+    width: 50%;
+}
+.settingsHeader {
+    display: flex;
+    padding-bottom: 5px;
+}
+.settingsItem {
+    display: flex;
+    align-items: center;
+    padding: 5px 0 5px 10px;
+}
+.settingsSubItem {
+    display: flex;
+    align-items: center;
+    padding: 0 0 5px 20px;
+    color: #5b5b5b;
+}
+.spotifyHelp {
+    padding-top: 20px;
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+}
+/* --settings-- */

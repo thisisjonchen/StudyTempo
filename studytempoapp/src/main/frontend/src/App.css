@@ -1,9 +1,7 @@
-.centered {
+.centeredH {
   display: flex;
-  justify-content: center;
   align-items: center;
 }
-
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -11,7 +9,9 @@ body {
 body::-webkit-scrollbar {
   display: none;
 }
-
+span {
+  font-weight: bold;
+}
 /* --divs-- */
 div .dark {
     background-color: #f3f3f3;
@@ -25,7 +25,6 @@ div .dark {
   -webkit-transition: .4s;
   transition: .4s;
 }
-
 div .light {
   background-color: #f3f3f3;
   filter: none;
@@ -37,7 +36,6 @@ div .light {
   -webkit-transition: .4s;
   transition: .4s;
 }
-
 div .alert {
   background-color: #ffe2af;
   .fullscreen-enabled {
@@ -48,7 +46,6 @@ div .alert {
   -webkit-transition: .4s;
   transition: .4s;
 }
-
 div .stop {
   background-color: #ff8383;
   .fullscreen-enabled {
@@ -61,41 +58,66 @@ div .stop {
 }
 /* --divs-- */
 
-/* --headers-- */
+/* --headers- */
 .header {
-  min-height: 20vh;
   display: flex;
   align-items: flex-start;
-  padding: 0 32px 0 32px;
+  min-height: 20vh;
 }
-.header .bar {
+.headerContainer {
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 32px 0 32px;
+}
+.bar {
   width: 33%;
   display: flex;
   justify-content: flex-end;
-  margin-top: 32px;
   opacity: 50%;
 }
 .logo {
   width: 33%;
-  margin-top: 32px;
   opacity: 50%;
 }
-
 .timerContainer {
   width: 34%;
   display: flex;
   justify-content: center;
-  margin-top: 32px;
-  padding: 16px 16px 0 16px;
 }
 .timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
   background-color: #FF9500;
   border-radius: 50px;
 }
-/* --headers-- */
+
+/* --header-- */
+
+/* --footer-- */
+.footer {
+  display: flex;
+  align-items: flex-end;
+  min-height: 20vh;
+}
+.footerContainer {
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 48px 32px 38px;
+}
+.content {
+  width: 30%;
+  filter: none !important;
+}
+/* --footer-- */
 
 /* --container/center-- */
-.container {
+.middleContainer {
   min-height: 60vh;
   max-width: 100vw;
   display: flex;
@@ -103,13 +125,17 @@ div .stop {
   justify-content: center;
   text-align: start;
 }
-.clock {
+.centerStack{
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
-
+.todoLabel {
+  color: rgba(0, 0, 0, 0.5);
+}
 .todo {
+  color: rgb(0, 0, 0);
   white-space:nowrap;
   display:inline-block;
   font-weight: bold;
@@ -120,55 +146,31 @@ div .stop {
 }
 /* --container/center-- */
 
-/* --footer-- */
-.footer {
-  min-height: 20vh;
-  display: flex;
-  align-items: flex-end;
-  padding: 0 32px 0 32px;
-}
-.player {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 32px;
-  opacity: 50%;
-}
-.playerContainer {
-  width: 40%;
-}
-.content {
-  margin-bottom: 32px;
-  width: 30%;
-  filter: none !important;
-}
-
 /* --timer-- */
 .timerControl {
   display: flex;
   height: max-content;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: 32px;
   width: 30%;
-  padding: 0 10px 10px 0;
 }
 .timerControl button {
   font-weight: bold;
   font-size: 1rem;
   height: 25px;
   opacity: 50%;
-}
-.timerControl .stop {
-  padding: 5px;
   border-radius: 50px;
+}
+.stopButton {
+  padding: 5px;
   margin-left: 10px;
   color:white;
   background-color: #ff4b4b !important;
   opacity: 100% !important;
 }
-.timerControl .start {
+
+.startButton {
   padding: 10px;
-  border-radius: 50px;
   margin-left: 5px;
   color:white;
   background-color: #15a93f !important;
@@ -177,51 +179,23 @@ div .stop {
 /* --timer-- */
 /* --footer-- */
 
-/* --settings-- */
-.settings {
-  display: flex;
-  height: 55vh;
-  background: #ffffff;
-  padding: 32px;
-}
-.settingsHeader {
-  display: flex;
-}
-.settingsHeaderItem {
-  padding-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
-.settingsContainer {
-  width: 50%;
-  padding: 0 10px 0 10px;
-}
-.settingsItem {
-  display: flex;
-  align-items: center;
-  padding: 0 0 10px 10px;
-}
-.settingsSubItem {
-  display: flex;
-  align-items: center;
-  padding: 0 0 10px 40px;
-  color: #5b5b5b;
-}
-/* --settings-- */
-
 /* --icons-- */
 .icon {
   height: 20px;
   padding: 10px;
 }
-.sticon {
+.stIcon {
   height: 35px;
-  padding: 5px;
+  padding-right: 10px;
 }
 .spotifyIcon {
   height: 20px;
   padding: 10px 10px 10px 0;
   filter: invert(100%) hue-rotate(180deg);
+}
+.spotifyIconHelp {
+  height: 20px;
+  padding: 0 10px 0 10px;
 }
 .timerIcon {
   height: 20px;
@@ -230,35 +204,6 @@ div .stop {
 }
 /* --icons-- */
 
-/* --Spotify-- */
-.spotifyLogin {
-  display: flex;
-  align-items: center;
-  margin-right: 1em;
-  padding: 0 1em 0 1em;
-  font-weight: bold;
-  font-size: 0.875rem;
-  border-radius: 50px;
-  color: white;
-  background-color: black !important;
-}
-.visualizer {
-  padding: 0 10px 0 0;
-  height: 20px;
-  filter: invert();
-}
-.player Button {
-  height: 25px;
-  padding: 20px;
-}
-.play {
-  content:url("./player/icons/playicon.png");
-}
-.pause {
-  content:url("./player/icons/pauseicon.png");
-}
-/* --Spotify-- */
-
 /* --visibility-- */
 .hide {
   display: none !important;
@@ -266,6 +211,9 @@ div .stop {
 /* --visibility-- */
 
 /* --fonts & generic buttons-- */
+h1 {
+  margin: 0;
+}
 h5 {
   font-size: 1.5rem;
   margin: 0;
@@ -284,6 +232,7 @@ button {
   border-color: transparent;
   -webkit-transition: .4s;
   transition: .4s;
+  font-size: 1.5rem;
 }
 button:hover {
   cursor: pointer;
@@ -292,10 +241,6 @@ button:active {
   scale: 60%;
   -webkit-transition: .4s;
   transition: .4s;
-}
-button span {
-  font-weight: bold;
-  padding-left: 5px;
 }
 .textButton {
   background-color: transparent;
@@ -360,7 +305,6 @@ input:checked + .slider:before {
   margin: 0 10px 0 10px;
   border-radius: 17px;
   background: #ccc;
-  outline: none;
   -webkit-transition: .4s;
   transition: opacity .4s;
 }
@@ -383,6 +327,4 @@ input:checked + .slider:before {
   box-shadow: 0 0 5px #000000;
   cursor: pointer;
 }
-
-
 /* --fonts & generic buttons-- */

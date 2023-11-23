@@ -1,4 +1,4 @@
-import TimerIcon from "../assets/timer.png";
+import TimerIcon from "../../assets/timer.png";
 import React from "react";
 
 function CountdownControl({timer, setTimer, countdownApi}) {
@@ -8,9 +8,8 @@ function CountdownControl({timer, setTimer, countdownApi}) {
             <button onClick={() => {setTimer(Date.now() + 1500000); countdownApi?.stop();}}>25</button>
             <button onClick={() => {setTimer(Date.now() + 1800000); countdownApi?.stop();}}>30</button>
             <button onClick={() => {setTimer(Date.now() + 2700000); countdownApi?.stop();}}>45</button>
-            <button onClick={() => {setTimer(Date.now() + 3599000); countdownApi?.stop();}}>60</button>
-            <button id="timerStart" className="start" onClick={countdownApi?.start}>Start</button>
-            <button id="timerStart" className="stop" onClick={() => {setTimer(0)}}>C</button>
+            <button id="timerStart" className="startButton" onClick={countdownApi?.start}>Start</button>
+            <button id="timerStart" className="stopButton" onClick={() => {setTimer(0)}}>C</button>
         </div>
     )
 }
@@ -35,7 +34,7 @@ function timerRenderer({minutes, seconds, completed}) {
         return "";
     } else {
         return (
-            <h5 className="centered" style={{padding:1}}>
+            <h5 className="timer">
                 <img src={TimerIcon} className="timerIcon"/><span>{minute}</span>:<span className="secondTimer">{second}</span>
             </h5>
         );

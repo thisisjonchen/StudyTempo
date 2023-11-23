@@ -1,0 +1,110 @@
+.currentArtistMain {
+    padding-top: 5px;
+    opacity: 50%;
+}
+.playlistTitle {
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+}
+.playbackCurrentPane {
+    padding: 20px;
+    margin: 20px 0 20px 0;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #5b5b5b;
+}
+.playbackCurrent {
+    height: min-content;
+    display: flex;
+    align-items: center;
+}
+.playlistCover {
+    height: 100px;
+    filter: none;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border: 1px solid #5b5b5b;
+    margin-right: 20px;
+}
+.dark .playlistCover {
+    filter: invert(100%) hue-rotate(180deg);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.playlistCoverMini {
+    height: 50px;
+    filter: none;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border: 1px solid #5b5b5b;
+    margin-right: 10px;
+}
+.dark .playlistCoverMini {
+    filter: invert(100%) hue-rotate(180deg);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+img[src=""] {
+    display: none;
+}
+.playbackPlaylists {
+    height: 25vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #5b5b5b;
+    overflow-y:auto;
+}
+.playbackPlaylists::-webkit-scrollbar {
+    display: none;
+}
+.playlistSelector {
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px;
+    margin: 5px 0 5px 0;
+    border-radius: 5px;
+    border: 1px solid #c9c8c8;
+    background: #ffffff;
+}
+/* --Spotify-- */
+.spotifyLogin {
+    display: flex;
+    align-items: center;
+    margin-right: 1em;
+    padding: 0 1em 0 1em;
+    font-weight: bold;
+    font-size: 0.875rem;
+    border-radius: 50px;
+    color: white;
+    background-color: black !important;
+}
+.visualizer {
+    padding: 0 10px 0 0;
+    height: 20px;
+    filter: invert();
+}
+.playerControl {
+    display: flex;
+    justify-content: center;
+    opacity: 50%;
+}
+.playerContainer {
+    width: 40%;
+}
+.playerControl Button {
+    height: 25px;
+    padding: 20px;
+}
+.play {
+    content:url("./icons/playicon.png");
+}
+.pause {
+    content:url("./icons/pauseicon.png");
+}
+/* --Spotify-- */

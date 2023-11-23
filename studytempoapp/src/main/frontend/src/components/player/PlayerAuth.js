@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react";
+import {useState} from "react";
 
 function CreateSpotifyToken() {
     try {
@@ -6,7 +6,6 @@ function CreateSpotifyToken() {
             .then((response) => response.text())
             .then(response => {
                 window.location = response;
-                setInterval(RefreshSpotifyToken, 3500000)
             })
     }
     catch (err) {
@@ -39,13 +38,4 @@ function RefreshSpotifyToken() {
     catch (err) {console.log(err)}
 }
 
-function GetAuthToken() {
-    return useCallback(callback => callback(
-        fetch("http://localhost:8080/auth/get-token")
-            .then((response) => response.text())
-            .then(response => {
-                return response;
-            })), []);
-}
-
-export {CreateSpotifyToken, RefreshSpotifyToken, GetAuthToken, IsLoggedIn};
+export {CreateSpotifyToken, RefreshSpotifyToken, IsLoggedIn};
