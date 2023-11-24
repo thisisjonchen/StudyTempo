@@ -12,3 +12,58 @@
 .secondTimer {
     width: 40px;
 }
+
+/* --timer-- */
+.timerControl {
+    display: flex;
+    height: max-content;
+    justify-content: flex-end;
+    align-items: center;
+    width: 30%;
+    padding: 10px;
+}
+.timerControl button {
+    font-weight: bold;
+    font-size: 1rem;
+    height: 25px;
+    opacity: 50%;
+    border-radius: 50px;
+}
+.stopButton {
+    padding: 5px;
+    margin-left: 10px;
+    color:white;
+    background-color: #ff4b4b !important;
+    opacity: 100% !important;
+}
+
+.startButton {
+    padding: 10px;
+    margin-left: 5px;
+    color:white;
+    background-color: #15a93f !important;
+    opacity: 100% !important;
+}
+.timerContainer {
+    width: 34%;
+    display: flex;
+    justify-content: center;
+}
+.timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    background-color: #FF9500;
+    border-radius: 50px;
+}
+.timerBreak {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    background-color: #00b2ff;
+    border-radius: 50px;
+}
+
+/* --timer-- */

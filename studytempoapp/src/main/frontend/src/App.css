@@ -40,21 +40,31 @@ div .alert {
   background-color: #ffe2af;
   .fullscreen-enabled {
     background-color: #ffe2af;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: .2s;
+    transition: .2s;;
   }
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: .2s;
+  transition: .2s;
 }
 div .stop {
   background-color: #ff8383;
   .fullscreen-enabled {
     background-color: #ff8383;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: .2s;
+    transition: .2s;
   }
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: .2s;
+  transition: .2s;
+}
+div .break {
+  background-color: #afe3ff;
+  .fullscreen-enabled {
+    background-color: #afe3ff;
+    -webkit-transition: .2s;
+    transition: .2s;
+  }
+  -webkit-transition: .2s;
+  transition: .2s;
 }
 /* --divs-- */
 
@@ -81,20 +91,6 @@ div .stop {
   width: 33%;
   opacity: 50%;
 }
-.timerContainer {
-  width: 34%;
-  display: flex;
-  justify-content: center;
-}
-.timer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1px;
-  background-color: #FF9500;
-  border-radius: 50px;
-}
-
 /* --header-- */
 
 /* --footer-- */
@@ -106,9 +102,9 @@ div .stop {
 .footerContainer {
   width: 100vw;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 48px 32px 38px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 32px 32px 32px;
 }
 .content {
   width: 30%;
@@ -146,39 +142,6 @@ div .stop {
 }
 /* --container/center-- */
 
-/* --timer-- */
-.timerControl {
-  display: flex;
-  height: max-content;
-  justify-content: flex-end;
-  align-items: center;
-  width: 30%;
-}
-.timerControl button {
-  font-weight: bold;
-  font-size: 1rem;
-  height: 25px;
-  opacity: 50%;
-  border-radius: 50px;
-}
-.stopButton {
-  padding: 5px;
-  margin-left: 10px;
-  color:white;
-  background-color: #ff4b4b !important;
-  opacity: 100% !important;
-}
-
-.startButton {
-  padding: 10px;
-  margin-left: 5px;
-  color:white;
-  background-color: #15a93f !important;
-  opacity: 100% !important;
-}
-/* --timer-- */
-/* --footer-- */
-
 /* --icons-- */
 .icon {
   height: 20px;
@@ -196,6 +159,10 @@ div .stop {
 .spotifyIconHelp {
   height: 20px;
   padding: 0 10px 0 10px;
+}
+.spotifyIconFull {
+  height: 20px;
+  padding-left: 10px;
 }
 .timerIcon {
   height: 20px;
@@ -225,6 +192,7 @@ h6 {
   margin: 0;
 }
 button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -238,7 +206,7 @@ button:hover {
   cursor: pointer;
 }
 button:active {
-  scale: 60%;
+  scale: 80%;
   -webkit-transition: .4s;
   transition: .4s;
 }

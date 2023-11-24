@@ -25,9 +25,13 @@
     color: #5b5b5b;
 }
 .spotifyHelp {
-    padding-top: 20px;
     flex-wrap: wrap;
     display: flex;
     align-items: center;
+}
+.spotifyGreeting {
+    display: flex;
+    align-items: center;
+    white-space: pre;
 }
 /* --settings-- */

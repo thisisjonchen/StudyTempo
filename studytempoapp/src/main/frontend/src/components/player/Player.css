@@ -52,8 +52,8 @@ img[src=""] {
     height: 25vh;
     display: flex;
     flex-direction: column;
+    margin: 10px 0 10px 0;
     padding: 20px;
-    margin-top: 20px;
     border-radius: 20px;
     background: #ffffff;
     border: 1px solid #5b5b5b;
@@ -72,7 +72,9 @@ img[src=""] {
     border: 1px solid #c9c8c8;
     background: #ffffff;
 }
-/* --Spotify-- */
+.playbackDetails {
+    width: 75%;
+}
 .spotifyLogin {
     display: flex;
     align-items: center;
@@ -107,4 +109,7 @@ img[src=""] {
 .pause {
     content:url("./icons/pauseicon.png");
 }
-/* --Spotify-- */
+.shuffleToggle {
+    display: flex;
+    justify-content: flex-end;
+}

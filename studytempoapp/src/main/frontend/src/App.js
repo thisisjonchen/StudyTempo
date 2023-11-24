@@ -6,9 +6,9 @@ import React, {useCallback, useEffect, useRef, useState} from "react"
 import StudyTempoLogo from "./assets/stlogo.png";
 import {Clock} from "./components/clock/clock";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
-import {CountdownControl, timerRenderer} from "./components/clock/timer";
+import {CountdownControl, TimerRenderer} from "./components/clock/timer";
 import {Bar, Settings} from "./components/settings/Settings";
-import Countdown from "react-countdown";
+import Countdown, {calcTimeDelta} from "react-countdown";
 import {CurrentPlaylist, CurrentSong, PlaybackControl} from "./components/player/PlaybackSDK";
 import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
 import {RefreshSpotifyToken} from "./components/player/PlayerAuth";
@@ -21,6 +21,7 @@ function StudyTempo() {
     const countdownApi = countdownRef.current?.getApi();
     const [timer, setTimer] = useState(Date.now);
     const [breakTime, setBreakTime] = useState(localStorage.getItem("breakTimePref"));
+    const [breakToggle, setBreakToggle] = useState(localStorage.getItem("breakToggle"));
 
     // keep screen on
     let screenLock;
@@ -72,7 +73,8 @@ function StudyTempo() {
                         <div id="HeaderContainer" className="headerContainer">
                             <div id="Logo" className="logo"><button><img src={StudyTempoLogo} className="stIcon"/><span className="studyLogo">Study</span>Tempo</button></div>
                             <div className="timerContainer">
-                                <Countdown date={timer} renderer={timerRenderer} ref={setRef}/>
+                                <Countdown date={timer} renderer={props => <TimerRenderer minutes={calcTimeDelta(timer).minutes} seconds={calcTimeDelta(timer).seconds} completed={calcTimeDelta(timer).completed}
+                                                                                          setTimer={setTimer} breakToggle={breakToggle}/>} ref={setRef} onStop={() => document.getElementById("Timer").className="timer"}/>
                             </div>
                             <Bar darkPref={darkPref} setDarkPref={setDarkPref} isFullScreen={isFullScreen} setFullScreen={setFullScreen} handle={handle}/>
                         </div>
@@ -100,7 +102,7 @@ function StudyTempo() {
                 {/*Main*/}
                 {/*Settings*/}
                 <Settings breakTime={breakTime} setBreakTime={setBreakTime} darkPref={darkPref} setDarkPref={setDarkPref}
-                showTODO={showTODO} setShowTODO={setShowTODO}/>
+                showTODO={showTODO} setShowTODO={setShowTODO} breakToggle={breakToggle} setBreakToggle={setBreakToggle}/>
                 {/*Settings*/}
             </div>
         </WebPlaybackSDK>

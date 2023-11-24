@@ -46,7 +46,7 @@ function CurrentPlaylist() {
     );
 }
 
-// returns and displays playback controls: shuffle, skip back, pause/resume, skip forward, volume "knob"
+// returns and displays playback controls: skip back, pause/resume, skip forward
 function PlaybackControl() {
     const player = useSpotifyPlayer();
     const playbackState = usePlaybackState();
@@ -55,18 +55,6 @@ function PlaybackControl() {
 
     return (
         <div id="PlayerControl" className="playerControl">
-            <button onClick={() => {
-                fetch(
-                    `https://api.spotify.com/v1/me/player/shuffle?state=${(!!playbackState)}`,
-                    {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${authToken}`,
-                        },
-                    },
-                );
-            }}><img src={ShuffleToggleIcon}/></button>
             <button onClick={() => player.previousTrack()}><img src={SkipBackIcon}/></button>
             <button onClick={playbackState.paused === true ? () => player.resume() : () => player.pause()}>
                 <img id="PlayPause" className={playbackState.paused === true ? "play" : "pause"}/></button>
@@ -93,6 +81,7 @@ function GetUsername() {
 // returns and displays a "pane" containing album cover, current album, current song, current artists
 function CurrentlyPlaying() {
     const playbackState = usePlaybackState();
+    const player = useSpotifyPlayer();
     if (playbackState === null) return null;
     const currentSong = playbackState.track_window.current_track.name
     const currentAlbum = playbackState.track_window.current_track.album.name;
@@ -102,11 +91,22 @@ function CurrentlyPlaying() {
         <div className="playbackCurrentPane">
             <div className="playbackCurrent">
                 <img src={playbackState.track_window.current_track.album.images[0].url} className="playlistCover"/>
-                <div>
+                <div className="playbackDetails">
                     <h6>{currentAlbum}</h6>
                     <h5>{currentSong}</h5>
                     <div className="centeredH"><h6>{currentArtists}</h6></div>
                 </div>
+                <button onClick={() => {
+                    fetch(
+                        `https://api.spotify.com/v1/me/player/shuffle?state=${(!!playbackState)}`,
+                        {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${authToken}`,
+                            },},);
+                    player.nextTrack();}
+                } className="shuffleToggle"><img src={ShuffleToggleIcon}/></button>
             </div>
         </div>
     )
@@ -139,8 +139,9 @@ function UserPlaylists() {
                                 Authorization: `Bearer ${authToken}`,
                             },
                         },
-                    );
-                }}
+                    )
+                }
+            }
             >{playlist.name}</button>) : null}
         </div>
     )
