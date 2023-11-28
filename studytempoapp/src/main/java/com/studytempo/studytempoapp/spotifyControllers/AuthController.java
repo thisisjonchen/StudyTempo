@@ -1,7 +1,6 @@
 package com.studytempo.studytempoapp.spotifyControllers;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.hc.core5.http.ParseException;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -15,7 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 
 @RestController
-@CrossOrigin(origins ="http://localhost:3000") //  CORS allow React to fetch Endpoint
+@CrossOrigin(origins ="http://localhost:3000") // CORS allow React to fetch Endpoint
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -60,7 +59,7 @@ public class AuthController {
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
-            System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
+            System.out.println("(A) Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error " + e.getMessage());
             return e.getMessage();
@@ -83,7 +82,7 @@ public class AuthController {
 
     //  refresh tokens
     @PostMapping("refresh-token")
-    public String refreshSpotifyUserToken() {
+    public void refreshSpotifyUserToken() {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
                 .build();
         //  try token refresh
@@ -92,11 +91,10 @@ public class AuthController {
 
             // Set access and refresh token for further "spotifyApi" object usage...sets both access and refresh tokens as refresh token can only be used once
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-            System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
+            System.out.println("(R) Expires in: " + authorizationCodeCredentials.getExpiresIn());
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-        return "";
     }
 
     @GetMapping("is-token-valid")

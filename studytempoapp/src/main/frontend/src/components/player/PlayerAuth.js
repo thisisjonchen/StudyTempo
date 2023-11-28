@@ -6,6 +6,7 @@ function CreateSpotifyToken() {
             .then((response) => response.text())
             .then(response => {
                 window.location = response;
+                setInterval(RefreshSpotifyToken, 3500000)
             })
     }
     catch (err) {
@@ -24,15 +25,13 @@ function IsLoggedIn() {
 }
 
 function RefreshSpotifyToken() {
-    const headers = {
-        "Content-Type": "application/json",
-        "Access-Control-Origin": "*"
-    }
-
     try {
         fetch("http://localhost:8080/auth/refresh-token", {
             method: "POST",
-            headers: headers
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            }
         })
     }
     catch (err) {console.log(err)}

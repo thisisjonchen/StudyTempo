@@ -5,8 +5,6 @@ import SkipBackIcon from "./icons/skipbackicon.png";
 import SkipNextIcon from "./icons/skipnexticon.png";
 import ShuffleToggleIcon from "./icons/shuffleicon.png";
 
-// grabs authToken from storage
-const authToken = localStorage.getItem("authToken");
 
 // returns and displays current song
 function CurrentSong() {
@@ -86,7 +84,7 @@ function CurrentlyPlaying() {
     const currentSong = playbackState.track_window.current_track.name
     const currentAlbum = playbackState.track_window.current_track.album.name;
     const currentArtistsArr = playbackState.track_window.current_track.artists;
-    const currentArtists = currentArtistsArr.slice(0, -1).map(currentArtist => `${currentArtist.name}, `).join("") + currentArtistsArr[currentArtistsArr.length-1].name;
+    const currentArtists = playbackState.track_window.current_track.artists.slice(0, -1).map(currentArtist => `${currentArtist.name}, `).join("") + currentArtistsArr[currentArtistsArr.length-1].name;
     return (
         <div className="playbackCurrentPane">
             <div className="playbackCurrent">
@@ -96,17 +94,18 @@ function CurrentlyPlaying() {
                     <h5>{currentSong}</h5>
                     <div className="centeredH"><h6>{currentArtists}</h6></div>
                 </div>
-                <button onClick={() => {
-                    fetch(
-                        `https://api.spotify.com/v1/me/player/shuffle?state=${(!!playbackState)}`,
-                        {
-                            method: "PUT",
+                <div className="shuffleToggle">
+                    <button onClick={() => {
+                        fetch("http://localhost:8080/player/shuffle-toggle", {
+                            method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
-                                Authorization: `Bearer ${authToken}`,
-                            },},);
-                    player.nextTrack();}
-                } className="shuffleToggle"><img src={ShuffleToggleIcon}/></button>
+                                "Access-Control-Allow-Origin": "*"
+                            }
+                        })
+                    }
+                    }><img src={ShuffleToggleIcon}/></button>
+                </div>
             </div>
         </div>
     )
@@ -130,13 +129,13 @@ function UserPlaylists() {
             {userPlaylists ? userPlaylists.items.map((playlist) => <button className="playlistSelector" key={playlist.name} onClick={() =>
                 {
                     fetch(
-                        `https://api.spotify.com/v1/me/player/play?device_id=${device.device_id}`,
+                        `http://localhost:8080/player/play-playlist`,
                         {
                             method: "PUT",
-                            body: JSON.stringify({context_uri: playlist.uri}),
+                            body: JSON.stringify({context_uri: playlist.uri, device_id: device.device_id}),
                             headers: {
                                 "Content-Type": "application/json",
-                                Authorization: `Bearer ${authToken}`,
+                                "Access-Control-Allow-Origin": "*"
                             },
                         },
                     )

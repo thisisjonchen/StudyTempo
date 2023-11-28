@@ -99,7 +99,7 @@ function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, set
             {/*Left*/}
             {/*Right*/}
             <div className="settingsContainer">
-                <div className={device === null ? "hide" : "spotifyDetailedPane"}>
+                <div className={device === null ? "hide" :  "spotifyDetailedPane"}>
                     <h1 className="username">Hello, {GetUsername()} <span>:)</span></h1>
                     <h6 className="spotifyGreeting">Ready to Grind? <span>Select a Playlist</span> | Powered by<img src={SpotifyLogoFull} className="spotifyIconFull"/></h6>
                     <CurrentlyPlaying/>

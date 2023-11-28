@@ -65,5 +65,21 @@
     background-color: #00b2ff;
     border-radius: 50px;
 }
+.timerAlert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    background-color: #ffd500;
+    border-radius: 50px;
+}
+.timerStop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    background-color: #ff0000;
+    border-radius: 50px;
+}
 
 /* --timer-- */

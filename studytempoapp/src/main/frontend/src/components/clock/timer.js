@@ -19,9 +19,11 @@ function TimerRenderer({minutes, seconds, completed, setTimer, breakToggle}) {
     const second = ("0"+seconds).slice(-2);
     if (minutes === 0 && seconds === 5) {
         document.getElementById("StudyTempo").className="alert";
+        document.getElementById("Timer").className="timerAlert";
+
     }
     if (minutes === 0 && seconds === 1) {
-        if (breakToggle === "true" && document.getElementById("Timer").className === "timer") {
+        if (breakToggle === "true" && document.getElementById("Timer").className === "timerAlert") {
             document.getElementById("StudyTempo").className="break";
             setTimeout(function () {
                 setTimer(Date.now() + (localStorage.getItem("breakTimePref") * 60000));
@@ -33,6 +35,7 @@ function TimerRenderer({minutes, seconds, completed, setTimer, breakToggle}) {
             }, 990)
         } else {
             document.getElementById("StudyTempo").className="stop";
+            document.getElementById("Timer").className="timerStop";
             setTimeout(function () {
                 if (localStorage.getItem("darkPref") === "true") {
                     document.getElementById("StudyTempo").className="dark";

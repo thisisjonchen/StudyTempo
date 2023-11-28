@@ -14,8 +14,20 @@ import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
 import {RefreshSpotifyToken} from "./components/player/PlayerAuth";
 
 function StudyTempo() {
+    // just in case there is a valid refresh token
+    useEffect(() => {
+        RefreshSpotifyToken();
+    }, []);
 
-    // timer props
+    // get auth token for usage in playback
+    const getAuthToken =
+        fetch("http://localhost:8080/auth/get-token")
+            .then((response) => response.text())
+            .then(token => {
+                return token;
+            })
+
+    // props
     const countdownRef = useRef(null);
     const setRef = (countdown) => {countdownRef.current = countdown;};
     const countdownApi = countdownRef.current?.getApi();
@@ -46,24 +58,11 @@ function StudyTempo() {
     const [isFullScreen, setFullScreen] = useState(false);
     const [darkPref, setDarkPref] = useState(localStorage.getItem("darkPref"));
 
-    // auth
-    try {
-        useEffect(() => {
-            fetch("http://localhost:8080/auth/get-token")
-                .then((response) => response.text())
-                .then(response => {
-                    localStorage.setItem("authToken", response)
-                })
-            setInterval(RefreshSpotifyToken, 3500000);
-        }, [])
-    }
-    catch (e) {}
-
     return (
         <WebPlaybackSDK
             initialDeviceName="StudyTempo"
-            getOAuthToken={useCallback(callback => callback(localStorage.getItem("authToken")), [])}
-            initialVolume={0.1}
+            getOAuthToken={useCallback(callback => callback(getAuthToken), [])}
+            initialVolume={0.2}
             connectOnInitialized={true}>
             <div id="StudyTempo" className={darkPref === "true" ? "dark" : "light"}>
                 {/*Main*/}
