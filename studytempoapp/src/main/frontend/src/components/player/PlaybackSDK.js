@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import Visualizer from "./icons/visualizer.gif";
 import SkipBackIcon from "./icons/skipbackicon.png";
 import SkipNextIcon from "./icons/skipnexticon.png";
-import ShuffleToggleIcon from "./icons/shuffleicon.png";
+import ShuffleToggle from "./icons/shuffleicon.png";
 
 
 // returns and displays current song
@@ -35,10 +35,10 @@ function CurrentPlaylist() {
     if (playbackState === null) return null;
     return (
         <div id="Playlist" className="centeredH">
-            <img src={playbackState.track_window.current_track.album.images[0].url} className="playlistCoverMini"/>
+            <img src={localStorage.getItem("playlistName") === "" ? playbackState.track_window.current_track.album.images[0].url : localStorage.getItem("playlistIMGUrl")} className="playlistCoverMini"/>
             <div className="playlistTitle">
                 <h6>Playing from</h6>
-                <h5>{playbackState.context.metadata.name ? playbackState.context.metadata.name : "Single"}</h5>
+                <h5>{localStorage.getItem("playlistName") === "" ?  playbackState.track_window.current_track.album.name : localStorage.getItem("playlistName")}</h5>
             </div>
         </div>
     );
@@ -70,6 +70,7 @@ function GetUsername() {
         fetch("http://localhost:8080/player/username")
             .then(response => response.text())
             .then(username => {
+                localStorage.setItem("username", username);
                 setUsername(username)
             })
     }, [])
@@ -77,41 +78,36 @@ function GetUsername() {
 }
 
 // returns and displays a "pane" containing album cover, current album, current song, current artists
-function CurrentlyPlaying() {
+function CurrentlyPlaying({shuffle, setShuffle}) {
     const playbackState = usePlaybackState();
-    const player = useSpotifyPlayer();
+    const device = usePlayerDevice();
     if (playbackState === null) return null;
     const currentSong = playbackState.track_window.current_track.name
     const currentAlbum = playbackState.track_window.current_track.album.name;
     const currentArtistsArr = playbackState.track_window.current_track.artists;
-    const currentArtists = playbackState.track_window.current_track.artists.slice(0, -1).map(currentArtist => `${currentArtist.name}, `).join("") + currentArtistsArr[currentArtistsArr.length-1].name;
+    const currentArtists = currentArtistsArr.slice(0, -1).map(currentArtist => `${currentArtist.name}, `).join("") + currentArtistsArr[currentArtistsArr.length-1].name;
     return (
         <div className="playbackCurrentPane">
             <div className="playbackCurrent">
                 <img src={playbackState.track_window.current_track.album.images[0].url} className="playlistCover"/>
                 <div className="playbackDetails">
-                    <h6>{currentAlbum}</h6>
-                    <h5>{currentSong}</h5>
-                    <div className="centeredH"><h6>{currentArtists}</h6></div>
+                    <h6 onClick={() => window.open(playbackState.track_window.current_track.album.uri)}>{currentAlbum}</h6>
+                    <h5 onClick={() => window.open(playbackState.track_window.current_track.album.uri)}>{currentSong}</h5>
+                    <div className="centeredH"><h6 onClick={() => window.open(playbackState.track_window.current_track.artists[0].uri)}>{currentArtists}</h6></div>
                 </div>
                 <div className="shuffleToggle">
                     <button onClick={() => {
-                        fetch("http://localhost:8080/player/shuffle-toggle", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Access-Control-Allow-Origin": "*"
-                            }
-                        })
+                        setShuffle(shuffle === "true" ? "false" : "true");
+                        localStorage.setItem("shuffle", shuffle === "true" ? "false" : "true");
                     }
-                    }><img src={ShuffleToggleIcon}/></button>
+                    }><img src={ShuffleToggle} className={shuffle === "true" ? "shuffleOn" : "shuffleOff"}/></button>
                 </div>
             </div>
         </div>
     )
 }
 
-function UserPlaylists() {
+function UserPlaylists({shuffle}) {
     const device = usePlayerDevice();
     if (device === null) return null;
     const [userPlaylists, setUserPlaylists] = useState(null);
@@ -126,22 +122,25 @@ function UserPlaylists() {
     }, []);
     return (
         <div className="playbackPlaylists">
-            {userPlaylists ? userPlaylists.items.map((playlist) => <button className="playlistSelector" key={playlist.name} onClick={() =>
-                {
-                    fetch(
-                        `http://localhost:8080/player/play-playlist`,
-                        {
-                            method: "PUT",
-                            body: JSON.stringify({context_uri: playlist.uri, device_id: device.device_id}),
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Access-Control-Allow-Origin": "*"
-                            },
+            <h5 className="yourPlaylistLabel">Your Playlists</h5>
+            {userPlaylists ? userPlaylists.items.map((playlist) => <button className="playlistSelector" key={playlist.name} onClick={() => {
+                fetch(
+                    `http://localhost:8080/player/play-playlist`,
+                    {
+                        method: "PUT",
+                        body: JSON.stringify({context_uri: playlist.uri, device_id: device.device_id, shuffle_state: shuffle === "true" ? "true" : "false"}),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*"
                         },
-                    )
+                    },
+                ).then(() => {
+                    localStorage.setItem("playlistName", playlist.name);
+                    localStorage.setItem("playlistIMGUrl", playlist.images[0].url);
+                })
                 }
             }
-            >{playlist.name}</button>) : null}
+            ><img className="playlistCoverMini" src={playlist.images[0].url}/>{playlist.name}</button>) : null}
         </div>
     )
 }

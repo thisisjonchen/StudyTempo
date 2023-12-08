@@ -41,5 +41,8 @@
   "devDependencies": {
     "@types/jquery": "^3.5.27"
   },
-  "proxy": "http://localhost:8080"
+  "options": {
+    "allowedHosts": ["localhost", ".localhost"],
+    "proxy": "https://localhost:8080/"
+  }
 }

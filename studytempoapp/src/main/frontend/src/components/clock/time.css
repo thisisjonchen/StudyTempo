@@ -33,7 +33,7 @@
     padding: 5px;
     margin-left: 10px;
     color:white;
-    background-color: #ff4b4b !important;
+    background-color: #ff4b4b;
     opacity: 100% !important;
 }
 
@@ -41,7 +41,7 @@
     padding: 10px;
     margin-left: 5px;
     color:white;
-    background-color: #15a93f !important;
+    background-color: #15a93f;
     opacity: 100% !important;
 }
 .timerContainer {
@@ -57,29 +57,54 @@
     background-color: #FF9500;
     border-radius: 50px;
 }
-.timerBreak {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1px;
+.timer.break {
     background-color: #00b2ff;
-    border-radius: 50px;
 }
-.timerAlert {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1px;
-    background-color: #ffd500;
-    border-radius: 50px;
+.timer.alert {
+    background-color: #e7bb00;
 }
-.timerStop {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1px;
-    background-color: #ff0000;
-    border-radius: 50px;
+.timer.stop {
+    background-color: #ff4b4b;
 }
-
+.overlay {
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    .fullscreen-enabled {
+        -webkit-transition: .2s;
+        transition: .2s;;
+    }
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.overlay.alert {
+    opacity: 1;
+    background-image: radial-gradient(transparent 75%, #e7bb00);
+    .fullscreen-enabled {
+        background: radial-gradient(transparent 75%, #e7bb00);
+    }
+}
+.overlay.stop {
+    background: radial-gradient(transparent 75%, #fa5b5b);
+    .fullscreen-enabled {
+        background: radial-gradient(transparent 75%, #fa5b5b);
+    }
+}
+.overlay.break {
+    background: radial-gradient(transparent 75%, #afe3ff);
+    .fullscreen-enabled {
+        background: radial-gradient(transparent 75%, #afe3ff);
+    }
+}
+.overlay.start {
+    background: radial-gradient(transparent 75%, #15a93f);
+    .fullscreen-enabled {
+        background: radial-gradient(transparent 75%, #15a93f);
+    }
+}
+.overlay.hide {
+    display: none;
+}
 /* --timer-- */

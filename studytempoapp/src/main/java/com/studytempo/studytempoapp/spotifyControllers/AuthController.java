@@ -85,14 +85,16 @@ public class AuthController {
     public void refreshSpotifyUserToken() {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
                 .build();
-        //  try token refresh
+        //  try token refresh.........maybe detect if access token is expired first before retrying?
         try {
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
-
-            // Set access and refresh token for further "spotifyApi" object usage...sets both access and refresh tokens as refresh token can only be used once
-            spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-            System.out.println("(R) Expires in: " + authorizationCodeCredentials.getExpiresIn());
-        } catch (Exception e) {
+            if (authorizationCodeCredentials.getExpiresIn() > 300) {
+                // Set access and refresh token for further "spotifyApi" object usage...sets both access and refresh tokens as refresh token can only be used once
+                spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+                System.out.println("(R) Expires in: " + authorizationCodeCredentials.getExpiresIn());
+            }
+        }
+        catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

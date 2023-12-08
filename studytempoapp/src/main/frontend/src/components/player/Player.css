@@ -21,6 +21,7 @@
 }
 .playlistCover {
     height: 100px;
+    width: 100px;
     filter: none;
     -webkit-transition: .4s;
     transition: .4s;
@@ -34,6 +35,7 @@
 }
 .playlistCoverMini {
     height: 50px;
+    width: 50px;
     filter: none;
     -webkit-transition: .4s;
     transition: .4s;
@@ -49,7 +51,7 @@ img[src=""] {
     display: none;
 }
 .playbackPlaylists {
-    height: 25vh;
+    height: 45vh;
     display: flex;
     flex-direction: column;
     margin: 10px 0 10px 0;
@@ -64,6 +66,7 @@ img[src=""] {
 }
 .playlistSelector {
     width: 100%;
+    text-align: left;
     font-size: 1.5rem;
     font-weight: bold;
     padding: 10px;
@@ -110,6 +113,20 @@ img[src=""] {
     content:url("./icons/pauseicon.png");
 }
 .shuffleToggle {
+    width: 50px;
     display: flex;
     justify-content: flex-end;
+}
+.shuffleOn {
+    padding: 5px;
+    border-radius: 50px;
+    background: #ffffff;
+    filter: invert(100%);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.shuffleOff {
+    padding: 5px;
+    -webkit-transition: .4s;
+    transition: .4s;
 }

@@ -12,11 +12,15 @@ body::-webkit-scrollbar {
 span {
   font-weight: bold;
 }
+span.todo[contenteditable]:empty::before {
+  content: "Enter a Task!";
+  display: inline-block;
+}
 /* --divs-- */
-div .dark {
+div .dark:not(.overlay) {
     background-color: #f3f3f3;
     filter: invert(100%) hue-rotate(180deg);
-    .fullscreen-enabled {
+    .fullscreen-enabled:not(.overlay) {
       background-color: #f3f3f3;
       filter: invert(100%) hue-rotate(180deg);
       -webkit-transition: .4s;
@@ -36,36 +40,6 @@ div .light {
   -webkit-transition: .4s;
   transition: .4s;
 }
-div .alert {
-  background-color: #ffe2af;
-  .fullscreen-enabled {
-    background-color: #ffe2af;
-    -webkit-transition: .2s;
-    transition: .2s;;
-  }
-  -webkit-transition: .2s;
-  transition: .2s;
-}
-div .stop {
-  background-color: #ff8383;
-  .fullscreen-enabled {
-    background-color: #ff8383;
-    -webkit-transition: .2s;
-    transition: .2s;
-  }
-  -webkit-transition: .2s;
-  transition: .2s;
-}
-div .break {
-  background-color: #afe3ff;
-  .fullscreen-enabled {
-    background-color: #afe3ff;
-    -webkit-transition: .2s;
-    transition: .2s;
-  }
-  -webkit-transition: .2s;
-  transition: .2s;
-}
 /* --divs-- */
 
 /* --headers- */
@@ -80,6 +54,7 @@ div .break {
   align-items: center;
   justify-content: center;
   padding: 32px 32px 0 32px;
+  z-index: 1;
 }
 .bar {
   width: 33%;
@@ -105,6 +80,7 @@ div .break {
   align-items: flex-end;
   justify-content: flex-end;
   padding: 0 32px 32px 32px;
+  z-index: 1;
 }
 .content {
   width: 30%;
@@ -144,8 +120,9 @@ div .break {
 
 /* --icons-- */
 .icon {
-  height: 20px;
+  height: 25px;
   padding: 10px;
+
 }
 .stIcon {
   height: 35px;
@@ -266,7 +243,7 @@ input:checked + .slider:before {
   transform: translateX(13px);
 }
 
-.sliderRange {
+.range {
   -webkit-appearance: none;
   width: 100px;
   height: 17px;
@@ -276,8 +253,7 @@ input:checked + .slider:before {
   -webkit-transition: .4s;
   transition: opacity .4s;
 }
-
-.sliderRange::-webkit-slider-thumb {
+.range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 17px;
@@ -287,7 +263,7 @@ input:checked + .slider:before {
   box-shadow: 0 0 5px #000000;
   cursor: pointer;
 }
-.sliderRange::-moz-range-thumb {
+.range::-moz-range-thumb {
   width: 17px;
   height: 17px;
   border-radius: 50%;

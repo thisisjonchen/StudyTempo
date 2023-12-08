@@ -61,10 +61,17 @@ public class PlayerController {
     public static class PlaylistRequest {
         private String context_uri;
         private String device_id;
+        private String shuffle_state;
 
-        public PlaylistRequest(String context_uri, String device_id) {
+        public PlaylistRequest(String context_uri, String device_id, String shuffle_state) {
             this.context_uri = context_uri;
             this.device_id = device_id;
+            this.shuffle_state = shuffle_state;
+        }
+
+        public boolean isShuffled() {
+            if (shuffle_state == null || shuffle_state.equals("true")) return true;
+            return false;
         }
     }
 
@@ -76,6 +83,12 @@ public class PlayerController {
                 .device_id(playlist.device_id)
                 .build();
         try {
+            final ToggleShuffleForUsersPlaybackRequest toggleShuffleForUsersPlaybackRequest = spotifyApi
+                    .toggleShuffleForUsersPlayback(playlist.isShuffled())
+                    .device_id(playlist.device_id)
+                    .build();
+            try {toggleShuffleForUsersPlaybackRequest.execute();}
+            catch (Exception ignored) {}
             startResumeUsersPlaybackRequest.execute();
         } catch (Exception ignored) {}
     }
@@ -91,19 +104,5 @@ public class PlayerController {
         }
         catch (Exception ignored) {}
         return "";
-    }
-
-    private boolean shuffleToggleState = true;
-
-    @PostMapping("shuffle-toggle")
-    public void shuffleToggle() {
-        final ToggleShuffleForUsersPlaybackRequest toggleShuffleForUsersPlaybackRequest = spotifyApi.toggleShuffleForUsersPlayback(shuffleToggled()).build();
-        try {toggleShuffleForUsersPlaybackRequest.execute();}
-        catch (Exception ignored) {}
-    }
-
-    public boolean shuffleToggled() {
-        shuffleToggleState = !shuffleToggleState;
-        return shuffleToggleState;
     }
 }
