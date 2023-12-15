@@ -3,6 +3,7 @@
     font-size: 10rem;
     margin: 0;
     line-height: 1.1;
+    z-index: 1;
 }
 
 .hour, .minute, .second {
@@ -13,7 +14,7 @@
     width: 40px;
 }
 
-/* --timer-- */
+/*--timer--*/
 .timerControl {
     display: flex;
     height: max-content;
@@ -54,57 +55,119 @@
     align-items: center;
     justify-content: center;
     padding: 1px;
-    background-color: #FF9500;
     border-radius: 50px;
+    background-color: #FF9500;
 }
-.timer.break {
+.timerBreak {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    border-radius: 50px;
     background-color: #00b2ff;
 }
-.timer.alert {
-    background-color: #e7bb00;
+.timerAlert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    border-radius: 50px;
+    background-color: #f5a800;
 }
-.timer.stop {
-    background-color: #ff4b4b;
+.timerStop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    border-radius: 50px;
+    background-color: #fa5b5b;
 }
-.overlay {
+/* --timer-- */
+
+/*--timer-overlay--*/
+.overlayAlert {
     pointer-events: none;
     display: block;
     position: absolute;
     width: 100%;
     height: 100vh;
     .fullscreen-enabled {
-        -webkit-transition: .2s;
-        transition: .2s;;
+        -webkit-transition: .4s;
+        transition: .4s;
     }
     -webkit-transition: .4s;
     transition: .4s;
-}
-.overlay.alert {
-    opacity: 1;
-    background-image: radial-gradient(transparent 75%, #e7bb00);
+    background: #f5a800;
     .fullscreen-enabled {
-        background: radial-gradient(transparent 75%, #e7bb00);
+        background: #f5a800;
     }
 }
-.overlay.stop {
-    background: radial-gradient(transparent 75%, #fa5b5b);
+.overlayStop {
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
     .fullscreen-enabled {
-        background: radial-gradient(transparent 75%, #fa5b5b);
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    -webkit-transition: .4s;
+    transition: .4s;
+    background: #fa5b5b;
+    .fullscreen-enabled {
+        background: #fa5b5b;
     }
 }
-.overlay.break {
-    background: radial-gradient(transparent 75%, #afe3ff);
+.overlayBreak {
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
     .fullscreen-enabled {
-        background: radial-gradient(transparent 75%, #afe3ff);
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    -webkit-transition: .4s;
+    transition: .4s;
+    background: #afe3ff;
+    .fullscreen-enabled {
+        background: #afe3ff;
     }
 }
-.overlay.start {
-    background: radial-gradient(transparent 75%, #15a93f);
+.overlayStart {
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
     .fullscreen-enabled {
-        background: radial-gradient(transparent 75%, #15a93f);
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    -webkit-transition: .4s;
+    transition: .4s;
+    background: #15a93f;
+    .fullscreen-enabled {
+        background: #15a93f;
     }
 }
-.overlay.hide {
-    display: none;
+.overlayHide {
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    .fullscreen-enabled {
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    -webkit-transition: .4s;
+    transition: .4s;
+    background: transparent;
+    .fullscreen-enabled {
+        background: transparent;
+    }
 }
-/* --timer-- */
+/*--timer-overlay--*/

@@ -24,18 +24,22 @@
     padding: 0 0 5px 20px;
     color: #5b5b5b;
 }
-.spotifyHelp {
-    flex-wrap: wrap;
-    display: flex;
-    align-items: center;
-}
-.spotifyGreeting {
+.greeting {
     display: flex;
     align-items: center;
     white-space: pre;
 }
-
-.yourPlaylistLabel {
-    padding: 10px 0 10px 0;
+.spotifyLoginTab {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin: 20px 0 20px 0;
+    border-radius: 20px;
+    background: linear-gradient(90deg, white 60%, #1DB954);
+    border: 1px solid #5b5b5b;
+}
+.spotifyLoginTab:hover {
+    cursor: pointer;
 }
 /* --settings-- */

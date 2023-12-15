@@ -2,6 +2,17 @@
   display: flex;
   align-items: center;
 }
+.fixed {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -96,12 +107,7 @@ div .light {
   align-items: center;
   justify-content: center;
   text-align: start;
-}
-.centerStack{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  z-index: 1;
 }
 .todoLabel {
   color: rgba(0, 0, 0, 0.5);
@@ -118,11 +124,21 @@ div .light {
 }
 /* --container/center-- */
 
+/* --the pit --*/
+.pit {
+  height: 1500vh;
+  background: linear-gradient(180deg, white, black);
+}
+.dark .pit {
+  height: 1500vh;
+  background: linear-gradient(180deg, white, #ffa0a0);
+}
+/* --the pit --*/
+
 /* --icons-- */
 .icon {
   height: 25px;
   padding: 10px;
-
 }
 .stIcon {
   height: 35px;
@@ -133,24 +149,22 @@ div .light {
   padding: 10px 10px 10px 0;
   filter: invert(100%) hue-rotate(180deg);
 }
-.spotifyIconHelp {
-  height: 20px;
-  padding: 0 10px 0 10px;
-}
-.spotifyIconFull {
-  height: 20px;
-  padding-left: 10px;
-}
 .timerIcon {
   height: 20px;
   padding: 5px;
   filter: brightness(0%);
+}
+.integratedIcon {
+  height: 20px;
+  margin-bottom: -10px;
 }
 /* --icons-- */
 
 /* --visibility-- */
 .hide {
   display: none !important;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 /* --visibility-- */
 

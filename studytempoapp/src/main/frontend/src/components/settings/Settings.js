@@ -1,73 +1,98 @@
 import SpotifyLogo from "../../assets/SpotifyLogo.png";
 import {CreateSpotifyToken, IsLoggedIn} from "../player/PlayerAuth";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import DarkIcon from "../../assets/darkmode.png";
 import LightIcon from "../../assets/lightmode.png";
 import FullscreenIcon from "../../assets/fullscreen.png";
 import MinimizeIcon from "../../assets/minimize.png";
-import {CurrentlyPlaying, GetUsername, UserPlaylists} from "../player/PlaybackSDK";
+import {CurrentlyPlaying, UserPlaylists, UserProfile} from "../player/PlaybackSDK";
 import {usePlayerDevice, useSpotifyPlayer} from "react-spotify-web-playback-sdk";
-import SpotifyLogoFull from "../../assets/Spotify_Logo_RGB_Black.png";
 
 function FullScreenToggle({isFullScreen, setFullScreen, handle}) {
-    if (isFullScreen) {
-        handle.exit();
-    }
-    else {
-        handle.enter();
-    }
+    if (isFullScreen) handle.exit();
+    else handle.enter();
     setFullScreen(!isFullScreen);
 }
 
 function DarkModeToggle({darkPref, setDarkPref}) {
     if(darkPref === "false") {
-        setDarkPref("true")
+        setDarkPref("true");
         localStorage.setItem("darkPref", "true");
     } else {
-        setDarkPref("false")
+        setDarkPref("false");
         localStorage.setItem("darkPref", "false");
     }
 }
 
 function ShowTODOToggle({showTODO, setShowTODO}) {
     if(showTODO === "false") {
-        setShowTODO("true")
+        setShowTODO("true");
         localStorage.setItem("showTODO", "true");
     } else {
-        setShowTODO("false")
+        setShowTODO("false");
         localStorage.setItem("showTODO", "false");
     }
 }
 
 function BreakToggle({breakToggle, setBreakToggle}) {
     if(breakToggle === "false") {
-        setBreakToggle("true")
+        setBreakToggle("true");
         localStorage.setItem("breakToggle", "true");
     } else {
-        setBreakToggle("false")
+        setBreakToggle("false");
         localStorage.setItem("breakToggle", "false");
     }
 }
 
 function AutoRestartToggle({autoRestart, setAutoRestart}) {
     if(autoRestart === "false") {
-        setAutoRestart("true")
+        setAutoRestart("true");
         localStorage.setItem("autoRestart", "true");
     } else {
-        setAutoRestart("false")
+        setAutoRestart("false");
         localStorage.setItem("autoRestart", "false");
     }
 }
 
 function TimerPingToggle({timerPing, setTimerPing}) {
     if(timerPing === "false") {
-        setTimerPing("true")
+        setTimerPing("true");
         localStorage.setItem("timerPing", "true");
     } else {
-        setTimerPing("false")
+        setTimerPing("false");
         localStorage.setItem("timerPing", "false");
     }
 }
+
+function ScreenLockToggle({screenLockToggle, setScreenLockToggle}) {
+    if(screenLockToggle === "false") {
+        setScreenLockToggle("true");
+        localStorage.setItem("screenLock", "true");
+    } else {
+        setScreenLockToggle("false");
+        localStorage.setItem("screenLock", "false");
+    }
+}
+
+function GoodGreeting() {
+    const now = new Date();
+    const nowHour = now.getHours();
+    if (nowHour < 12) return "Good Morning";
+    else if (nowHour < 18) return "Good Afternoon";
+    else return "Good Night";
+}
+
+function GreetingQuote() {
+    const [quote, setQuote] = useState("");
+    const quotes =
+        ["Let's get sh*t done.", "Who's gonna carry the boats?", "Do more.", "I ain't hear no bell.", "Think different.",
+            "Make your parents proud.", "Show'em who's boss.", "Trust the process.", "Remember to drink water!", "Remember to take a break every once in a while."]
+    useEffect(() => {
+        setQuote(quotes[Math.floor(Math.random()*quotes.length)]);
+    }, []);
+    return quote;
+}
+
 
 function Bar({darkPref, setDarkPref, isFullScreen, setFullScreen, handle}) {
     const loggedIn = IsLoggedIn();
@@ -80,14 +105,9 @@ function Bar({darkPref, setDarkPref, isFullScreen, setFullScreen, handle}) {
     );
 }
 
-function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, setShowTODO, breakToggle, setBreakToggle, autoRestart, setAutoRestart, volume, setVolume, timerPing, setTimerPing, shuffle, setShuffle}) {
+function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, setShowTODO, breakToggle, setBreakToggle, autoRestart, setAutoRestart, volume, setVolume, timerPing, setTimerPing, shuffle, setShuffle, screenLockToggle, setScreenLockToggle, username}) {
     const device = usePlayerDevice();
     const player = useSpotifyPlayer();
-
-    if (localStorage.getItem("username") === "") {
-        GetUsername();
-    }
-    const username = localStorage.getItem("username");
     return (
         <div className="settings">
             {/*Left*/}
@@ -109,6 +129,13 @@ function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, set
                             <span className="slider"></span>
                         </label>
                     </div>
+                </div>
+                <div className="settingsSubItem">
+                    <h5>Keep Screen On</h5>
+                    <label className="switch">
+                        <input type="checkbox" onChange={() => ScreenLockToggle({screenLockToggle, setScreenLockToggle})} checked={screenLockToggle === "true"}/>
+                        <span className="slider"></span>
+                    </label>
                 </div>
                 <div id="TimerSettings">
                     <h5 className="settingsItem">Timer</h5>
@@ -138,8 +165,8 @@ function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, set
                     <div className="settingsSubItem">
                         <h5>Volume</h5>
                         <input type="range" min="0" max="1" defaultValue={volume} step="0.01" className="range"
-                               onChange={volumeSlider => {setVolume(volumeSlider.target.value); localStorage.setItem("volume", volumeSlider.target.value); player.setVolume(volume)}}/>
-                        <h5 id="BreakTime">{Math.round(volume * 100)}%</h5>
+                               onChange={volumeSlider => {setVolume(volumeSlider.target.value); localStorage.setItem("volume", volumeSlider.target.value); player.setVolume(Math.round(volume*100)/100)}}/>
+                        <h5>{Math.round(volume * 100)}%</h5>
                     </div>
                     <div className="settingsSubItem">
                         <h5>Timer Ping</h5>
@@ -153,21 +180,25 @@ function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, set
             {/*Left*/}
             {/*Right*/}
             <div className="settingsContainer">
+                <h1 className={username ? "username" : "hide"}>{GoodGreeting()}, {username}</h1>
+                <h6 className="greeting">{GreetingQuote()}</h6>
+                <div className={device === null ? "" : "hide"} onClick={() => player.connect()}>
+                    <UserProfile/>
+                </div>
                 <div className={device === null ? "hide" :  "spotifyDetailedPane"}>
-                    <h1 className="username">Hello, {username} <span>:)</span></h1>
-                    <h6 className="spotifyGreeting">Ready to Grind? <span>Select a Playlist</span> | Powered by<img src={SpotifyLogoFull} className="spotifyIconFull"/></h6>
                     <CurrentlyPlaying shuffle={shuffle} setShuffle={setShuffle}/>
                     <UserPlaylists shuffle={shuffle}/>
-                </div>
-                <div className="spotifyHelp">
-                    <img src={SpotifyLogo} className="spotifyIconHelp"/>
-                    <h5>Having Problems with Spotify?</h5>
-                    <button className="textButton" onClick={CreateSpotifyToken}>Try Logging in Again</button>
                 </div>
             </div>
             {/*Right*/}
         </div>
     );
 }
+
+//<div className="spotifyHelp">
+//                     <img src={SpotifyLogo} className="spotifyIconHelp"/>
+//                     <h5>Having Problems with Spotify?</h5>
+//                     <button className="textButton" onClick={CreateSpotifyToken}>Try Logging in Again</button>
+//                 </div>
 
 export {Bar, Settings}

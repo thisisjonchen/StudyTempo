@@ -2,6 +2,9 @@
     padding-top: 5px;
     opacity: 50%;
 }
+.currentSong {
+    z-index: 1;
+}
 .playlistTitle {
     display: flex;
     flex-direction: column;
@@ -11,12 +14,13 @@
     padding: 20px;
     margin: 20px 0 20px 0;
     border-radius: 20px;
-    background: #ffffff;
+    background: radial-gradient(circle at top right,#1DB954,white 25%);
     border: 1px solid #5b5b5b;
 }
 .playbackCurrent {
     height: min-content;
     display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 .playlistCover {
@@ -54,15 +58,20 @@ img[src=""] {
     height: 45vh;
     display: flex;
     flex-direction: column;
-    margin: 10px 0 10px 0;
+    margin: 20px 0 10px 0;
     padding: 20px;
     border-radius: 20px;
-    background: #ffffff;
+    background: radial-gradient(circle at top right,#1DB954,white 25%);
     border: 1px solid #5b5b5b;
     overflow-y:auto;
 }
 .playbackPlaylists::-webkit-scrollbar {
     display: none;
+}
+.yourPlaylistLabel {
+    display: flex;
+    align-items: center;
+    padding: 5px 0 10px 0;
 }
 .playlistSelector {
     width: 100%;
@@ -71,12 +80,9 @@ img[src=""] {
     font-weight: bold;
     padding: 10px;
     margin: 5px 0 5px 0;
-    border-radius: 5px;
-    border: 1px solid #c9c8c8;
-    background: #ffffff;
-}
-.playbackDetails {
-    width: 75%;
+    border-width: 1px;
+    border-style: solid;
+    border-image: linear-gradient(to right, #5b5b5b, transparent 90%) 1;
 }
 .spotifyLogin {
     display: flex;
@@ -113,6 +119,7 @@ img[src=""] {
     content:url("./icons/pauseicon.png");
 }
 .shuffleToggle {
+    margin-right: 20px;
     width: 50px;
     display: flex;
     justify-content: flex-end;
@@ -129,4 +136,16 @@ img[src=""] {
     padding: 5px;
     -webkit-transition: .4s;
     transition: .4s;
+}
+.poweredBy {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: -1rem;
+}
+.disconnect {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: -1rem;
 }

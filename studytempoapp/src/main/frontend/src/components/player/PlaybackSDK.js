@@ -4,7 +4,7 @@ import Visualizer from "./icons/visualizer.gif";
 import SkipBackIcon from "./icons/skipbackicon.png";
 import SkipNextIcon from "./icons/skipnexticon.png";
 import ShuffleToggle from "./icons/shuffleicon.png";
-
+import SpotifyLogo from "../../assets/SpotifyLogo.png";
 
 // returns and displays current song
 function CurrentSong() {
@@ -22,7 +22,7 @@ function CurrentSong() {
         <>
             <div className="centeredH">
                 <img src={Visualizer} id="Visualizer" className={playbackState.paused === true ? "hide" : "visualizer"}/>
-                <h5>{currentSong}</h5>
+                <h5 className="currentSong">{currentSong}</h5>
             </div>
             <h6 className="currentArtistMain">{currentArtists[0].name}</h6>
         </>
@@ -64,22 +64,30 @@ function PlaybackControl() {
 // ! Spotify Detailed Panel: Username, Currently Playing "Pane", and User Playlist Selector
 
 // returns and displays Spotify Profile Username
-function GetUsername() {
-    const [username, setUsername] = useState("");
-    useEffect(() => {
+function UserProfile() {
+    const [spotifyUsername, setSpotifyUsername] = useState("");
+    function getSpotifyUsername() {
         fetch("http://localhost:8080/player/username")
             .then(response => response.text())
             .then(username => {
-                localStorage.setItem("username", username);
-                setUsername(username)
+                setSpotifyUsername(username)
             })
-    }, [])
-    return username;
+    }
+    setTimeout(getSpotifyUsername, 500)
+    return (
+        <div className="spotifyLoginTab">
+            <div className="playbackCurrent">
+                <h5>Logged in as {spotifyUsername}</h5>
+            </div>
+            <img src={SpotifyLogo} className="icon"/>
+        </div>
+    )
 }
 
 // returns and displays a "pane" containing album cover, current album, current song, current artists
 function CurrentlyPlaying({shuffle, setShuffle}) {
     const playbackState = usePlaybackState();
+    const player = useSpotifyPlayer();
     const device = usePlayerDevice();
     if (playbackState === null) return null;
     const currentSong = playbackState.track_window.current_track.name
@@ -88,12 +96,15 @@ function CurrentlyPlaying({shuffle, setShuffle}) {
     const currentArtists = currentArtistsArr.slice(0, -1).map(currentArtist => `${currentArtist.name}, `).join("") + currentArtistsArr[currentArtistsArr.length-1].name;
     return (
         <div className="playbackCurrentPane">
+            <div className="poweredBy"><button><img src={SpotifyLogo} className="integratedIcon"/></button></div>
             <div className="playbackCurrent">
-                <img src={playbackState.track_window.current_track.album.images[0].url} className="playlistCover"/>
-                <div className="playbackDetails">
-                    <h6 onClick={() => window.open(playbackState.track_window.current_track.album.uri)}>{currentAlbum}</h6>
-                    <h5 onClick={() => window.open(playbackState.track_window.current_track.album.uri)}>{currentSong}</h5>
-                    <div className="centeredH"><h6 onClick={() => window.open(playbackState.track_window.current_track.artists[0].uri)}>{currentArtists}</h6></div>
+                <div className="centeredH">
+                    <img src={playbackState.track_window.current_track.album.images[0].url} className="playlistCover"/>
+                    <div className="playbackDetails">
+                        <h6 onClick={() => window.open(playbackState.track_window.current_track.album.uri)}>{currentAlbum}</h6>
+                        <h5 onClick={() => window.open(playbackState.track_window.current_track.album.uri)}>{currentSong}</h5>
+                        <div className="centeredH"><h6 onClick={() => window.open(playbackState.track_window.current_track.artists[0].uri)}>{currentArtists}</h6></div>
+                    </div>
                 </div>
                 <div className="shuffleToggle">
                     <button onClick={() => {
@@ -122,6 +133,9 @@ function UserPlaylists({shuffle}) {
     }, []);
     return (
         <div className="playbackPlaylists">
+            <div className="fixed">
+                <div className="poweredBy"><button><img src={SpotifyLogo} className="integratedIcon"/></button></div>
+            </div>
             <h5 className="yourPlaylistLabel">Your Playlists</h5>
             {userPlaylists ? userPlaylists.items.map((playlist) => <button className="playlistSelector" key={playlist.name} onClick={() => {
                 fetch(
@@ -146,4 +160,4 @@ function UserPlaylists({shuffle}) {
 }
 
 // end & export
-export {CurrentSong, CurrentPlaylist, PlaybackControl, UserPlaylists, GetUsername, CurrentlyPlaying};
+export {CurrentSong, CurrentPlaylist, PlaybackControl, UserPlaylists, CurrentlyPlaying, UserProfile};

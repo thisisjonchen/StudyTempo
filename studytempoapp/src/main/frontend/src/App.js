@@ -1,8 +1,9 @@
 import "./App.css";
 import "./components/clock/time.css";
 import "./components/player/Player.css"
-import "./components/settings/Settings.css"
-import React, {useCallback, useEffect, useRef, useState} from "react"
+import "./components/settings/Settings.css";
+import "./components/welcome/Welcome.css"
+import React, {useCallback, useRef, useState} from "react"
 import StudyTempoLogo from "./assets/stlogo.png";
 import {Clock} from "./components/clock/clock";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
@@ -12,12 +13,20 @@ import Countdown, {calcTimeDelta} from "react-countdown";
 import {CurrentPlaylist, CurrentSong, PlaybackControl} from "./components/player/PlaybackSDK";
 import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
 import {RefreshSpotifyToken} from "./components/player/PlayerAuth";
+import {Welcome} from "./components/welcome/Welcome.js";
 
 function StudyTempo() {
-    // just in case there is a valid refresh token
-    useEffect(() => {
-        RefreshSpotifyToken(); // refresh
-    }, []);
+    // check if user visited site before
+    const [username, setUsername] = useState(localStorage.getItem("username"));
+    function HasVisited() {
+        if (!username) {
+            return false;
+        } else {
+            // just in case there is a valid refresh token
+            RefreshSpotifyToken();
+            return true;
+        }
+    }
 
     // get auth token for usage in playback
     const getAuthToken =
@@ -30,6 +39,13 @@ function StudyTempo() {
                 }
             })
 
+    // ui
+    const handle = useFullScreenHandle();
+    const [showTODO, setShowTODO] = useState(localStorage.getItem("showTODO"));
+    const [isFullScreen, setFullScreen] = useState(false);
+    const [darkPref, setDarkPref] = useState(localStorage.getItem("darkPref"));
+    const [screenLockToggle, setScreenLockToggle] = useState(localStorage.getItem("screenLock"))
+
     // timer
     const countdownRef = useRef(null);
     const setRef = (countdown) => {countdownRef.current = countdown;};
@@ -40,43 +56,42 @@ function StudyTempo() {
     const [autoRestart, setAutoRestart] = useState(localStorage.getItem("autoRestart"));
     const [timerMode, setTimerMode] = useState("alarm")
 
-    // ui
-    const handle = useFullScreenHandle();
-    const [showTODO, setShowTODO] = useState(localStorage.getItem("showTODO"));
-    const [isFullScreen, setFullScreen] = useState(false);
-    const [darkPref, setDarkPref] = useState(localStorage.getItem("darkPref"));
-
     // sound
     const [timerPing, setTimerPing] = useState(localStorage.getItem("timerPing"));
     const [volume, setVolume] = useState(localStorage.getItem("volume"));
     const [shuffle, setShuffle] = useState(localStorage.getItem("shuffle"));
 
-    // keep screen on
-    //let screenLock;
-    //try {
-    //    navigator.wakeLock.request('screen')
-    //        .then(lock => {
-    //            try {
-    //                screenLock = lock;
-    //                document.addEventListener('visibilitychange', async () => {
-    //                    if (screenLock !== null && document.visibilityState === 'visible') {
-    //                        screenLock = await navigator.wakeLock.request('screen');
-    //                    }
-    //                });
-    //            }
-    //            catch (e) {}
-    //        });
-    //} catch (e) {}
+    //keep screen on
+    if (screenLockToggle === "true") {
+        let screenLock;
+        try {
+            navigator.wakeLock.request('screen')
+                .then(lock => {
+                    try {
+                        screenLock = lock;
+                        document.addEventListener('visibilitychange', async () => {
+                            if (screenLock !== null && document.visibilityState === 'visible') {
+                                screenLock = await navigator.wakeLock.request('screen');
+                            }
+                        });
+                    }
+                    catch (e) {}
+                });
+        } catch (e) {}
+    }
 
     return (
         <WebPlaybackSDK
             initialDeviceName="StudyTempo"
             getOAuthToken={useCallback(callback => callback(getAuthToken), [])}
             initialVolume={volume}
-            connectOnInitialized={true}>
+            connectOnInitialized={false}>
             <div id="StudyTempo" className={darkPref === "true" ? "dark" : "light"}>
                 {/*Main*/}
                 <FullScreen handle={handle}>
+                    <div id="Welcome" className={HasVisited() === false ? "welcomeContainer" : "hide"}>
+                        <Welcome setUsername={setUsername}/>
+                    </div>
                     <div id="Overlay" className="overlay hide"/>
                     {/*Header*/}
                     <div id="Header" className="header">
@@ -107,7 +122,7 @@ function StudyTempo() {
                     {/*Header*/}
                     {/*Middle*/}
                     <div id="Main" className="middleContainer">
-                        <div className="centerStack">
+                        <div className="stack">
                             <h6 className={showTODO === "true" ? "todoLabel" : "hide"}>TO-DO: <span contentEditable="true" className="todo" suppressContentEditableWarning={true}></span></h6>
                             <Clock/>
                             <CurrentSong/>
@@ -127,9 +142,15 @@ function StudyTempo() {
                 {/*Main*/}
                 {/*Settings*/}
                 <Settings breakTime={breakTime} setBreakTime={setBreakTime} darkPref={darkPref} setDarkPref={setDarkPref}
-                showTODO={showTODO} setShowTODO={setShowTODO} breakToggle={breakToggle} setBreakToggle={setBreakToggle} autoRestart={autoRestart} setAutoRestart={setAutoRestart}
-                timerMode={setTimer} setTimerMode={setTimerMode} timerPing={timerPing} setTimerPing={setTimerPing} volume={volume} setVolume={setVolume} shuffle={shuffle} setShuffle={setShuffle}/>
+                          showTODO={showTODO} setShowTODO={setShowTODO} breakToggle={breakToggle} setBreakToggle={setBreakToggle} autoRestart={autoRestart} setAutoRestart={setAutoRestart}
+                          timerMode={setTimer} setTimerMode={setTimerMode} timerPing={timerPing} setTimerPing={setTimerPing} volume={volume} setVolume={setVolume} shuffle={shuffle} setShuffle={setShuffle}
+                          screenLockToggle={screenLockToggle} setScreenLockToggle={setScreenLockToggle} username={username} setUsername={setUsername}/>
                 {/*Settings*/}
+                {/*The Pit*/}
+                <div className="pit">
+
+                </div>
+                {/*The Pit*/}
             </div>
         </WebPlaybackSDK>
       );

@@ -1,0 +1,34 @@
+.welcomeContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    background-color: #f3f3f3;
+    z-index: 5;
+}
+
+.welcome {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    width: 500px;
+    border-radius: 50px;
+    background-color: #f3f3f3;
+    box-shadow: 0 0 10px #000000;
+}
+
+input[type="text"] {
+    border-radius: 50px;
+    border-color: black;
+    padding: 5px 17px 5px 17px;
+    margin-top: 5vh;
+    text-align: center;
+}
+
+.welcomeIcon {
+    width: 50px;
+    padding: 20px;
+}
