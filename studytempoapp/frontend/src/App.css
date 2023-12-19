@@ -16,6 +16,7 @@
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  background-color: black;
 }
 body::-webkit-scrollbar {
   display: none;
@@ -28,10 +29,10 @@ span.todo[contenteditable]:empty::before {
   display: inline-block;
 }
 /* --divs-- */
-div .dark:not(.overlay) {
+div .dark {
     background-color: #f3f3f3;
     filter: invert(100%) hue-rotate(180deg);
-    .fullscreen-enabled:not(.overlay) {
+    .fullscreen-enabled {
       background-color: #f3f3f3;
       filter: invert(100%) hue-rotate(180deg);
       -webkit-transition: .4s;
@@ -72,10 +73,14 @@ div .light {
   display: flex;
   justify-content: flex-end;
   opacity: 50%;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 .logo {
   width: 33%;
   opacity: 50%;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 /* --header-- */
 
@@ -124,17 +129,6 @@ div .light {
 }
 /* --container/center-- */
 
-/* --the pit --*/
-.pit {
-  height: 1500vh;
-  background: linear-gradient(180deg, white, black);
-}
-.dark .pit {
-  height: 1500vh;
-  background: linear-gradient(180deg, white, #ffa0a0);
-}
-/* --the pit --*/
-
 /* --icons-- */
 .icon {
   height: 25px;
@@ -143,11 +137,6 @@ div .light {
 .stIcon {
   height: 35px;
   padding-right: 10px;
-}
-.spotifyIcon {
-  height: 20px;
-  padding: 10px 10px 10px 0;
-  filter: invert(100%) hue-rotate(180deg);
 }
 .timerIcon {
   height: 20px;
@@ -163,6 +152,11 @@ div .light {
 /* --visibility-- */
 .hide {
   display: none !important;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.hideOpacity {
+  opacity: 0;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -206,6 +200,7 @@ button:active {
   border-color: transparent;
   text-decoration: underline;
   text-align: start;
+  padding: 0;
 }
 .switch {
   position: relative;

@@ -1,8 +1,7 @@
-
 /* --settings-- */
 .settings {
     display: flex;
-    height: 100vh;
+    height: 50vh;
     background: #ffffff;
     padding: 48px 32px 32px 32px;
 }
@@ -38,8 +37,38 @@
     border-radius: 20px;
     background: linear-gradient(90deg, white 60%, #1DB954);
     border: 1px solid #5b5b5b;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.spotifyLoginTab:active {
+    scale: 80%;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 .spotifyLoginTab:hover {
     cursor: pointer;
+}
+.miscChange {
+    display: flex;
+    padding-left: 20px;
+}
+.miscChangeBtn {
+    height: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #5b5b5b;
+    border-radius: 20px;
+}
+.miscChangeBtn:hover{
+    color: white;
+    background-color: #ff4b4b;
+}
+.miscChangeBtn + .nameChangeDesc {
+    display: none;
+}
+.miscChangeBtn:hover + .nameChangeDesc {
+    display: block;
+    padding-left: 10px;
+    width: 200px;
 }
 /* --settings-- */

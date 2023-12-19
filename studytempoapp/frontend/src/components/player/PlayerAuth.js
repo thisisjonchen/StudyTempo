@@ -1,8 +1,9 @@
 import {useState} from "react";
 
+const API_URL = "http://localhost";
 function CreateSpotifyToken() {
     try {
-        fetch("http://localhost:8080/auth/login")
+        fetch(`${API_URL}:8080/auth/login`)
             .then((response) => response.text())
             .then(response => {
                 window.location = response;
@@ -16,7 +17,7 @@ function CreateSpotifyToken() {
 
 function IsLoggedIn() {
     const [isLoggedIn, setStatus] = useState("");
-    fetch("http://localhost:8080/auth/is-token-valid")
+    fetch(`${API_URL}:8080/auth/is-token-valid`)
         .then((response) => response.text())
         .then(response => {
             setStatus(response)
@@ -26,7 +27,7 @@ function IsLoggedIn() {
 
 function RefreshSpotifyToken() {
     try {
-        fetch("http://localhost:8080/auth/refresh-token", {
+        fetch(`${API_URL}:8080/auth/refresh-token`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

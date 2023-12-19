@@ -1,6 +1,7 @@
 package com.studytempo.studytempoapp.spotifyControllers;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -38,7 +39,7 @@ public class AuthController {
     @ResponseBody
     public String spotifyLogin() {
         AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
-                .scope("user-read-private, user-read-email, user-read-currently-playing, user-read-playback-state, streaming")
+                .scope("user-read-private, user-read-email, user-read-currently-playing, user-read-playback-state, streaming, playlist-read-private")
                 .show_dialog(true)
                 .build();
         final URI uri = authorizationCodeUriRequest.execute();
@@ -81,8 +82,9 @@ public class AuthController {
     }
 
     //  refresh tokens
+    @Scheduled(fixedRate = 3600000)
     @PostMapping("refresh-token")
-    public void refreshSpotifyUserToken() {
+    public synchronized void refreshSpotifyUserToken() {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
                 .build();
         //  try token refresh.........maybe detect if access token is expired first before retrying?

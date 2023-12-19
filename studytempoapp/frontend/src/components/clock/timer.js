@@ -4,15 +4,14 @@ import React, {useState} from "react";
 import {zeroPad} from "react-countdown";
 import useSound from "use-sound";
 
-function CountdownControl({setTimer, countdownApi}) {
-    const [timerValue, setTimerValue] = useState(0)
+function CountdownControl({timerValue, setTimerValue, setTimer, countdownApi}) {
     return (
         <div id="TimerControl" className="timerControl">
-            <button onClick={() => {setTimerValue(10000); setTimer(Date.now() + 10000); countdownApi?.stop();}}>15</button>
+            <button onClick={() => {setTimerValue(900000); setTimer(Date.now() + 900000); countdownApi?.stop();}}>15</button>
             <button onClick={() => {setTimerValue(1500000); setTimer(Date.now() + 1500000); countdownApi?.stop();}}>25</button>
             <button onClick={() => {setTimerValue(1800000); setTimer(Date.now() + 1800000); countdownApi?.stop();}}>30</button>
             <button onClick={() => {setTimerValue(2700000); setTimer(Date.now() + 2700000); countdownApi?.stop();}}>45</button>
-            <button className="startButton" onClick={() => {setTimer(Date.now() + timerValue); setTimeout(countdownApi?.start(), 1000)}}>Start</button>
+            <button className="startButton" onClick={() => {setTimer(Date.now() + timerValue); countdownApi?.stop(); setTimeout(countdownApi?.start(), 1000)}}>Start</button>
             <button className="stopButton" onClick={() => {
                 setTimer(0);
                 countdownApi?.stop();
@@ -26,7 +25,7 @@ function CountdownControl({setTimer, countdownApi}) {
     )
 }
 
-function TimerRenderer({minutes, seconds, completed, setTimer, timerMode, setTimerMode, autoRestart, breakToggle, countdownApi, volume, timerPing}) {
+function TimerRenderer({minutes, seconds, completed, setTimer, timerMode, setTimerMode, autoRestart, breakToggle, countdownApi, volume, timerPing, timerValue}) {
     const [ping] = useSound(Ping, {volume: timerPing === "true" ? volume : 0});
     if (minutes === 0 && seconds === 5) {
         document.getElementById("Overlay").className="overlayAlert"; // flash yellow alert screen to user
@@ -50,8 +49,7 @@ function TimerRenderer({minutes, seconds, completed, setTimer, timerMode, setTim
                 document.getElementById("Overlay").className = "overlayStart";
                 ping();
                 setTimeout(function () {
-                    setTimer(Date.now() + 200000000);
-                    console.log(minutes)
+                    setTimer(Date.now() + timerValue);
                     setTimeout(countdownApi?.start(), 500)
                     document.getElementById("Overlay").className = "overlayHide";
                     setTimerMode("alarm")
@@ -70,7 +68,7 @@ function TimerRenderer({minutes, seconds, completed, setTimer, timerMode, setTim
                 document.getElementById("Overlay").className = "overlayStart";
                 ping();
                 setTimeout(function () {
-                    setTimer(Date.now() + 200000000);
+                    setTimer(Date.now() + timerValue);
                     setTimeout(countdownApi?.start(), 500)
                     document.getElementById("Overlay").className = "overlayHide";
                 }, 990);

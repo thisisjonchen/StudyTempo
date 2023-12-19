@@ -1,4 +1,3 @@
-import SpotifyLogo from "../../assets/SpotifyLogo.png";
 import {CreateSpotifyToken, IsLoggedIn} from "../player/PlayerAuth";
 import React, {useEffect, useState} from "react";
 import DarkIcon from "../../assets/darkmode.png";
@@ -74,38 +73,56 @@ function ScreenLockToggle({screenLockToggle, setScreenLockToggle}) {
     }
 }
 
+const onSubmitUsername = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const username = formData.get("username");
+
+    localStorage.setItem("username", username.toString());
+    setUsername(username);
+}
+
 function GoodGreeting() {
     const now = new Date();
     const nowHour = now.getHours();
-    if (nowHour < 12) return "Good Morning";
-    else if (nowHour < 18) return "Good Afternoon";
+    if (nowHour >= 5 && nowHour < 12) return "Good Morning";
+    else if (nowHour >= 12 && nowHour < 18) return "Good Afternoon";
     else return "Good Night";
 }
 
 function GreetingQuote() {
     const [quote, setQuote] = useState("");
-    const quotes =
-        ["Let's get sh*t done.", "Who's gonna carry the boats?", "Do more.", "I ain't hear no bell.", "Think different.",
-            "Make your parents proud.", "Show'em who's boss.", "Trust the process.", "Remember to drink water!", "Remember to take a break every once in a while."]
+    const now = GoodGreeting();
+    let quotes = [""]
+    if (now === "Good Morning") { // Morning
+        quotes = ["Let's get sh*t done.", "Who's gonna carry the boats?",
+                "Wake up. Make your parents proud.", "Show'em who's boss.", "Wakey Wakey Lil' Princess."]
+    }
+    else if (now === "Good Afternoon") { // Afternoon
+        quotes = ["Remember to drink water!", "A lil' coffee break 💅🏻...then back to work", "They don't know me son.",
+                "Maybe try a different approach?", "Take a little time to pat yourself on the back :)"]
+    }
+    else { // Night
+        quotes = ["Who needs sleep anyways?", "On da grind.", "Keep pushing. Your time is now.", "While they're sleepin', you're workin'.",
+                "They talk sh*t, but look who's sleeping?"]
+    }
     useEffect(() => {
         setQuote(quotes[Math.floor(Math.random()*quotes.length)]);
     }, []);
     return quote;
 }
 
-
 function Bar({darkPref, setDarkPref, isFullScreen, setFullScreen, handle}) {
-    const loggedIn = IsLoggedIn();
     return (
-        <div className="bar">
-            <button onClick={CreateSpotifyToken} id="SpotifyLoginBtn" className={loggedIn === "invalid" ? "spotifyLogin" : "hide"}><img src={SpotifyLogo} className="spotifyIcon"/>Login</button>
+        <div id="Bar" className="bar">
             <button onClick={() => DarkModeToggle({darkPref, setDarkPref})}><img src={darkPref === "true" ? LightIcon : DarkIcon} className="icon"/></button>
             <button onClick={() => FullScreenToggle({isFullScreen, setFullScreen, handle})}><img src={isFullScreen === true ? MinimizeIcon : FullscreenIcon} className="icon"/></button>
         </div>
     );
 }
 
-function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, setShowTODO, breakToggle, setBreakToggle, autoRestart, setAutoRestart, volume, setVolume, timerPing, setTimerPing, shuffle, setShuffle, screenLockToggle, setScreenLockToggle, username}) {
+function Settings({API_URL, breakTime, setBreakTime, darkPref, setDarkPref, showTODO, setShowTODO, breakToggle, setBreakToggle, autoRestart, setAutoRestart, volume, setVolume, timerPing, setTimerPing, shuffle, setShuffle, screenLockToggle, setScreenLockToggle, username}) {
     const device = usePlayerDevice();
     const player = useSpotifyPlayer();
     return (
@@ -176,29 +193,34 @@ function Settings({breakTime, setBreakTime, darkPref, setDarkPref, showTODO, set
                         </label>
                     </div>
                 </div>
+                <div id="Misc Settings">
+                    <h5 className="settingsItem">Misc.</h5>
+                    <div className="miscChange">
+                        <button className="miscChangeBtn" onClick={() => CreateSpotifyToken()}>Re-Login to Spotify</button>
+                    </div>
+                    <div className="miscChange">
+                        <button className="miscChangeBtn" onClick={() => {localStorage.setItem("username", ""); window.location.reload()}}>Change Name</button>
+                        <div className="nameChangeDesc">
+                            <h6>You f*cked up. Here is another chance at typing out a name you like (or maybe...your name) <br/>You're welcome :></h6>
+                        </div>
+                    </div>
+                </div>
             </div>
             {/*Left*/}
             {/*Right*/}
             <div className="settingsContainer">
-                <h1 className={username ? "username" : "hide"}>{GoodGreeting()}, {username}</h1>
+                <h1 className="username">{GoodGreeting()}, {username ? username : ":>"}</h1>
                 <h6 className="greeting">{GreetingQuote()}</h6>
-                <div className={device === null ? "" : "hide"} onClick={() => player.connect()}>
-                    <UserProfile/>
+                <div className={device === null ? "" : "hide"}>
+                    <UserProfile API_URL={API_URL}/>
                 </div>
                 <div className={device === null ? "hide" :  "spotifyDetailedPane"}>
                     <CurrentlyPlaying shuffle={shuffle} setShuffle={setShuffle}/>
-                    <UserPlaylists shuffle={shuffle}/>
+                    <UserPlaylists shuffle={shuffle} API_URL={API_URL}/>
                 </div>
             </div>
             {/*Right*/}
         </div>
     );
 }
-
-//<div className="spotifyHelp">
-//                     <img src={SpotifyLogo} className="spotifyIconHelp"/>
-//                     <h5>Having Problems with Spotify?</h5>
-//                     <button className="textButton" onClick={CreateSpotifyToken}>Try Logging in Again</button>
-//                 </div>
-
 export {Bar, Settings}

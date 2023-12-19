@@ -22,6 +22,9 @@
     align-items: center;
     width: 30%;
     padding: 10px;
+    -webkit-transition: .4s;
+    transition: .4s;
+
 }
 .timerControl button {
     font-weight: bold;
@@ -57,6 +60,8 @@
     padding: 1px;
     border-radius: 50px;
     background-color: #FF9500;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 .timerBreak {
     display: flex;
@@ -65,6 +70,8 @@
     padding: 1px;
     border-radius: 50px;
     background-color: #00b2ff;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 .timerAlert {
     display: flex;
@@ -72,7 +79,9 @@
     justify-content: center;
     padding: 1px;
     border-radius: 50px;
-    background-color: #f5a800;
+    background-color: #fcd200;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 .timerStop {
     display: flex;
@@ -81,6 +90,8 @@
     padding: 1px;
     border-radius: 50px;
     background-color: #fa5b5b;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 /* --timer-- */
 
@@ -91,16 +102,13 @@
     position: absolute;
     width: 100%;
     height: 100vh;
+    background-color: #faf6ae;;
     .fullscreen-enabled {
         -webkit-transition: .4s;
         transition: .4s;
     }
     -webkit-transition: .4s;
     transition: .4s;
-    background: #f5a800;
-    .fullscreen-enabled {
-        background: #f5a800;
-    }
 }
 .overlayStop {
     pointer-events: none;
@@ -114,10 +122,7 @@
     }
     -webkit-transition: .4s;
     transition: .4s;
-    background: #fa5b5b;
-    .fullscreen-enabled {
-        background: #fa5b5b;
-    }
+    background: #ff9595;
 }
 .overlayBreak {
     pointer-events: none;
@@ -131,10 +136,7 @@
     }
     -webkit-transition: .4s;
     transition: .4s;
-    background: #afe3ff;
-    .fullscreen-enabled {
-        background: #afe3ff;
-    }
+    background: #93dcff;
 }
 .overlayStart {
     pointer-events: none;
@@ -148,10 +150,7 @@
     }
     -webkit-transition: .4s;
     transition: .4s;
-    background: #15a93f;
-    .fullscreen-enabled {
-        background: #15a93f;
-    }
+    background: #a1ffba;
 }
 .overlayHide {
     pointer-events: none;
@@ -166,8 +165,5 @@
     -webkit-transition: .4s;
     transition: .4s;
     background: transparent;
-    .fullscreen-enabled {
-        background: transparent;
-    }
 }
 /*--timer-overlay--*/

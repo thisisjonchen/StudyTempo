@@ -42,7 +42,10 @@
     "@types/jquery": "^3.5.27"
   },
   "options": {
-    "allowedHosts": ["localhost", ".localhost"],
+    "allowedHosts": [
+      "localhost",
+      ".localhost"
+    ],
     "proxy": "https://localhost:8080/"
   }
 }

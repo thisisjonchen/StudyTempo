@@ -9,12 +9,14 @@
     display: flex;
     flex-direction: column;
     text-align: start;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 .playbackCurrentPane {
     padding: 20px;
     margin: 20px 0 20px 0;
     border-radius: 20px;
-    background: radial-gradient(circle at top right,#1DB954,white 25%);
+    background: white;
     border: 1px solid #5b5b5b;
 }
 .playbackCurrent {
@@ -26,6 +28,7 @@
 .playlistCover {
     height: 100px;
     width: 100px;
+    object-fit: cover;
     filter: none;
     -webkit-transition: .4s;
     transition: .4s;
@@ -40,6 +43,7 @@
 .playlistCoverMini {
     height: 50px;
     width: 50px;
+    object-fit: cover;
     filter: none;
     -webkit-transition: .4s;
     transition: .4s;
@@ -84,17 +88,6 @@ img[src=""] {
     border-style: solid;
     border-image: linear-gradient(to right, #5b5b5b, transparent 90%) 1;
 }
-.spotifyLogin {
-    display: flex;
-    align-items: center;
-    margin-right: 1em;
-    padding: 0 1em 0 1em;
-    font-weight: bold;
-    font-size: 0.875rem;
-    border-radius: 50px;
-    color: white;
-    background-color: black !important;
-}
 .visualizer {
     padding: 0 10px 0 0;
     height: 20px;
@@ -104,9 +97,13 @@ img[src=""] {
     display: flex;
     justify-content: center;
     opacity: 50%;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 .playerContainer {
     width: 40%;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 .playerControl Button {
     height: 25px;
@@ -119,7 +116,6 @@ img[src=""] {
     content:url("./icons/pauseicon.png");
 }
 .shuffleToggle {
-    margin-right: 20px;
     width: 50px;
     display: flex;
     justify-content: flex-end;
