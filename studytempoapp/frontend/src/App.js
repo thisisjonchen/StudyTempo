@@ -11,14 +11,13 @@ import {CountdownControl, TimerRenderer} from "./components/clock/timer";
 import {Bar, Settings} from "./components/settings/Settings";
 import Countdown, {calcTimeDelta} from "react-countdown";
 import {CurrentPlaylist, CurrentSong, PlaybackControl} from "./components/player/PlaybackSDK";
-import {WebPlaybackSDK, usePlaybackState} from "react-spotify-web-playback-sdk";
-import {RefreshSpotifyToken} from "./components/player/PlayerAuth";
+import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
 import {Welcome} from "./components/welcome/Welcome.js";
 import Abyss from "./components/abyss/abyss";
 
 function StudyTempo() {
     // check if user visited site before
-    const API_URL = "http://localhost";
+    const API_URL = "https://studytempo.co";
     const [username, setUsername] = useState(localStorage.getItem("username"));
     function HasVisited() {
         if (!username) return false;
@@ -26,15 +25,25 @@ function StudyTempo() {
     }
 
     // get auth token for usage in playback
-    const getAuthToken =
-        fetch(`${API_URL}:8080/auth/get-token`)
+    const [authToken, setAuthToken] = useState(
+        fetch(`${API_URL}/auth/get-token`)
             .then((response) => response.text())
             .then(token => {
                 if (token) {
-                    setInterval(RefreshSpotifyToken, 3500000) // then setInterval to refresh token
                     return token;
                 }
             })
+    );
+    function GetAuthToken() {
+        setAuthToken(fetch(`${API_URL}/auth/get-token`)
+            .then((response) => response.text())
+            .then(token => {
+                if (token) {
+                    return token;
+                }
+            }))
+    }
+    setInterval(GetAuthToken, 3590000)
 
     // ui
     const handle = useFullScreenHandle();
@@ -42,38 +51,6 @@ function StudyTempo() {
     const [isFullScreen, setFullScreen] = useState(false);
     const [darkPref, setDarkPref] = useState(localStorage.getItem("darkPref"));
     const [screenLockToggle, setScreenLockToggle] = useState(localStorage.getItem("screenLock"));
-
-    let screenIdleTime = 0
-    const screenIdleMax = 5 // timeout after 5 secs
-
-    function HideControls() {
-        document.getElementById("Bar").classList.add("hideOpacity");
-        document.getElementById("TimerControl").classList.add("hideOpacity");
-        document.getElementById("Logo").classList.add("hideOpacity");
-        document.getElementById("Player").classList.add("hideOpacity");
-        document.documentElement.style.cursor = "none";
-    }
-
-    function ShowControls() {
-        screenIdleTime = 0
-        document.getElementById("Bar").classList.remove("hideOpacity");
-        document.getElementById("TimerControl").classList.remove("hideOpacity");
-        document.getElementById("Logo").classList.remove("hideOpacity");
-        document.getElementById("Player").classList.remove("hideOpacity");
-        document.documentElement.style.cursor = "auto";
-    }
-
-    document.addEventListener("mousemove", ShowControls);
-    document.addEventListener("touchstart", ShowControls);
-
-    function CheckIdleTime() {
-        screenIdleTime++;
-        if (screenIdleTime >= screenIdleMax) {
-            HideControls();
-        }
-    }
-
-    setInterval(CheckIdleTime, 1000)
 
     // timer
     const countdownRef = useRef(null);
@@ -113,7 +90,7 @@ function StudyTempo() {
     return (
         <WebPlaybackSDK
             initialDeviceName="StudyTempo"
-            getOAuthToken={useCallback(callback => callback(getAuthToken), [])}
+            getOAuthToken={useCallback(callback => callback(authToken), [])}
             initialVolume={volume}
             connectOnInitialized={false}>
             <div id="StudyTempo" className={darkPref === "true" ? "dark" : "light"}>

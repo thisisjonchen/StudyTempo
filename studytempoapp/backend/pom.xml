@@ -10,11 +10,11 @@
 	</parent>
 	<groupId>com.studytempo</groupId>
 	<artifactId>studytempoapp</artifactId>
-	<version>0.0.9</version>
+	<version>0.1.0</version>
 	<name>StudyTempo</name>
 	<description>A study web app that allows students to access a "StandBy" display with whatever they need, including Spotify.</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

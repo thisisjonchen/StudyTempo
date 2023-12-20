@@ -21,11 +21,11 @@ public class AuthController {
 
     //  specify clientID & clientSecret from Spotify Dev
     private static final String clientID = "ea74b10d170848169662fc6fc322359d";
-    private static final String clientSecret = "e5f18fd7b1e64e10a83956a03c50ea49";
+    private static final String clientSecret = "[]";
 
     //  specify URI matching Spotify Dev URI
     //  BRUH: was missing trailing slash in redirectUri on Spotify Dev Portal
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/auth/get-user-code/");
+    private static final URI redirectUri = SpotifyHttpManager.makeUri("https://studytempo.co/auth/get-user-code/");
 
 
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
@@ -66,7 +66,7 @@ public class AuthController {
             return e.getMessage();
         }
 
-        response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("https://studytempo.co");
         return spotifyApi.getAccessToken();
     }
     // if denied
@@ -82,7 +82,7 @@ public class AuthController {
     }
 
     //  refresh tokens
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 3590000)
     @PostMapping("refresh-token")
     public synchronized void refreshSpotifyUserToken() {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()

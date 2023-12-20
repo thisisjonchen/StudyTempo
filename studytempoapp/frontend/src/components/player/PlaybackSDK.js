@@ -69,7 +69,7 @@ function UserProfile({API_URL}) {
     const [spotifyUsername, setSpotifyUsername] = useState("");
     const player = useSpotifyPlayer();
     function getSpotifyUsername() {
-        fetch(`${API_URL}:8080/player/username`)
+        fetch(`${API_URL}/player/username`)
             .then(response => response.text())
             .then(username => {
                 setSpotifyUsername(username)
@@ -120,7 +120,7 @@ function UserPlaylists({shuffle, API_URL}) {
     const device = usePlayerDevice();
     const [userPlaylists, setUserPlaylists] = useState(null);
     useEffect(() => {
-        fetch(`${API_URL}:8080/player/get-user-playlists`)
+        fetch(`${API_URL}/player/get-user-playlists`)
             .then(response => response.json())
             .then(playlists => {
                 setUserPlaylists(playlists)
@@ -138,7 +138,7 @@ function UserPlaylists({shuffle, API_URL}) {
             <h5 className="yourPlaylistLabel">Your Playlists</h5>
             {userPlaylists ? userPlaylists.items.map((playlist) => <button className="playlistSelector" key={playlist.name} onClick={() => {
                 fetch(
-                    `${API_URL}:8080/player/play-playlist`,
+                    `${API_URL}/player/play-playlist`,
                     {
                         method: "PUT",
                         body: JSON.stringify({context_uri: playlist.uri, device_id: device.device_id, shuffle_state: shuffle === "true" ? "true" : "false"}),

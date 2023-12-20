@@ -1,4 +1,4 @@
-import {CreateSpotifyToken, IsLoggedIn} from "../player/PlayerAuth";
+import {CreateSpotifyToken} from "../player/PlayerAuth";
 import React, {useEffect, useState} from "react";
 import DarkIcon from "../../assets/darkmode.png";
 import LightIcon from "../../assets/lightmode.png";
@@ -73,6 +73,38 @@ function ScreenLockToggle({screenLockToggle, setScreenLockToggle}) {
     }
 }
 
+let screenIdleTime = 0
+const screenIdleMax = 5 // timeout after 5 secs
+
+function HideControls() {
+    document.getElementById("Bar").classList.add("hideOpacity");
+    document.getElementById("TimerControl").classList.add("hideOpacity");
+    document.getElementById("Logo").classList.add("hideOpacity");
+    document.getElementById("Player").classList.add("hideOpacity");
+    document.documentElement.style.cursor = "none";
+}
+
+function ShowControls() {
+    screenIdleTime = 0
+    document.getElementById("Bar").classList.remove("hideOpacity");
+    document.getElementById("TimerControl").classList.remove("hideOpacity");
+    document.getElementById("Logo").classList.remove("hideOpacity");
+    document.getElementById("Player").classList.remove("hideOpacity");
+    document.documentElement.style.cursor = "auto";
+}
+
+document.addEventListener("mousemove", ShowControls);
+document.addEventListener("touchstart", ShowControls);
+
+function CheckIdleTime() {
+    screenIdleTime++;
+    if (screenIdleTime >= screenIdleMax) {
+        HideControls();
+    }
+}
+
+setInterval(CheckIdleTime, 1000)
+
 const onSubmitUsername = (event) => {
     event.preventDefault();
 
@@ -81,6 +113,16 @@ const onSubmitUsername = (event) => {
 
     localStorage.setItem("username", username.toString());
     setUsername(username);
+}
+
+function ShowControlToggle({showControls, setShowControls}) {
+    if(showControls === "false") {
+        setShowControls("true");
+        localStorage.setItem("showControls", "true");
+    } else {
+        setShowControls("false");
+        localStorage.setItem("showControls", "false");
+    }
 }
 
 function GoodGreeting() {
@@ -122,7 +164,8 @@ function Bar({darkPref, setDarkPref, isFullScreen, setFullScreen, handle}) {
     );
 }
 
-function Settings({API_URL, breakTime, setBreakTime, darkPref, setDarkPref, showTODO, setShowTODO, breakToggle, setBreakToggle, autoRestart, setAutoRestart, volume, setVolume, timerPing, setTimerPing, shuffle, setShuffle, screenLockToggle, setScreenLockToggle, username}) {
+function Settings({API_URL, breakTime, setBreakTime, darkPref, setDarkPref, showTODO, setShowTODO, breakToggle, setBreakToggle, autoRestart, setAutoRestart, volume, setVolume, timerPing, setTimerPing,
+                      shuffle, setShuffle, screenLockToggle, setScreenLockToggle, username}) {
     const device = usePlayerDevice();
     const player = useSpotifyPlayer();
     return (

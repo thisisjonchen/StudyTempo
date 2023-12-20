@@ -1,9 +1,9 @@
 import {useState} from "react";
 
-const API_URL = "http://localhost";
+const API_URL = "https://studytempo.co";
 function CreateSpotifyToken() {
     try {
-        fetch(`${API_URL}:8080/auth/login`)
+        fetch(`${API_URL}/auth/login`)
             .then((response) => response.text())
             .then(response => {
                 window.location = response;
@@ -17,7 +17,7 @@ function CreateSpotifyToken() {
 
 function IsLoggedIn() {
     const [isLoggedIn, setStatus] = useState("");
-    fetch(`${API_URL}:8080/auth/is-token-valid`)
+    fetch(`${API_URL}/auth/is-token-valid`)
         .then((response) => response.text())
         .then(response => {
             setStatus(response)
@@ -25,17 +25,4 @@ function IsLoggedIn() {
     return isLoggedIn;
 }
 
-function RefreshSpotifyToken() {
-    try {
-        fetch(`${API_URL}:8080/auth/refresh-token`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        })
-    }
-    catch (err) {console.log(err)}
-}
-
-export {CreateSpotifyToken, RefreshSpotifyToken, IsLoggedIn};
+export {CreateSpotifyToken, IsLoggedIn};
