@@ -17,7 +17,7 @@ Server Deployment ☁️
 * AWS S3, EC2, Elastic Beanstalk
 
 Some more things I learned and used ✏️
-* ELB, Security Groups, and Ports (AWS, Namecheap)
+* ELB, Security Groups, Ports, IAM Roles and Permissions (AWS, Namecheap)
 * API vs. SDK (Spotify)
 * Hooks & Props (ReactJS)
 * Rate Limiting, CORS 💀, Cookies (Secure, HttpOnly), CSRF, HTTP Request (credentials, body, URL, headers), localStorage
