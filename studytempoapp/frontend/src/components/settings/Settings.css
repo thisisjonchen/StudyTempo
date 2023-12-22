@@ -1,9 +1,10 @@
 /* --settings-- */
 .settings {
     display: flex;
-    height: 50vh;
+    height: auto;
     background: #ffffff;
     padding: 48px 32px 32px 32px;
+    overflow-x: hidden;
 }
 .settingsContainer {
     width: 50%;

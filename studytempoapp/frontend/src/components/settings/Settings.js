@@ -168,6 +168,24 @@ function Settings({API_URL, breakTime, setBreakTime, darkPref, setDarkPref, show
                       shuffle, setShuffle, screenLockToggle, setScreenLockToggle, username}) {
     const device = usePlayerDevice();
     const player = useSpotifyPlayer();
+    //keep screen on
+    if (screenLockToggle === "true") {
+        let screenLock;
+        try {
+            navigator.wakeLock.request('screen')
+                .then(lock => {
+                    try {
+                        screenLock = lock;
+                        document.addEventListener('visibilitychange', async () => {
+                            if (screenLock !== null && document.visibilityState === 'visible') {
+                                screenLock = await navigator.wakeLock.request('screen');
+                            }
+                        });
+                    }
+                    catch (e) {}
+                });
+        } catch (e) {}
+    }
     return (
         <div className="settings">
             {/*Left*/}

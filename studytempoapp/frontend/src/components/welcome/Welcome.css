@@ -7,14 +7,15 @@
     height: 100vh;
     background-color: #f3f3f3;
     z-index: 5;
+    overflow: clip;
 }
 
 .welcome {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 500px;
-    width: 500px;
+    height: 85vh;
+    width: 85vh;
     border-radius: 50px;
     background-color: #f3f3f3;
     box-shadow: 0 0 10px #000000;

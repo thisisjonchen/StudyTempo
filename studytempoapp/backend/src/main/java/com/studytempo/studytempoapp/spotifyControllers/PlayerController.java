@@ -3,14 +3,11 @@ package com.studytempo.studytempoapp.spotifyControllers;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlayingContext;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
-import se.michaelthelin.spotify.model_objects.specification.Playlist;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistSimplified;
 import se.michaelthelin.spotify.model_objects.specification.User;
-import se.michaelthelin.spotify.requests.data.player.GetInformationAboutUsersCurrentPlaybackRequest;
 import se.michaelthelin.spotify.requests.data.player.StartResumeUsersPlaybackRequest;
 import se.michaelthelin.spotify.requests.data.player.ToggleShuffleForUsersPlaybackRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
-import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 import static com.studytempo.studytempoapp.spotifyControllers.AuthController.spotifyApi;
@@ -21,18 +18,6 @@ import static com.studytempo.studytempoapp.spotifyControllers.AuthController.spo
 public class PlayerController {
 
     CurrentlyPlayingContext currentlyPlayingContext = null;
-    Playlist playlist = null;
-
-    @GetMapping("fetch-spotify")
-    public void fetchSpotify() {
-        try {
-            final GetInformationAboutUsersCurrentPlaybackRequest getInformationAboutUsersCurrentPlaybackRequest = spotifyApi.getInformationAboutUsersCurrentPlayback().build();
-            final GetPlaylistRequest getPlaylistRequest = spotifyApi.getPlaylist(getUserCurrentPlaylistID()).build();
-            Playlist playlist = getPlaylistRequest.execute();
-            this.playlist = playlist;
-        }
-        catch (Exception ignored){}
-    }
 
     // get user currently playing track id for use in getPlaylist
     @GetMapping("current-playlist-id")
@@ -40,20 +25,24 @@ public class PlayerController {
         try {
             String input = currentlyPlayingContext.getContext().getUri();
             String[] id = input.split("playlist:");
-            return id[id.length-1];
+            String playlist = id[id.length-1];
+            return playlist;
         }
         catch (Exception ignored){}
         return "";
     }
 
     @GetMapping("get-user-playlists")
-    public Paging<PlaylistSimplified> getUserPlaylists() {
+    public Paging<PlaylistSimplified> getUserPlaylists(@CookieValue("spotifyAccessToken") String spotifyAccessToken) {
+        spotifyApi.setAccessToken(spotifyAccessToken);
         final GetListOfCurrentUsersPlaylistsRequest getListOfCurrentUsersPlaylistsRequest = spotifyApi
                 .getListOfCurrentUsersPlaylists()
                 .limit(30)
                 .build();
         try {
-            return getListOfCurrentUsersPlaylistsRequest.execute();
+            Paging<PlaylistSimplified> playlists = getListOfCurrentUsersPlaylistsRequest.execute();
+            spotifyApi.setAccessToken("");
+            return playlists;
         } catch (Exception ignored){}
         return null;
     }
@@ -77,7 +66,8 @@ public class PlayerController {
 
     @PutMapping("play-playlist")
     @ResponseBody
-    public void playPlaylist(@RequestBody PlaylistRequest playlist) {
+    public void playPlaylist(@RequestBody PlaylistRequest playlist, @CookieValue("spotifyAccessToken") String spotifyAccessToken) {
+        spotifyApi.setAccessToken(spotifyAccessToken);
         final StartResumeUsersPlaybackRequest startResumeUsersPlaybackRequest = spotifyApi.startResumeUsersPlayback()
                 .context_uri(playlist.context_uri)
                 .device_id(playlist.device_id)
@@ -87,20 +77,25 @@ public class PlayerController {
                     .toggleShuffleForUsersPlayback(playlist.isShuffled())
                     .device_id(playlist.device_id)
                     .build();
-            try {toggleShuffleForUsersPlaybackRequest.execute();}
+            try {
+                toggleShuffleForUsersPlaybackRequest.execute();
+            }
             catch (Exception ignored) {}
             startResumeUsersPlaybackRequest.execute();
+            spotifyApi.setAccessToken("");
         } catch (Exception ignored) {}
     }
 
     @GetMapping("username")
-    public String getUsername() {
+    public String getUsername(@CookieValue("spotifyAccessToken") String spotifyAccessToken) {
+        spotifyApi.setAccessToken(spotifyAccessToken);
         final GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = spotifyApi.getCurrentUsersProfile()
                 .build();
-
         try {
             final User user = getCurrentUsersProfileRequest.execute();
-            return user.getDisplayName();
+            String spotifyUsername = user.getDisplayName();
+            spotifyApi.setAccessToken("");
+            return spotifyUsername;
         }
         catch (Exception ignored) {}
         return "";

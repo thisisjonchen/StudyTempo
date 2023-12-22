@@ -1,34 +1,20 @@
-.centeredH {
+.orientationAlertContainer {
+  height: 300%;
+  width: 100vw;
+  background-color: white;
+  position: absolute;
+  z-index: 10;
+}
+.orientationAlert {
+  height: 100vh;
+  width: 100%;
+  position:fixed;
   display: flex;
   align-items: center;
-}
-.fixed {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-.stack {
-  display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
-body {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  background-color: black;
-}
-body::-webkit-scrollbar {
-  display: none;
-}
-span {
-  font-weight: bold;
-}
-span.todo[contenteditable]:empty::before {
-  content: "Enter a Task!";
-  display: inline-block;
-}
-/* --divs-- */
+
+/* --body, span, divs- */
 div .dark {
     background-color: #f3f3f3;
     filter: invert(100%) hue-rotate(180deg);
@@ -52,7 +38,22 @@ div .light {
   -webkit-transition: .4s;
   transition: .4s;
 }
-/* --divs-- */
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  background-color: black;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+span {
+  font-weight: bold;
+}
+span.todo[contenteditable]:empty::before {
+  content: "Enter a Task!";
+  display: inline-block;
+}
+/* --body, span, divs-- */
 
 /* --headers- */
 .header {
@@ -152,8 +153,6 @@ div .light {
 /* --visibility-- */
 .hide {
   display: none !important;
-  -webkit-transition: .4s;
-  transition: .4s;
 }
 .hideOpacity {
   opacity: 0;
@@ -281,3 +280,21 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 /* --fonts & generic buttons-- */
+
+/* --misc formatting-- */
+.centeredH {
+  display: flex;
+  align-items: center;
+}
+.fixed {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+/* --misc formatting-- */

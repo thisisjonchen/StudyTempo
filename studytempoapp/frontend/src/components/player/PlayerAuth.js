@@ -1,13 +1,13 @@
-import {useState} from "react";
+const API_URL = "http://localhost:8080";
 
-const API_URL = "https://studytempo.co";
+// sends request to backend, which then returns an url for user to log in with
+// should only happen once (or until they log in again)
 function CreateSpotifyToken() {
     try {
         fetch(`${API_URL}/auth/login`)
-            .then((response) => response.text())
+            .then(response => response.text())
             .then(response => {
                 window.location = response;
-                setInterval(RefreshSpotifyToken, 3500000)
             })
     }
     catch (err) {
@@ -15,14 +15,40 @@ function CreateSpotifyToken() {
         }
 }
 
-function IsLoggedIn() {
-    const [isLoggedIn, setStatus] = useState("");
-    fetch(`${API_URL}/auth/is-token-valid`)
-        .then((response) => response.text())
-        .then(response => {
-            setStatus(response)
-        })
-    return isLoggedIn;
+function RefreshAuthToken() {
+    try {
+        fetch(`${API_URL}/auth/get-auth-token`,
+            {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Credentials": "true"
+                }}
+        )
+    }
+    catch (err) {
+        console.log(err)
+    }
 }
 
-export {CreateSpotifyToken, IsLoggedIn};
+setInterval(RefreshAuthToken, 3590000) // refresh in less than an hour 
+
+// thanks w3 schools :>
+function getCookie(cookie) {
+    const name = cookie + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(';');
+    for(let i = 0; i < cookieArray.length; i++) {
+        let c = cookieArray[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "false";
+}
+
+export {CreateSpotifyToken, getCookie, RefreshAuthToken};

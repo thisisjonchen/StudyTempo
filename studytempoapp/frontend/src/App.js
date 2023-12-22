@@ -3,7 +3,7 @@ import "./components/clock/time.css";
 import "./components/player/Player.css"
 import "./components/settings/Settings.css";
 import "./components/welcome/Welcome.css"
-import React, {useCallback, useRef, useState} from "react"
+import React, {useCallback, useRef, useState, useEffect} from "react"
 import StudyTempoLogo from "./assets/stlogo.png";
 import {Clock} from "./components/clock/clock";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
@@ -11,39 +11,39 @@ import {CountdownControl, TimerRenderer} from "./components/clock/timer";
 import {Bar, Settings} from "./components/settings/Settings";
 import Countdown, {calcTimeDelta} from "react-countdown";
 import {CurrentPlaylist, CurrentSong, PlaybackControl} from "./components/player/PlaybackSDK";
+import {getCookie, RefreshAuthToken} from "./components/player/PlayerAuth";
 import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
 import {Welcome} from "./components/welcome/Welcome.js";
 import Abyss from "./components/abyss/abyss";
 
 function StudyTempo() {
     // check if user visited site before
-    const API_URL = "https://studytempo.co";
+    const API_URL = "http://localhost:8080";
+    
+    const spotifyLoggedIn = getCookie("spotifyLoggedIn");
+    
+    const spotifyAccessToken = getCookie("spotifyAccessToken");
+
+    useEffect(() => {
+        if (spotifyLoggedIn === "true") {
+            RefreshAuthToken();
+        }
+    }, []);
+
     const [username, setUsername] = useState(localStorage.getItem("username"));
+
+    let landscape = window.matchMedia("(orientation: landscape)");
+
+    landscape.addEventListener("change", function(e) {
+        if (e.matches) document.getElementById("OrientationCheck").className = "hide";
+        else document.getElementById("OrientationCheck").className = "orientationAlertContainer";
+    })
+
+
     function HasVisited() {
         if (!username) return false;
         else return true;
     }
-
-    // get auth token for usage in playback
-    const [authToken, setAuthToken] = useState(
-        fetch(`${API_URL}/auth/get-token`)
-            .then((response) => response.text())
-            .then(token => {
-                if (token) {
-                    return token;
-                }
-            })
-    );
-    function GetAuthToken() {
-        setAuthToken(fetch(`${API_URL}/auth/get-token`)
-            .then((response) => response.text())
-            .then(token => {
-                if (token) {
-                    return token;
-                }
-            }))
-    }
-    setInterval(GetAuthToken, 3590000)
 
     // ui
     const handle = useFullScreenHandle();
@@ -68,32 +68,22 @@ function StudyTempo() {
     const [volume, setVolume] = useState(localStorage.getItem("volume"));
     const [shuffle, setShuffle] = useState(localStorage.getItem("shuffle"));
 
-    //keep screen on
-    if (screenLockToggle === "true") {
-        let screenLock;
-        try {
-            navigator.wakeLock.request('screen')
-                .then(lock => {
-                    try {
-                        screenLock = lock;
-                        document.addEventListener('visibilitychange', async () => {
-                            if (screenLock !== null && document.visibilityState === 'visible') {
-                                screenLock = await navigator.wakeLock.request('screen');
-                            }
-                        });
-                    }
-                    catch (e) {}
-                });
-        } catch (e) {}
-    }
-
     return (
         <WebPlaybackSDK
             initialDeviceName="StudyTempo"
-            getOAuthToken={useCallback(callback => callback(authToken), [])}
+            getOAuthToken={useCallback(callback => callback(spotifyAccessToken), [])}
             initialVolume={volume}
             connectOnInitialized={false}>
             <div id="StudyTempo" className={darkPref === "true" ? "dark" : "light"}>
+                <div id="OrientationCheck" className={window.innerWidth < window.innerHeight ? "orientationAlertContainer" : "hide"}>
+                    <div className="orientationAlert">
+                        <div className="stack">
+                            <img src={StudyTempoLogo} className="welcomeIcon"/>
+                            <h1>StudyTempo</h1>
+                            <h5 style={{fontWeight:"normal"}}>Landscape mode please</h5>
+                        </div>
+                    </div>
+                </div>
                 {/*Main*/}
                 <FullScreen handle={handle}>
                     <div id="Welcome" className={HasVisited() === false ? "welcomeContainer" : "hide"}>
@@ -151,7 +141,7 @@ function StudyTempo() {
                 <Settings API_URL={API_URL} breakTime={breakTime} setBreakTime={setBreakTime} darkPref={darkPref} setDarkPref={setDarkPref}
                           showTODO={showTODO} setShowTODO={setShowTODO} breakToggle={breakToggle} setBreakToggle={setBreakToggle} autoRestart={autoRestart} setAutoRestart={setAutoRestart}
                           timerMode={setTimer} setTimerMode={setTimerMode} timerPing={timerPing} setTimerPing={setTimerPing} volume={volume} setVolume={setVolume} shuffle={shuffle} setShuffle={setShuffle}
-                          screenLockToggle={screenLockToggle} setScreenLockToggle={setScreenLockToggle} username={username} setUsername={setUsername}/>
+                          screenLockToggle={screenLockToggle} setScreenLockToggle={setScreenLockToggle} username={username}/>
                 {/*Settings*/}
                 {/*The Pit*/}
                 <Abyss/>

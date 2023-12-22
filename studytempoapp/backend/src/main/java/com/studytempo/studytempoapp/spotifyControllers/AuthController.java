@@ -1,7 +1,7 @@
 package com.studytempo.studytempoapp.spotifyControllers;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -13,9 +13,10 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 
 @RestController
-@CrossOrigin(origins ="http://localhost:3000") // CORS allow React to fetch Endpoint
+@CrossOrigin(origins ="http://localhost:3000", allowCredentials = "true") // CORS allow React to fetch Endpoint
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -23,10 +24,17 @@ public class AuthController {
     private static final String clientID = "ea74b10d170848169662fc6fc322359d";
     private static final String clientSecret = "[]";
 
+    private static HashMap<String, String> spotifyCookies = new HashMap<>();
+
+    private static Cookie refreshTokenCookie = null;
+
+    private static Cookie accessTokenCookie = null;
+
+    private static Cookie loggedInCookie = null;
+
     //  specify URI matching Spotify Dev URI
     //  BRUH: was missing trailing slash in redirectUri on Spotify Dev Portal
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("https://studytempo.co/auth/get-user-code/");
-
+    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/auth/get-user-code/");
 
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientID)
@@ -48,7 +56,7 @@ public class AuthController {
 
     //  retrieve User Tokens to request User-specific data
     @RequestMapping( value = "get-user-code/", params = "code")
-    public String getSpotifyUserCode(@RequestParam String code, HttpServletResponse response) throws IOException {
+    public void getSpotifyUserCode(@RequestParam String code, HttpServletResponse response) throws IOException {
         AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code)
                 .build();
 
@@ -56,56 +64,69 @@ public class AuthController {
         try {
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
 
-            //  sets access and refresh tokens for Spotify API usage
-            spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-            spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
+            // put tokens in hashmap for use
+            spotifyCookies.put(authorizationCodeCredentials.getRefreshToken(), authorizationCodeCredentials.getAccessToken());
+
+            refreshTokenCookie = new Cookie("spotifyRefreshToken", authorizationCodeCredentials.getRefreshToken());
+            refreshTokenCookie.setMaxAge(31560000); // refreshToken cookie age of 1 year
+            refreshTokenCookie.setHttpOnly(true);
+            refreshTokenCookie.setSecure(true);
+            refreshTokenCookie.setPath("/");
+
+            accessTokenCookie = new Cookie("spotifyAccessToken", authorizationCodeCredentials.getAccessToken());
+            accessTokenCookie.setMaxAge(authorizationCodeCredentials.getExpiresIn()); // accessToken cookie age of 1 hour
+            accessTokenCookie.setSecure(true);
+            accessTokenCookie.setPath("/");
+
+            loggedInCookie = new Cookie("spotifyLoggedIn", "true");
+            loggedInCookie.setMaxAge(31560000); // match refreshToken cookie age (assuming user does not swap)
+            loggedInCookie.setSecure(true);
+            loggedInCookie.setPath("/");
+
 
             System.out.println("(A) Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error " + e.getMessage());
-            return e.getMessage();
         }
 
-        response.sendRedirect("https://studytempo.co");
-        return spotifyApi.getAccessToken();
+        response.addCookie(accessTokenCookie);
+        response.addCookie(loggedInCookie);
+        response.addCookie(refreshTokenCookie);
+        response.sendRedirect("http://localhost:8080/");
+        refreshTokenCookie = null;
     }
     // if denied
     @RequestMapping(value = "get-user-code/", params = "error")
     public void error(@RequestParam String error, HttpServletResponse response) throws IOException {
-        response.sendRedirect("http://localhost:3000/");
+        loggedInCookie = new Cookie("spotifyLoggedIn", "false");
+        loggedInCookie.setMaxAge(31560000);
+        loggedInCookie.setSecure(true);
+        loggedInCookie.setPath("/");
+        response.addCookie(loggedInCookie);
+        response.sendRedirect("http://localhost:8080/");
     }
 
     // get token
-    @GetMapping("get-token")
-    public String getSpotifyUserToken() {
-        return spotifyApi.getAccessToken();
-    }
-
-    //  refresh tokens
-    @Scheduled(fixedRate = 3590000)
-    @PostMapping("refresh-token")
-    public synchronized void refreshSpotifyUserToken() {
+    @GetMapping("get-auth-token")
+    public void refreshSpotifyUserToken(@CookieValue("spotifyRefreshToken") String refreshToken, HttpServletResponse response) {
+        spotifyApi.setRefreshToken(refreshToken);
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
                 .build();
         //  try token refresh.........maybe detect if access token is expired first before retrying?
         try {
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
-            if (authorizationCodeCredentials.getExpiresIn() > 300) {
-                // Set access and refresh token for further "spotifyApi" object usage...sets both access and refresh tokens as refresh token can only be used once
-                spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-                System.out.println("(R) Expires in: " + authorizationCodeCredentials.getExpiresIn());
-            }
+            String accessToken = authorizationCodeCredentials.getAccessToken();
+            spotifyApi.setRefreshToken("");
+            accessTokenCookie = new Cookie("spotifyAccessToken", accessToken);
+            accessTokenCookie.setMaxAge(authorizationCodeCredentials.getExpiresIn()); // accessToken cookie age of 1 hour
+            accessTokenCookie.setSecure(true);
+            accessTokenCookie.setPath("/");
+            response.addCookie(accessTokenCookie);
+            response.getWriter().flush();
+            response.getWriter().close();
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-    }
-
-    @GetMapping("is-token-valid")
-    public String getIsTokenValid() {
-        if (!(spotifyApi.getAccessToken() == null)) {
-            return "valid";
-        }
-        return "invalid";
     }
 }

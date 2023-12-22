@@ -5,7 +5,9 @@ import SkipBackIcon from "./icons/skipbackicon.png";
 import SkipNextIcon from "./icons/skipnexticon.png";
 import ShuffleToggle from "./icons/shuffleicon.png";
 import SpotifyLogo from "../../assets/SpotifyLogo.png";
-import {CreateSpotifyToken} from "./PlayerAuth";
+import {CreateSpotifyToken, getCookie} from "./PlayerAuth";
+
+const spotifyLoggedIn = getCookie("spotifyLoggedIn");
 
 // returns and displays current song
 function CurrentSong() {
@@ -63,23 +65,32 @@ function PlaybackControl() {
 }
 
 // ! Spotify Detailed Panel: Username, Currently Playing "Pane", and User Playlist Selector
-
 // returns and displays Spotify Profile Username
 function UserProfile({API_URL}) {
     const [spotifyUsername, setSpotifyUsername] = useState("");
     const player = useSpotifyPlayer();
-    function getSpotifyUsername() {
-        fetch(`${API_URL}/player/username`)
-            .then(response => response.text())
-            .then(username => {
-                setSpotifyUsername(username)
-            })
-    }
-    setTimeout(getSpotifyUsername, 500)
+    useEffect(async () => {
+        if (spotifyLoggedIn === "true") {
+            await new Promise(resolve => setTimeout(resolve, 250));
+            fetch(`${API_URL}/player/username`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Credentials": "true"
+                    }
+                })
+                .then(response => response.text())
+                .then(username => {
+                    setSpotifyUsername(username);
+                })
+        }
+    }, []);
     return (
-        <div className="spotifyLoginTab" onClick={() => {spotifyUsername === "" ? CreateSpotifyToken() : player.connect()}}>
+        <div className="spotifyLoginTab" onClick={() => {spotifyLoggedIn === "false" ? CreateSpotifyToken() : player.connect()}}>
             <div className="playbackCurrent">
-                <h5>{spotifyUsername === "" ? "Log in (Premium Only)" : "Logged in as "}{spotifyUsername}</h5>
+                <h5>{spotifyLoggedIn === "false" ? "Log in (Premium Only)" : "Logged in as "}{spotifyUsername}</h5>
             </div>
             <img src={SpotifyLogo} className="icon"/>
         </div>
@@ -119,15 +130,27 @@ function CurrentlyPlaying({shuffle, setShuffle}) {
 function UserPlaylists({shuffle, API_URL}) {
     const device = usePlayerDevice();
     const [userPlaylists, setUserPlaylists] = useState(null);
-    useEffect(() => {
-        fetch(`${API_URL}/player/get-user-playlists`)
-            .then(response => response.json())
-            .then(playlists => {
-                setUserPlaylists(playlists)
-            })
-            .catch(error => {
-                console.log(error)
-            })
+    useEffect(async () => {
+        if (spotifyLoggedIn === "true") {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            fetch(`${API_URL}/player/get-user-playlists`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Credentials": "true"
+                    }
+                }
+            )
+                .then(response => response.json())
+                .then(playlists => {
+                    setUserPlaylists(playlists);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
     }, []);
     if (device === null) return null;
     return (
@@ -141,6 +164,7 @@ function UserPlaylists({shuffle, API_URL}) {
                     `${API_URL}/player/play-playlist`,
                     {
                         method: "PUT",
+                        credentials: "include",
                         body: JSON.stringify({context_uri: playlist.uri, device_id: device.device_id, shuffle_state: shuffle === "true" ? "true" : "false"}),
                         headers: {
                             "Content-Type": "application/json",
