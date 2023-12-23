@@ -18,8 +18,9 @@ import Abyss from "./components/abyss/abyss";
 
 function StudyTempo() {
     // check if user visited site before
-    const API_URL = "http://localhost:8080";
+    const API_URL = "https://studytempo.co";
     
+    // spotify auth token flow: start
     const spotifyLoggedIn = getCookie("spotifyLoggedIn");
     
     const spotifyAccessToken = getCookie("spotifyAccessToken");
@@ -29,9 +30,8 @@ function StudyTempo() {
             RefreshAuthToken();
         }
     }, []);
-
-    const [username, setUsername] = useState(localStorage.getItem("username"));
-
+    
+    // landscape checks
     let landscape = window.matchMedia("(orientation: landscape)");
 
     landscape.addEventListener("change", function(e) {
@@ -39,9 +39,23 @@ function StudyTempo() {
         else document.getElementById("OrientationCheck").className = "orientationAlertContainer";
     })
 
+    // username + check for has visited
+    const [username, setUsername] = useState(localStorage.getItem("username"));
 
+    // sets all localStorage to defaults
     function HasVisited() {
-        if (!username) return false;
+        if (!username) {
+            localStorage.setItem("showTODO", "false");
+            localStorage.setItem("darkPref", "false");
+            localStorage.setItem("screenLock", "false");
+            localStorage.setItem("autoRestart", "false");
+            localStorage.setItem("breakTimePref", "5");
+            localStorage.setItem("breakToggle", "true");
+            localStorage.setItem("timerPing", "true");
+            localStorage.setItem("volume", "0.5");
+            localStorage.setItem("shuffle", "true");
+            return false;
+        }
         else return true;
     }
 

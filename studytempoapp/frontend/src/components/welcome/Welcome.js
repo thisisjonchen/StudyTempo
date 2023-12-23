@@ -9,6 +9,8 @@ function Welcome({setUsername}) {
 
         localStorage.setItem("username", username.toString());
         setUsername(username);
+        
+        window.location.reload();
     }
 
     return (

@@ -13,7 +13,7 @@ import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfi
 import static com.studytempo.studytempoapp.spotifyControllers.AuthController.spotifyApi;
 
 @RestController
-@CrossOrigin(origins ="http://localhost:3000")
+@CrossOrigin(origins ="https://studytempo.co", allowCredentials = "true")
 @RequestMapping("/player")
 public class PlayerController {
 

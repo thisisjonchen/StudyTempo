@@ -48,6 +48,10 @@
     background-color: #15a93f;
     opacity: 100% !important;
 }
+
+.setTimerButton {
+    margin: 0 5px 0 5px;
+}
 .timerContainer {
     width: 34%;
     display: flex;

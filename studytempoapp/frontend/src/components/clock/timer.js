@@ -7,10 +7,10 @@ import useSound from "use-sound";
 function CountdownControl({timerValue, setTimerValue, setTimer, countdownApi}) {
     return (
         <div id="TimerControl" className="timerControl">
-            <button onClick={() => {setTimerValue(900000); setTimer(Date.now() + 900000); countdownApi?.stop();}}>15</button>
-            <button onClick={() => {setTimerValue(1500000); setTimer(Date.now() + 1500000); countdownApi?.stop();}}>25</button>
-            <button onClick={() => {setTimerValue(1800000); setTimer(Date.now() + 1800000); countdownApi?.stop();}}>30</button>
-            <button onClick={() => {setTimerValue(2700000); setTimer(Date.now() + 2700000); countdownApi?.stop();}}>45</button>
+            <button className="setTimerButton" onClick={() => {setTimerValue(900000); setTimer(Date.now() + 900000); countdownApi?.stop();}}>15</button>
+            <button className="setTimerButton" onClick={() => {setTimerValue(1500000); setTimer(Date.now() + 1500000); countdownApi?.stop();}}>25</button>
+            <button className="setTimerButton" onClick={() => {setTimerValue(1800000); setTimer(Date.now() + 1800000); countdownApi?.stop();}}>30</button>
+            <button className="setTimerButton" onClick={() => {setTimerValue(2700000); setTimer(Date.now() + 2700000); countdownApi?.stop();}}>45</button>
             <button className="startButton" onClick={() => {setTimer(Date.now() + timerValue); countdownApi?.stop(); setTimeout(countdownApi?.start(), 1000)}}>Start</button>
             <button className="stopButton" onClick={() => {
                 setTimer(0);

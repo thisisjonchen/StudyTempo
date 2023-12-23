@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.HashMap;
 
 @RestController
-@CrossOrigin(origins ="http://localhost:3000", allowCredentials = "true") // CORS allow React to fetch Endpoint
+@CrossOrigin(origins ="https://studytempo.co", allowCredentials = "true") // CORS allow React to fetch Endpoint
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -34,7 +34,7 @@ public class AuthController {
 
     //  specify URI matching Spotify Dev URI
     //  BRUH: was missing trailing slash in redirectUri on Spotify Dev Portal
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/auth/get-user-code/");
+    private static final URI redirectUri = SpotifyHttpManager.makeUri("https://studytempo.co/auth/get-user-code/");
 
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientID)
@@ -92,18 +92,18 @@ public class AuthController {
         response.addCookie(accessTokenCookie);
         response.addCookie(loggedInCookie);
         response.addCookie(refreshTokenCookie);
-        response.sendRedirect("http://localhost:8080/");
+        response.sendRedirect("https://studytempo.co");
         refreshTokenCookie = null;
     }
     // if denied
-    @RequestMapping(value = "get-user-code/", params = "error")
+    @PutMapping(value = "get-user-code/", params = "error")
     public void error(@RequestParam String error, HttpServletResponse response) throws IOException {
         loggedInCookie = new Cookie("spotifyLoggedIn", "false");
         loggedInCookie.setMaxAge(31560000);
         loggedInCookie.setSecure(true);
         loggedInCookie.setPath("/");
         response.addCookie(loggedInCookie);
-        response.sendRedirect("http://localhost:8080/");
+        response.sendRedirect("https://studytempo.co");
     }
 
     // get token

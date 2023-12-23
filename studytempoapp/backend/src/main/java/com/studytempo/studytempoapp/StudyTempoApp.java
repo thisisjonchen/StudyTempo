@@ -10,4 +10,5 @@ public class StudyTempoApp {
 	public static void main(String[] args) {
 		SpringApplication.run(StudyTempoApp.class, args);
 	}
+
 }

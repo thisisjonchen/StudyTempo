@@ -89,8 +89,9 @@ function UserProfile({API_URL}) {
     }, []);
     return (
         <div className="spotifyLoginTab" onClick={() => {spotifyLoggedIn === "false" ? CreateSpotifyToken() : player.connect()}}>
-            <div className="playbackCurrent">
+            <div className="playbackPrompt">
                 <h5>{spotifyLoggedIn === "false" ? "Log in (Premium Only)" : "Logged in as "}{spotifyUsername}</h5>
+                <h6 className={spotifyLoggedIn === "false" ? "hide" : ""}>Click here to play!</h6>
             </div>
             <img src={SpotifyLogo} className="icon"/>
         </div>

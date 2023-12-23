@@ -176,10 +176,12 @@ h6 {
   margin: 0;
 }
 button {
+  padding: 0;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  color: black;
   background-color: transparent;
   border-color: transparent;
   -webkit-transition: .4s;
