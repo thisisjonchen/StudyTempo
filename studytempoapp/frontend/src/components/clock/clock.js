@@ -4,7 +4,7 @@ import "./time.css";
 function Clock() {
   const [hour, setHour] = useState()
   const [minute, setMinute] = useState()
-  const [second, setSecond] = useState()
+  //const [second, setSecond] = useState()
 
   useEffect(() => {
 

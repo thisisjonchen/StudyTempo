@@ -7,13 +7,14 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.model_objects.specification.User;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 
 @RestController
 @CrossOrigin(origins ="https://studytempo.co", allowCredentials = "true") // CORS allow React to fetch Endpoint
@@ -23,8 +24,6 @@ public class AuthController {
     //  specify clientID & clientSecret from Spotify Dev
     private static final String clientID = "ea74b10d170848169662fc6fc322359d";
     private static final String clientSecret = "[]";
-
-    private static HashMap<String, String> spotifyCookies = new HashMap<>();
 
     private static Cookie refreshTokenCookie = null;
 
@@ -59,32 +58,52 @@ public class AuthController {
     public void getSpotifyUserCode(@RequestParam String code, HttpServletResponse response) throws IOException {
         AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code)
                 .build();
-
-        //  check to see if Tokens are available
+        // check to see if Tokens are available
         try {
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
+            spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+            GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = spotifyApi.getCurrentUsersProfile()
+                    .build();
+            final User user = getCurrentUsersProfileRequest.execute();
 
-            // put tokens in hashmap for use
-            spotifyCookies.put(authorizationCodeCredentials.getRefreshToken(), authorizationCodeCredentials.getAccessToken());
+            // check if user is premium or not
+            // if so, redirect with loggedIn false
+            if (user.getProduct().toString().equals("FREE") || user.getProduct().toString().equals("OPEN")) {
+                refreshTokenCookie = new Cookie("spotifyRefreshToken", "NOTPremium");
+                refreshTokenCookie.setMaxAge(31560000); // refreshToken cookie age of 1 year
+                refreshTokenCookie.setHttpOnly(true);
+                refreshTokenCookie.setSecure(true);
+                refreshTokenCookie.setPath("/");
 
-            refreshTokenCookie = new Cookie("spotifyRefreshToken", authorizationCodeCredentials.getRefreshToken());
-            refreshTokenCookie.setMaxAge(31560000); // refreshToken cookie age of 1 year
-            refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(true);
-            refreshTokenCookie.setPath("/");
+                accessTokenCookie = new Cookie("spotifyAccessToken", "NOTPremium");
+                accessTokenCookie.setMaxAge(authorizationCodeCredentials.getExpiresIn()); // accessToken cookie age of 1 hour
+                accessTokenCookie.setSecure(true);
+                accessTokenCookie.setPath("/");
 
-            accessTokenCookie = new Cookie("spotifyAccessToken", authorizationCodeCredentials.getAccessToken());
-            accessTokenCookie.setMaxAge(authorizationCodeCredentials.getExpiresIn()); // accessToken cookie age of 1 hour
-            accessTokenCookie.setSecure(true);
-            accessTokenCookie.setPath("/");
+                loggedInCookie = new Cookie("spotifyLoggedIn", "false");
+                loggedInCookie.setMaxAge(31560000);
+                loggedInCookie.setSecure(true);
+                loggedInCookie.setPath("/");
+            }
+            else { // else, redirect with loggedIn true and tokens
+                refreshTokenCookie = new Cookie("spotifyRefreshToken", authorizationCodeCredentials.getRefreshToken());
+                refreshTokenCookie.setMaxAge(31560000); // refreshToken cookie age of 1 year
+                refreshTokenCookie.setHttpOnly(true);
+                refreshTokenCookie.setSecure(true);
+                refreshTokenCookie.setPath("/");
 
-            loggedInCookie = new Cookie("spotifyLoggedIn", "true");
-            loggedInCookie.setMaxAge(31560000); // match refreshToken cookie age (assuming user does not swap)
-            loggedInCookie.setSecure(true);
-            loggedInCookie.setPath("/");
+                accessTokenCookie = new Cookie("spotifyAccessToken", authorizationCodeCredentials.getAccessToken());
+                accessTokenCookie.setMaxAge(authorizationCodeCredentials.getExpiresIn()); // accessToken cookie age of 1 hour
+                accessTokenCookie.setSecure(true);
+                accessTokenCookie.setPath("/");
 
+                loggedInCookie = new Cookie("spotifyLoggedIn", "true");
+                loggedInCookie.setMaxAge(31560000); // match refreshToken cookie age (assuming user does not swap)
+                loggedInCookie.setSecure(true);
+                loggedInCookie.setPath("/");
 
-            System.out.println("(A) Expires in: " + authorizationCodeCredentials.getExpiresIn());
+                System.out.println("(A) Expires in: " + authorizationCodeCredentials.getExpiresIn());
+            }
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error " + e.getMessage());
         }
@@ -93,7 +112,11 @@ public class AuthController {
         response.addCookie(loggedInCookie);
         response.addCookie(refreshTokenCookie);
         response.sendRedirect("https://studytempo.co");
+
+        spotifyApi.setAccessToken("");
         refreshTokenCookie = null;
+        accessTokenCookie = null;
+        loggedInCookie = null;
     }
     // if denied
     @PutMapping(value = "get-user-code/", params = "error")
@@ -104,6 +127,7 @@ public class AuthController {
         loggedInCookie.setPath("/");
         response.addCookie(loggedInCookie);
         response.sendRedirect("https://studytempo.co");
+        loggedInCookie = null;
     }
 
     // get token
@@ -128,5 +152,6 @@ public class AuthController {
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+        accessTokenCookie = null;
     }
 }

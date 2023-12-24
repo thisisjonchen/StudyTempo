@@ -1,3 +1,4 @@
+/* --welcome-- */
 .welcomeContainer {
     display: flex;
     justify-content: center;
@@ -33,3 +34,4 @@ input[type="text"] {
     width: 50px;
     padding: 20px;
 }
+/* --welcome-- */

@@ -20,14 +20,16 @@ function CurrentSong() {
         .split("(feat")[0] // removes all including and after "(feat
         .split("[The")[0] // removes all including and after "(feat
         .replace(/,$/, ""); // removes comma at end if needed
+    const currentSongURI = playbackState.track_window.current_track.uri.split(":")[2];
     const currentArtists = playbackState.track_window.current_track.artists;
+    const currentArtistURI = currentArtists[0].uri.split(":")[2];
     return (
         <>
             <div className="centeredH">
-                <img src={Visualizer} id="Visualizer" className={playbackState.paused === true ? "hide" : "visualizer"}/>
-                <h5 className="currentSong">{currentSong}</h5>
+                <img alt="Audio Visualizer" src={Visualizer} id="Visualizer" className={playbackState.paused === true ? "hide" : "visualizer"}/>
+                <h5 onClick={() => window.open(`https://open.spotify.com/track/${currentSongURI}`)} className="currentSong spotifyOnClick">{currentSong}</h5>
             </div>
-            <h6 className="currentArtistMain">{currentArtists[0].name}</h6>
+            <h6 onClick={() => window.open(`https://open.spotify.com/artist/${currentArtistURI}`)} className="currentArtistMain spotifyOnClick">{currentArtists[0].name}</h6>
         </>
     );
 }
@@ -38,7 +40,7 @@ function CurrentPlaylist() {
     if (playbackState === null) return null;
     return (
         <div id="Playlist" className="centeredH">
-            <img src={localStorage.getItem("playlistName") === "" ? playbackState.track_window.current_track.album.images[0].url : localStorage.getItem("playlistIMGUrl")} className="playlistCoverMini"/>
+                    <img alt="Playlist Image" src={localStorage.getItem("playlistName") === "" ? playbackState.track_window.current_track.album.images[0].url : localStorage.getItem("playlistIMGUrl")} className="playlistCoverMini"/>
             <div className="playlistTitle">
                 <h6>Playing from</h6>
                 <h5>{localStorage.getItem("playlistName") === "" ?  playbackState.track_window.current_track.album.name : localStorage.getItem("playlistName")}</h5>
@@ -56,10 +58,10 @@ function PlaybackControl() {
 
     return (
         <div id="PlayerControl" className="playerControl">
-            <button onClick={() => player.previousTrack()}><img src={SkipBackIcon}/></button>
+            <button onClick={() => player.previousTrack()}><img alt="Skip Back Button" src={SkipBackIcon}/></button>
             <button onClick={playbackState.paused === true ? () => player.resume() : () => player.pause()}>
-                <img id="PlayPause" className={playbackState.paused === true ? "play" : "pause"}/></button>
-            <button onClick={() => player.nextTrack()}><img src={SkipNextIcon}/></button>
+                <img alt="Play/Pause Button" id="PlayPause" className={playbackState.paused === true ? "play" : "pause"}/></button>
+            <button onClick={() => player.nextTrack()}><img alt="Skip Next Button" src={SkipNextIcon}/></button>
         </div>
     );
 }
@@ -93,7 +95,7 @@ function UserProfile({API_URL}) {
                 <h5>{spotifyLoggedIn === "false" ? "Log in (Premium Only)" : "Logged in as "}{spotifyUsername}</h5>
                 <h6 className={spotifyLoggedIn === "false" ? "hide" : ""}>Click here to play!</h6>
             </div>
-            <img src={SpotifyLogo} className="icon"/>
+            <img alt="Spotify Logo" src={SpotifyLogo} className="icon"/>
         </div>
     )
 }
@@ -102,36 +104,40 @@ function UserProfile({API_URL}) {
 function CurrentlyPlaying({shuffle, setShuffle}) {
     const playbackState = usePlaybackState();
     if (playbackState === null) return null;
-    const currentSong = playbackState.track_window.current_track.name
+    const currentSong = playbackState.track_window.current_track.name;
+    const currentSongURI = playbackState.track_window.current_track.uri.split(":")[2];
     const currentAlbum = playbackState.track_window.current_track.album.name;
+    const currentAlbumURI = playbackState.track_window.current_track.album.uri.split(":")[2];
     const currentArtistsArr = playbackState.track_window.current_track.artists;
     const currentArtists = currentArtistsArr.slice(0, -1).map(currentArtist => `${currentArtist.name}, `).join("") + currentArtistsArr[currentArtistsArr.length-1].name;
+    const currentArtistURI = playbackState.track_window.current_track.artists[0].uri.split(":")[2];
     return (
         <div className="playbackCurrentPane">
             <div className="playbackCurrent">
                 <div className="centeredH">
-                    <img src={playbackState.track_window.current_track.album.images[0].url} className="playlistCover"/>
+                    <img alt="Playlist Image" src={playbackState.track_window.current_track.album.images[0].url} className="playlistCover"/>
                     <div className="playbackDetails">
-                        <h6 onClick={() => window.open(playbackState.track_window.current_track.album.uri)}>{currentAlbum}</h6>
-                        <h5 onClick={() => window.open(playbackState.track_window.current_track.album.uri)}>{currentSong}</h5>
-                        <div className="centeredH"><h6 onClick={() => window.open(playbackState.track_window.current_track.artists[0].uri)}>{currentArtists}</h6></div>
+                        <h6 className="spotifyOnClick" onClick={() => window.open(`https://open.spotify.com/album/${currentAlbumURI}`)}>{currentAlbum}</h6>
+                        <h5 className="spotifyOnClick" onClick={() => window.open(`https://open.spotify.com/track/${currentSongURI}`)}>{currentSong}</h5>
+                        <div className="centeredH spotifyOnClick"><h6 onClick={() => window.open(`https://open.spotify.com/artist/${currentArtistURI}`)}>{currentArtists}</h6></div>
                     </div>
                 </div>
                 <div className="shuffleToggle">
                     <button onClick={() => {
                         setShuffle(shuffle === "true" ? "false" : "true");
                         localStorage.setItem("shuffle", shuffle === "true" ? "false" : "true");
-                    }}><img src={ShuffleToggle} className={shuffle === "true" ? "shuffleOn" : "shuffleOff"}/></button>
+                    }}><img alt="Shuffle Button" src={ShuffleToggle} className={shuffle === "true" ? "shuffleOn" : "shuffleOff"}/></button>
                 </div>
             </div>
         </div>
     )
 }
 
+// returns the list of user playlists available in their library
 function UserPlaylists({shuffle, API_URL}) {
     const device = usePlayerDevice();
     const [userPlaylists, setUserPlaylists] = useState(null);
-    useEffect(async () => {
+    useEffect(async () => { // fetch list
         if (spotifyLoggedIn === "true") {
             await new Promise(resolve => setTimeout(resolve, 500));
             fetch(`${API_URL}/player/get-user-playlists`,
@@ -157,11 +163,11 @@ function UserPlaylists({shuffle, API_URL}) {
     return (
         <div className="playbackPlaylists">
             <div className="fixed">
-                <div className="poweredBy"><button><img src={SpotifyLogo} className="integratedIcon"/></button></div>
+                <div className="poweredBy"><button onClick={() => window.open("https://open.spotify.com/")}><img alt="Spotify Logo" src={SpotifyLogo} className="integratedIcon"/></button></div>
             </div>
             <h5 className="yourPlaylistLabel">Your Playlists</h5>
             {userPlaylists ? userPlaylists.items.map((playlist) => <button className="playlistSelector" key={playlist.name} onClick={() => {
-                fetch(
+                fetch( // onclick send request to play selected playlist
                     `${API_URL}/player/play-playlist`,
                     {
                         method: "PUT",
@@ -178,7 +184,7 @@ function UserPlaylists({shuffle, API_URL}) {
                 })
                 }
             }
-            ><img className="playlistCoverMini" src={playlist.images[0].url}/>{playlist.name}</button>) : null}
+            ><img alt="Playlist Image" className="playlistCoverMini" src={playlist.images[0].url}/>{playlist.name}</button>) : null}
         </div>
     )
 }

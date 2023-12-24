@@ -1,3 +1,4 @@
+/* --currents in main-- */
 .currentArtistMain {
     padding-top: 5px;
     opacity: 50%;
@@ -12,6 +13,51 @@
     text-overflow:ellipsis;
     white-space:nowrap;
 }
+.playbackCurrent {
+    height: min-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.visualizer {
+    padding: 0 10px 0 0;
+    height: 20px;
+    filter: invert();
+}
+/* --currents in main-- */
+
+/* --controls in main-- */
+.playerControl {
+    display: flex;
+    justify-content: center;
+    opacity: 50%;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.playerContainer {
+    width: 40%;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.playerControl Button {
+    height: 25px;
+    padding: 20px;
+}
+.play {
+    content:url("./icons/playicon.png");
+}
+.pause {
+    content:url("./icons/pauseicon.png");
+}
+/* --controls in main-- */
+
+/* --current playback pane-- */
+.playbackPrompt {
+    height: min-content;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start
+}
 .playbackCurrentPane {
     padding: 20px;
     margin: 20px 0 20px 0;
@@ -19,18 +65,27 @@
     background: white;
     border: 1px solid #5b5b5b;
 }
-.playbackCurrent {
-    height: min-content;
+.shuffleToggle {
+    width: 50px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-end;
 }
-.playbackPrompt {
-    height: min-content;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start
+.shuffleOn {
+    padding: 5px;
+    border-radius: 50px;
+    background: #ffffff;
+    filter: invert(100%);
+    -webkit-transition: .4s;
+    transition: .4s;
 }
+.shuffleOff {
+    padding: 5px;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+/* --current playback pane-- */
+
+/* --playlist covers-- */
 .playlistCover {
     height: 100px;
     width: 100px;
@@ -64,6 +119,9 @@
 img[src=""] {
     display: none;
 }
+/* --playlist covers-- */
+
+/* --playlist selector-- */
 .playbackPlaylists {
     height: 45vh;
     display: flex;
@@ -94,60 +152,13 @@ img[src=""] {
     border-style: solid;
     border-image: linear-gradient(to right, #5b5b5b, transparent 90%) 1;
 }
-.visualizer {
-    padding: 0 10px 0 0;
-    height: 20px;
-    filter: invert();
-}
-.playerControl {
-    display: flex;
-    justify-content: center;
-    opacity: 50%;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-.playerContainer {
-    width: 40%;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-.playerControl Button {
-    height: 25px;
-    padding: 20px;
-}
-.play {
-    content:url("./icons/playicon.png");
-}
-.pause {
-    content:url("./icons/pauseicon.png");
-}
-.shuffleToggle {
-    width: 50px;
-    display: flex;
-    justify-content: flex-end;
-}
-.shuffleOn {
-    padding: 5px;
-    border-radius: 50px;
-    background: #ffffff;
-    filter: invert(100%);
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-.shuffleOff {
-    padding: 5px;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
 .poweredBy {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     margin-bottom: -1rem;
 }
-.disconnect {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-top: -1rem;
+.spotifyOnClick:hover {
+    cursor: pointer;
 }
+/* --playlist selector-- */

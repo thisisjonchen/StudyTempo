@@ -59,6 +59,7 @@ function StudyTempo() {
         else return true;
     }
 
+    // props ->
     // ui
     const handle = useFullScreenHandle();
     const [showTODO, setShowTODO] = useState(localStorage.getItem("showTODO"));
@@ -92,7 +93,7 @@ function StudyTempo() {
                 <div id="OrientationCheck" className={window.innerWidth < window.innerHeight ? "orientationAlertContainer" : "hide"}>
                     <div className="orientationAlert">
                         <div className="stack">
-                            <img src={StudyTempoLogo} className="welcomeIcon"/>
+                            <img alt="StudyTempo Logo" src={StudyTempoLogo} className="welcomeIcon"/>
                             <h1>StudyTempo</h1>
                             <h5 style={{fontWeight:"normal"}}>Landscape mode please</h5>
                         </div>
@@ -107,7 +108,7 @@ function StudyTempo() {
                     {/*Header*/}
                     <div id="Header" className="header">
                         <div id="HeaderContainer" className="headerContainer">
-                            <div id="Logo" className="logo"><button><img src={StudyTempoLogo} className="stIcon"/><span className="studyLogo">Study</span>Tempo</button></div>
+                            <div id="Logo" className="logo"><button><img alt="StudyTempo Logo" src={StudyTempoLogo} className="stIcon"/><span className="studyLogo">Study</span>Tempo</button></div>
                             <div className="timerContainer">
                                 <div className="timerContainer">
                                 <Countdown date={timer}

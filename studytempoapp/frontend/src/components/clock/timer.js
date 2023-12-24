@@ -1,6 +1,6 @@
 import TimerIcon from "../../assets/timer.png";
 import Ping from "../../assets/ping.mp3";
-import React, {useState} from "react";
+import React from "react";
 import {zeroPad} from "react-countdown";
 import useSound from "use-sound";
 
@@ -86,7 +86,7 @@ function TimerRenderer({minutes, seconds, completed, setTimer, timerMode, setTim
     } else {
         return (
             <h5 id="Timer" className="timer">
-                <img src={TimerIcon} className="timerIcon"/><span>{zeroPad(minutes)}</span>:<span className="secondTimer">{zeroPad(seconds)}</span>
+                <img alt="Timer Icon" src={TimerIcon} className="timerIcon"/><span>{zeroPad(minutes)}</span>:<span className="secondTimer">{zeroPad(seconds)}</span>
             </h5>
         );
     }

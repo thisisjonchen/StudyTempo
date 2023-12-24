@@ -112,7 +112,6 @@ const onSubmitUsername = (event) => {
     const username = formData.get("username");
 
     localStorage.setItem("username", username.toString());
-    setUsername(username);
 }
 
 function ShowControlToggle({showControls, setShowControls}) {
@@ -158,8 +157,8 @@ function GreetingQuote() {
 function Bar({darkPref, setDarkPref, isFullScreen, setFullScreen, handle}) {
     return (
         <div id="Bar" className="bar">
-            <button onClick={() => DarkModeToggle({darkPref, setDarkPref})}><img src={darkPref === "true" ? LightIcon : DarkIcon} className="icon"/></button>
-            <button onClick={() => FullScreenToggle({isFullScreen, setFullScreen, handle})}><img src={isFullScreen === true ? MinimizeIcon : FullscreenIcon} className="icon"/></button>
+            <button onClick={() => DarkModeToggle({darkPref, setDarkPref})}><img alt="Dark Mode Button" src={darkPref === "true" ? LightIcon : DarkIcon} className="icon"/></button>
+            <button onClick={() => FullScreenToggle({isFullScreen, setFullScreen, handle})}><img alt="Full Screen Button" src={isFullScreen === true ? MinimizeIcon : FullscreenIcon} className="icon"/></button>
         </div>
     );
 }

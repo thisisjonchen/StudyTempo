@@ -28,7 +28,9 @@ public class PlayerController {
             String playlist = id[id.length-1];
             return playlist;
         }
-        catch (Exception ignored){}
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
         return "";
     }
 
@@ -43,7 +45,10 @@ public class PlayerController {
             Paging<PlaylistSimplified> playlists = getListOfCurrentUsersPlaylistsRequest.execute();
             spotifyApi.setAccessToken("");
             return playlists;
-        } catch (Exception ignored){}
+        }
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
         return null;
     }
 
@@ -80,14 +85,22 @@ public class PlayerController {
             try {
                 toggleShuffleForUsersPlaybackRequest.execute();
             }
-            catch (Exception ignored) {}
+            catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
             startResumeUsersPlaybackRequest.execute();
             spotifyApi.setAccessToken("");
-        } catch (Exception ignored) {}
+        }
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     @GetMapping("username")
     public String getUsername(@CookieValue("spotifyAccessToken") String spotifyAccessToken) {
+        if (spotifyAccessToken == null) {
+            return "";
+        }
         spotifyApi.setAccessToken(spotifyAccessToken);
         final GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = spotifyApi.getCurrentUsersProfile()
                 .build();
@@ -97,7 +110,10 @@ public class PlayerController {
             spotifyApi.setAccessToken("");
             return spotifyUsername;
         }
-        catch (Exception ignored) {}
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        spotifyApi.setAccessToken("");
         return "";
     }
 }

@@ -16,7 +16,7 @@ function Welcome({setUsername}) {
     return (
         <div className="welcome">
             <div className="stack">
-                <img src={StudyTempoLogo} className="welcomeIcon"/>
+                <img alt="StudyTempo Logo" src={StudyTempoLogo} className="welcomeIcon"/>
                 <h5>Welcome to</h5>
                 <h1>StudyTempo</h1>
                 <form className="stack" onSubmit={onSubmitUsername}>
