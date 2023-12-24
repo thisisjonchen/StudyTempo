@@ -3,4 +3,4 @@ StudyTempo **DOES NOT** collect any personal data coming from your Spotify accou
 
 Data is saved only to your local machine and used to enhance your experience on StudyTempo.
 
-I am always available to hear any concerns or complaints. Please contact me through GitHub.
+We are available to hear any concerns or complaints. Please contact us through GitHub @thisisjonchen. Thanks :)
