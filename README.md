@@ -14,7 +14,7 @@ Front-End 📲
 * JavaScript, ReactJS, HTML, CSS
 
 Back-End ⚙️
-* Java, Spring (Web, Data JPA, Security, Test)
+* Java, SpringBoot & Spring (Web, Data JPA, Security, Test)
 
 Server Deployment ☁️
 * AWS S3, EC2, Elastic Beanstalk
@@ -24,11 +24,23 @@ Some more things I learned and used ✏️
 * API vs. SDK (Spotify)
 * Hooks & Props (ReactJS)
 * Rate Limiting, CORS 💀, Cookies (Secure, HttpOnly), CSRF, HTTP Request (credentials, body, URL, headers), localStorage
+* and more...
 
-## Third-Party Integrations 📥
+## Third-Party Integrations and Imports 📥
 So far...
-* Spotify (Web API & Playback SDK => react-spotify-web-playback-sdk)
+* Spotify (Web API & Playback SDK)
+* react-spotify-web-playback-sdk
 * react-countdown
 * react-fullscreen
+  
+Maybe in the future...
+* Google Genie Nano/Pro
+  
+Media
+* Google for Material Icons
+* Pixabay for Timer Ping
 
 ## Acknowledgements 🙌
+* God & Jesus
+* W3 Schools :)
+* My conscience at 3 am.
