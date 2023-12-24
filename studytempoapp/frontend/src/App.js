@@ -23,11 +23,12 @@ function StudyTempo() {
     // spotify auth token flow: start
     const spotifyLoggedIn = getCookie("spotifyLoggedIn");
     
-    const spotifyAccessToken = getCookie("spotifyAccessToken");
+    const [spotifyAccessToken, setSpotifyAccessToken] = useState(getCookie("spotifyAccessToken"));
 
     useEffect(() => {
         if (spotifyLoggedIn === "true") {
-            RefreshAuthToken();
+            RefreshAuthToken(setSpotifyAccessToken); // initial get accessToken
+            setInterval(() => RefreshAuthToken(setSpotifyAccessToken), 3595000) // refresh accessToken in less than exp date (in 59 minutes, 55 secs)
         }
     }, []);
     
@@ -86,7 +87,7 @@ function StudyTempo() {
     return (
         <WebPlaybackSDK
             initialDeviceName="StudyTempo"
-            getOAuthToken={useCallback(callback => callback(spotifyAccessToken), [])}
+            getOAuthToken={useCallback(callback => callback(spotifyAccessToken), [spotifyAccessToken])}
             initialVolume={volume}
             connectOnInitialized={false}>
             <div id="StudyTempo" className={darkPref === "true" ? "dark" : "light"}>

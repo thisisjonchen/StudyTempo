@@ -15,7 +15,7 @@ function CreateSpotifyToken() {
         }
 }
 
-function RefreshAuthToken() {
+function RefreshAuthToken(setSpotifyAccessToken) {
     try {
         fetch(`${API_URL}/auth/get-auth-token`,
             {
@@ -26,13 +26,13 @@ function RefreshAuthToken() {
                     "Access-Control-Allow-Credentials": "true"
                 }}
         )
+        setSpotifyAccessToken(getCookie("spotifyAccessToken"));
+        console.log("refreshed!")
     }
     catch (err) {
         console.log(err)
     }
 }
-
-setInterval(RefreshAuthToken, 3590000) // refresh in less than an hour 
 
 // thanks w3 schools :>
 function getCookie(cookie) {

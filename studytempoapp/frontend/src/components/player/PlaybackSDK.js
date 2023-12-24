@@ -40,10 +40,12 @@ function CurrentPlaylist() {
     if (playbackState === null) return null;
     return (
         <div id="Playlist" className="centeredH">
-                    <img alt="Playlist Image" src={localStorage.getItem("playlistName") === "" ? playbackState.track_window.current_track.album.images[0].url : localStorage.getItem("playlistIMGUrl")} className="playlistCoverMini"/>
+                    <img alt="Playlist Image" src={localStorage.getItem("playlistName") === "" ? playbackState.track_window.current_track.album.images[0].url : localStorage.getItem("playlistIMGUrl")} className="playlistCoverMini spotifyOnClick"
+                         onClick={() => window.open(`https://open.spotify.com/playlist/${localStorage.getItem("playlistURI")}`)}/>
             <div className="playlistTitle">
                 <h6>Playing from</h6>
-                <h5>{localStorage.getItem("playlistName") === "" ?  playbackState.track_window.current_track.album.name : localStorage.getItem("playlistName")}</h5>
+                <h5 className="spotifyOnClick" onClick={() => window.open(`https://open.spotify.com/playlist/${localStorage.getItem("playlistURI")}`)}>
+                    {localStorage.getItem("playlistName") === "" ?  playbackState.track_window.current_track.album.name : localStorage.getItem("playlistName")}</h5>
             </div>
         </div>
     );
@@ -115,7 +117,7 @@ function CurrentlyPlaying({shuffle, setShuffle}) {
         <div className="playbackCurrentPane">
             <div className="playbackCurrent">
                 <div className="centeredH">
-                    <img alt="Playlist Image" src={playbackState.track_window.current_track.album.images[0].url} className="playlistCover"/>
+                    <img alt="Playlist Image" src={playbackState.track_window.current_track.album.images[0].url} className="playlistCover spotifyOnClick" onClick={() => window.open(`https://open.spotify.com/album/${currentAlbumURI}`)}/>
                     <div className="playbackDetails">
                         <h6 className="spotifyOnClick" onClick={() => window.open(`https://open.spotify.com/album/${currentAlbumURI}`)}>{currentAlbum}</h6>
                         <h5 className="spotifyOnClick" onClick={() => window.open(`https://open.spotify.com/track/${currentSongURI}`)}>{currentSong}</h5>
@@ -180,6 +182,7 @@ function UserPlaylists({shuffle, API_URL}) {
                     },
                 ).then(() => {
                     localStorage.setItem("playlistName", playlist.name);
+                    localStorage.setItem("playlistURI", playlist.uri.split(":")[2])
                     localStorage.setItem("playlistIMGUrl", playlist.images[0].url);
                 })
                 }

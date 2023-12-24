@@ -46,7 +46,7 @@ public class AuthController {
     @ResponseBody
     public String spotifyLogin() {
         AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
-                .scope("user-read-private, user-read-email, user-read-currently-playing, user-read-playback-state, streaming, playlist-read-private")
+                .scope("user-read-private, user-read-currently-playing, user-read-playback-state, streaming, playlist-read-private, playlist-read-collaborative")
                 .show_dialog(true)
                 .build();
         final URI uri = authorizationCodeUriRequest.execute();
