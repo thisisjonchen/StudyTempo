@@ -32,6 +32,7 @@ So far...
 * react-spotify-web-playback-sdk
 * react-countdown
 * react-fullscreen
+* and more!
   
 Maybe in the future...
 * Google Genie Nano/Pro
