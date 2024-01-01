@@ -1,6 +1,8 @@
 import {usePlaybackState, usePlayerDevice, useSpotifyPlayer} from "react-spotify-web-playback-sdk";
 import React, {useEffect, useState} from "react";
 import Visualizer from "./icons/visualizer.gif";
+import PlayIcon from "./icons/playicon.png";
+import PauseIcon from "./icons/pauseicon.png";
 import SkipBackIcon from "./icons/skipbackicon.png";
 import SkipNextIcon from "./icons/skipnexticon.png";
 import ShuffleToggle from "./icons/shuffleicon.png";
@@ -62,7 +64,7 @@ function PlaybackControl() {
         <div id="PlayerControl" className="playerControl">
             <button onClick={() => player.previousTrack()}><img alt="Skip Back Button" src={SkipBackIcon}/></button>
             <button onClick={playbackState.paused === true ? () => player.resume() : () => player.pause()}>
-                <img alt="Play/Pause Button" id="PlayPause" className={playbackState.paused === true ? "play" : "pause"}/></button>
+                <img alt="Play/Pause Button" id="PlayPause" src={playbackState.paused === true ? PlayIcon : PauseIcon}/></button>
             <button onClick={() => player.nextTrack()}><img alt="Skip Next Button" src={SkipNextIcon}/></button>
         </div>
     );
@@ -73,7 +75,7 @@ function PlaybackControl() {
 function UserProfile({API_URL}) {
     const [spotifyUsername, setSpotifyUsername] = useState("");
     const player = useSpotifyPlayer();
-    useEffect(async () => {
+    const fetchSpotifyUsername = async() => {
         if (spotifyLoggedIn === "true") {
             await new Promise(resolve => setTimeout(resolve, 250));
             fetch(`${API_URL}/player/username`,
@@ -87,12 +89,20 @@ function UserProfile({API_URL}) {
                 })
                 .then(response => response.text())
                 .then(username => {
-                    setSpotifyUsername(username);
+                    if (username.includes("{\"timestamp\"")) {
+                        setSpotifyUsername("(**Please Refresh Page**)");
+                    }
+                    else {
+                        setSpotifyUsername(username);
+                    }
                 })
         }
-    }, []);
+    }
+    useEffect( () => {
+        fetchSpotifyUsername();
+    },[])
     return (
-        <div className="spotifyLoginTab" onClick={() => {spotifyLoggedIn === "false" ? CreateSpotifyToken() : player.connect()}}>
+        <div className="loginTab spotifyTab" onClick={() => {spotifyLoggedIn === "false" ? CreateSpotifyToken() : player.connect()}}>
             <div className="playbackPrompt">
                 <h5>{spotifyLoggedIn === "false" ? "Log in (Premium Only)" : "Logged in as "}{spotifyUsername}</h5>
                 <h6 className={spotifyLoggedIn === "false" ? "hide" : ""}>Click here to play!</h6>
@@ -139,9 +149,9 @@ function CurrentlyPlaying({shuffle, setShuffle}) {
 function UserPlaylists({shuffle, API_URL}) {
     const device = usePlayerDevice();
     const [userPlaylists, setUserPlaylists] = useState(null);
-    useEffect(async () => { // fetch list
+    const fetchUserPlaylists = async() => {
         if (spotifyLoggedIn === "true") {
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 1000));
             fetch(`${API_URL}/player/get-user-playlists`,
                 {
                     method: "GET",
@@ -160,6 +170,9 @@ function UserPlaylists({shuffle, API_URL}) {
                     console.log(error)
                 })
         }
+    }
+    useEffect(() => {
+        fetchUserPlaylists(); // fetch list
     }, []);
     if (device === null) return null;
     return (

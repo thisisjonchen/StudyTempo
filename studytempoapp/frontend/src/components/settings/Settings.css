@@ -26,26 +26,32 @@
 }
 /* --settings general-- */
 
-/* --spotify settings login-- */
-.spotifyLoginTab {
+/* --settings login-- */
+.loginTab {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
     margin: 20px 0 20px 0;
     border-radius: 20px;
-    background: linear-gradient(90deg, white 60%, #1DB954);
     border: 1px solid #5b5b5b;
-    -webkit-transition: .4s;
     transition: .4s;
 }
-.spotifyLoginTab:active {
+
+.spotifyTab {
+    background: linear-gradient(90deg, white 60%, #1DB954);
+}
+
+.spotifyTab:active {
     scale: 80%;
-    -webkit-transition: .4s;
     transition: .4s;
 }
-.spotifyLoginTab:hover {
+
+.spotifyTab:hover {
     cursor: pointer;
+}
+.youtubeTab {
+    background: linear-gradient(90deg, white 60%, #fc5e5e);
 }
 /* --spotify settings login-- */
 

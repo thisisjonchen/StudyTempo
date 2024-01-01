@@ -26,28 +26,22 @@
 }
 /* --currents in main-- */
 
+/* --currents out of main */
+
 /* --controls in main-- */
 .playerControl {
     display: flex;
     justify-content: center;
     opacity: 50%;
-    -webkit-transition: .4s;
     transition: .4s;
 }
 .playerContainer {
     width: 40%;
-    -webkit-transition: .4s;
     transition: .4s;
 }
 .playerControl Button {
     height: 25px;
     padding: 20px;
-}
-.play {
-    content:url("./icons/playicon.png");
-}
-.pause {
-    content:url("./icons/pauseicon.png");
 }
 /* --controls in main-- */
 
@@ -75,12 +69,10 @@
     border-radius: 50px;
     background: #ffffff;
     filter: invert(100%);
-    -webkit-transition: .4s;
     transition: .4s;
 }
 .shuffleOff {
     padding: 5px;
-    -webkit-transition: .4s;
     transition: .4s;
 }
 /* --current playback pane-- */
@@ -91,14 +83,12 @@
     width: 100px;
     object-fit: cover;
     filter: none;
-    -webkit-transition: .4s;
     transition: .4s;
     border: 1px solid #5b5b5b;
     margin-right: 20px;
 }
 .dark .playlistCover {
     filter: invert(100%) hue-rotate(180deg);
-    -webkit-transition: .4s;
     transition: .4s;
 }
 .playlistCoverMini {
@@ -106,14 +96,12 @@
     width: 50px;
     object-fit: cover;
     filter: none;
-    -webkit-transition: .4s;
     transition: .4s;
     border: 1px solid #5b5b5b;
     margin-right: 10px;
 }
 .dark .playlistCoverMini {
     filter: invert(100%) hue-rotate(180deg);
-    -webkit-transition: .4s;
     transition: .4s;
 }
 img[src=""] {

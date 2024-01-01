@@ -1,4 +1,4 @@
-package com.studytempo.studytempoapp.spotifyControllers;
+package com.studytempo.studytempoapp.SpotifyControllers;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,13 +17,13 @@ import java.io.IOException;
 import java.net.URI;
 
 @RestController
-@CrossOrigin(origins ="https://studytempo.co", allowCredentials = "true") // CORS allow React to fetch Endpoint
+@CrossOrigin(origins ="http://localhost:3000", allowCredentials = "true") // CORS allow React to fetch Endpoint
 @RequestMapping("/auth")
 public class AuthController {
 
     //  specify clientID & clientSecret from Spotify Dev
     private static final String clientID = "ea74b10d170848169662fc6fc322359d";
-    private static final String clientSecret = "[]";
+    private static final String clientSecret = "7d093e11b2c0438eb85e618484110f26";
 
     private static Cookie refreshTokenCookie = null;
 
@@ -33,7 +33,7 @@ public class AuthController {
 
     //  specify URI matching Spotify Dev URI
     //  BRUH: was missing trailing slash in redirectUri on Spotify Dev Portal
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("https://studytempo.co/auth/get-user-code/");
+    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/auth/get-user-code/");
 
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientID)
@@ -111,7 +111,7 @@ public class AuthController {
         response.addCookie(accessTokenCookie);
         response.addCookie(loggedInCookie);
         response.addCookie(refreshTokenCookie);
-        response.sendRedirect("https://studytempo.co");
+        response.sendRedirect("http://localhost:8080");
 
         spotifyApi.setAccessToken("");
         refreshTokenCookie = null;
@@ -126,7 +126,7 @@ public class AuthController {
         loggedInCookie.setSecure(true);
         loggedInCookie.setPath("/");
         response.addCookie(loggedInCookie);
-        response.sendRedirect("https://studytempo.co");
+        response.sendRedirect("http://localhost:8080");
         loggedInCookie = null;
     }
 

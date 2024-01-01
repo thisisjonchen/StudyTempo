@@ -1,4 +1,4 @@
-const API_URL = "https://studytempo.co";
+const API_URL = "http://localhost:8080";
 
 // sends request to backend, which then returns an url for user to log in with
 // should only happen once (or until they log in again)
@@ -15,7 +15,7 @@ function CreateSpotifyToken() {
         }
 }
 
-function RefreshAuthToken(setSpotifyAccessToken) {
+function RefreshAuthToken() {
     try {
         fetch(`${API_URL}/auth/get-auth-token`,
             {
@@ -26,8 +26,7 @@ function RefreshAuthToken(setSpotifyAccessToken) {
                     "Access-Control-Allow-Credentials": "true"
                 }}
         )
-        setSpotifyAccessToken(getCookie("spotifyAccessToken"));
-        console.log("refreshed!")
+        console.log("refreshed!");
     }
     catch (err) {
         console.log(err)

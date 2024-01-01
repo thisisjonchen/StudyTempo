@@ -1,4 +1,4 @@
-package com.studytempo.studytempoapp.spotifyControllers;
+package com.studytempo.studytempoapp.SpotifyControllers;
 
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlayingContext;
@@ -10,10 +10,10 @@ import se.michaelthelin.spotify.requests.data.player.ToggleShuffleForUsersPlayba
 import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
-import static com.studytempo.studytempoapp.spotifyControllers.AuthController.spotifyApi;
+import static com.studytempo.studytempoapp.SpotifyControllers.AuthController.spotifyApi;
 
 @RestController
-@CrossOrigin(origins ="https://studytempo.co", allowCredentials = "true")
+@CrossOrigin(origins ="http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/player")
 public class PlayerController {
 
@@ -77,23 +77,18 @@ public class PlayerController {
                 .context_uri(playlist.context_uri)
                 .device_id(playlist.device_id)
                 .build();
+        final ToggleShuffleForUsersPlaybackRequest toggleShuffleForUsersPlaybackRequest = spotifyApi
+                .toggleShuffleForUsersPlayback(playlist.isShuffled())
+                .device_id(playlist.device_id)
+                .build();
         try {
-            final ToggleShuffleForUsersPlaybackRequest toggleShuffleForUsersPlaybackRequest = spotifyApi
-                    .toggleShuffleForUsersPlayback(playlist.isShuffled())
-                    .device_id(playlist.device_id)
-                    .build();
-            try {
-                toggleShuffleForUsersPlaybackRequest.execute();
-            }
-            catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
             startResumeUsersPlaybackRequest.execute();
-            spotifyApi.setAccessToken("");
+            toggleShuffleForUsersPlaybackRequest.execute();
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+        spotifyApi.setAccessToken("");
     }
 
     @GetMapping("username")

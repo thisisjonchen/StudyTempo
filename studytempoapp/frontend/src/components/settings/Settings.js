@@ -1,11 +1,14 @@
-import {CreateSpotifyToken} from "../player/PlayerAuth";
+import {CreateSpotifyToken, RefreshAuthToken} from "../player/PlayerAuth";
 import React, {useEffect, useState} from "react";
 import DarkIcon from "../../assets/darkmode.png";
 import LightIcon from "../../assets/lightmode.png";
 import FullscreenIcon from "../../assets/fullscreen.png";
 import MinimizeIcon from "../../assets/minimize.png";
+import DisplayOneIcon from "../../assets/displayone.png";
+import DisplayTwoIcon from "../../assets/displaytwo.png";
 import {CurrentlyPlaying, UserPlaylists, UserProfile} from "../player/PlaybackSDK";
 import {usePlayerDevice, useSpotifyPlayer} from "react-spotify-web-playback-sdk";
+import {YouTubeInput} from "../youtube/YouTube";
 
 function FullScreenToggle({isFullScreen, setFullScreen, handle}) {
     if (isFullScreen) handle.exit();
@@ -20,6 +23,16 @@ function DarkModeToggle({darkPref, setDarkPref}) {
     } else {
         setDarkPref("false");
         localStorage.setItem("darkPref", "false");
+    }
+}
+
+function ScreenModeToggle({screenMode, setScreenMode}) {
+    if(screenMode === "spotify") {
+        setScreenMode("youtube");
+        localStorage.setItem("screenMode", "youtube");
+    } else {
+        setScreenMode("spotify");
+        localStorage.setItem("screenMode", "spotify");
     }
 }
 
@@ -73,14 +86,12 @@ function ScreenLockToggle({screenLockToggle, setScreenLockToggle}) {
     }
 }
 
-let screenIdleTime = 0
-const screenIdleMax = 5 // timeout after 5 secs
-
 function HideControls() {
     document.getElementById("Bar").classList.add("hideOpacity");
     document.getElementById("TimerControl").classList.add("hideOpacity");
     document.getElementById("Logo").classList.add("hideOpacity");
     document.getElementById("Player").classList.add("hideOpacity");
+    document.getElementById("YouTube").classList.add("max");
     document.documentElement.style.cursor = "none";
 }
 
@@ -90,11 +101,19 @@ function ShowControls() {
     document.getElementById("TimerControl").classList.remove("hideOpacity");
     document.getElementById("Logo").classList.remove("hideOpacity");
     document.getElementById("Player").classList.remove("hideOpacity");
+    document.getElementById("YouTube").classList.remove("max");
     document.documentElement.style.cursor = "auto";
 }
 
 document.addEventListener("mousemove", ShowControls);
 document.addEventListener("touchstart", ShowControls);
+document.addEventListener("scroll", ShowControls);
+document.addEventListener("click", ShowControls);
+
+
+// control visibility + refresh
+let screenIdleTime = 0
+const screenIdleMax = 5 // timeout after 5 secs
 
 function CheckIdleTime() {
     screenIdleTime++;
@@ -102,9 +121,7 @@ function CheckIdleTime() {
         HideControls();
     }
 }
-
-setInterval(CheckIdleTime, 1000)
-
+// username submission handling
 const onSubmitUsername = (event) => {
     event.preventDefault();
 
@@ -114,16 +131,7 @@ const onSubmitUsername = (event) => {
     localStorage.setItem("username", username.toString());
 }
 
-function ShowControlToggle({showControls, setShowControls}) {
-    if(showControls === "false") {
-        setShowControls("true");
-        localStorage.setItem("showControls", "true");
-    } else {
-        setShowControls("false");
-        localStorage.setItem("showControls", "false");
-    }
-}
-
+// greetings
 function GoodGreeting() {
     const now = new Date();
     const nowHour = now.getHours();
@@ -137,16 +145,20 @@ function GreetingQuote() {
     const now = GoodGreeting();
     let quotes = [""]
     if (now === "Good Morning") { // Morning
-        quotes = ["Let's get sh*t done.", "Who's gonna carry the boats?",
-                "Wake up. Make your parents proud.", "Show'em who's boss.", "Wakey Wakey Lil' Princess."]
+        quotes = ["Let's get sh*t done.", "Who's gonna carry the boats?", "3 milk buckets, 2 sugar, 1 egg, and 3 wheat",
+                "Better than punching wood :)", "Show'em who's boss.", "Wakey Wakey Lil' Princess.",
+                "Awesome!", "May contain nuts!", "Holy cow!", "So fresh, so clean!"]
     }
     else if (now === "Good Afternoon") { // Afternoon
-        quotes = ["Remember to drink water!", "A lil' coffee break 💅🏻...then back to work", "They don't know me son.",
-                "Maybe try a different approach?", "Take a little time to pat yourself on the back :)"]
+        quotes = ["Remember to drink water!", "A lil' coffee break 💅🏻...then back to work", "They don't know you son.",
+                "Maybe try a different approach?", "Take a little time to pat yourself on the back :)", "Yes, sir!",
+                "Some quotes here are from a block game :>", "Throughout Heaven and Earth, you are the studious one.",
+                `Is that...${localStorage.getItem("username")}?!!!`, "a^2+b^2=c^2", "9x-7i > 3(3x-7u)" ]
     }
     else { // Night
-        quotes = ["Who needs sleep anyways?", "On da grind.", "Keep pushing. Your time is now.", "While they're sleepin', you're workin'.",
-                "They talk sh*t, but look who's sleeping?"]
+        quotes = ["Who needs sleep anyways?", "What a beast!", "Keep pushing!", "Stay hard!",
+                "...!", "Play him off, keyboard cat!", "!!!1!", "You could be mining for diamonds rn",
+                "Would you like some coffee?", "Its C btw", "Remember +C!"]
     }
     useEffect(() => {
         setQuote(quotes[Math.floor(Math.random()*quotes.length)]);
@@ -154,17 +166,20 @@ function GreetingQuote() {
     return quote;
 }
 
-function Bar({darkPref, setDarkPref, isFullScreen, setFullScreen, handle}) {
+// "navigation" bar
+function Bar({darkPref, setDarkPref, isFullScreen, setFullScreen, handle, screenMode, setScreenMode}) {
     return (
         <div id="Bar" className="bar">
+            <button onClick={() => ScreenModeToggle({screenMode, setScreenMode})}><img alt="Screen Mode Button" src={screenMode === "spotify" ? DisplayTwoIcon : DisplayOneIcon} className="icon"/></button>
             <button onClick={() => DarkModeToggle({darkPref, setDarkPref})}><img alt="Dark Mode Button" src={darkPref === "true" ? LightIcon : DarkIcon} className="icon"/></button>
             <button onClick={() => FullScreenToggle({isFullScreen, setFullScreen, handle})}><img alt="Full Screen Button" src={isFullScreen === true ? MinimizeIcon : FullscreenIcon} className="icon"/></button>
         </div>
     );
 }
 
+// settings
 function Settings({API_URL, breakTime, setBreakTime, darkPref, setDarkPref, showTODO, setShowTODO, breakToggle, setBreakToggle, autoRestart, setAutoRestart, volume, setVolume, timerPing, setTimerPing,
-                      shuffle, setShuffle, screenLockToggle, setScreenLockToggle, username}) {
+                      shuffle, setShuffle, screenLockToggle, setScreenLockToggle, username, setYoutubeURL}) {
     const device = usePlayerDevice();
     const player = useSpotifyPlayer();
     //keep screen on
@@ -261,7 +276,7 @@ function Settings({API_URL, breakTime, setBreakTime, darkPref, setDarkPref, show
                     <div className="miscChange">
                         <button className="miscChangeBtn" onClick={() => {localStorage.setItem("username", ""); window.location.reload()}}>Change Name</button>
                         <div className="nameChangeDesc">
-                            <h6>You f*cked up. Here is another chance at typing out a name you like (or maybe...your name) <br/>You're welcome :></h6>
+                            <h6>You f*cked up. Here is another chance at typing out a name you like (or maybe...your name)<br/><br/>*WARNING: WILL RESET PREFERENCES. (consider it punishment)</h6>
                         </div>
                     </div>
                 </div>
@@ -278,9 +293,10 @@ function Settings({API_URL, breakTime, setBreakTime, darkPref, setDarkPref, show
                     <CurrentlyPlaying shuffle={shuffle} setShuffle={setShuffle}/>
                     <UserPlaylists shuffle={shuffle} API_URL={API_URL}/>
                 </div>
+                <YouTubeInput setYoutubeURL={setYoutubeURL}/>
             </div>
             {/*Right*/}
         </div>
     );
 }
-export {Bar, Settings}
+export {Bar, Settings, CheckIdleTime}

@@ -25,7 +25,7 @@ function Clock() {
   }, [])
 
   return (
-        <h2 className="center-clock"><span>{hour}</span>:<span>{minute}</span></h2>
+        <h2 style={{margin:0}}><span>{hour}</span>:<span>{minute}</span></h2>
   );
 }
 export {Clock};
