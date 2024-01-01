@@ -31,7 +31,7 @@ Some more things I learned and used ✏️
 ## Third-Party Integrations and Imports 📥
 So far...
 * Spotify (Web API & Playback SDK)
-* react-spotify-web-playback-sdk
+* YouTube (iframe)
 * react-countdown
 * react-fullscreen
 * and more!
