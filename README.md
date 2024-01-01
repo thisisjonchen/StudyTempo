@@ -6,8 +6,10 @@ Java Spring, testing API calls, and more! It is a display students can use on a
 second monitor to keep track of time, control music, set timers, and maintain 
 their _study tempo_.
 
-**Why did I build this?** I had an extra display and wanted to throw a clock display on it. I didn't like how current iterations on the internet looked and felt, so I made my own.
-Something simple, minimalistic, yet functional. This was initially supposed to be a tool I would use while working on other projects...but this became my main project :)
+**Why did I build this?** I had an extra display and wanted to throw a clock display on it. I didn't like how current iterations on the internet looked and felt, so I made my own:
+something simple, minimalistic, yet functional. This was initially supposed to be a tool I would use while working on other projects...until this became my main project :)
+
+**Link**: https://studytempo.co/
 
 ## Tech Stack 🥞
 Front-End 📲
@@ -32,6 +34,7 @@ So far...
 * react-spotify-web-playback-sdk
 * react-countdown
 * react-fullscreen
+* and more!
   
 Maybe in the future...
 * Google Genie Nano/Pro
