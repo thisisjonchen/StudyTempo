@@ -23,7 +23,7 @@ public class AuthController {
 
     //  specify clientID & clientSecret from Spotify Dev
     private static final String clientID = "ea74b10d170848169662fc6fc322359d";
-    private static final String clientSecret = "7d093e11b2c0438eb85e618484110f26";
+    private static final String clientSecret = "[]";
 
     private static Cookie refreshTokenCookie = null;
 
