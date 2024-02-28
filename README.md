@@ -44,6 +44,5 @@ Media
 * Pixabay for Timer Ping
 
 ## Acknowledgements 🙌
-* God & Jesus
 * W3 Schools :)
 * My conscience at 3 am.
