@@ -9,8 +9,6 @@ their _study tempo_.
 **Why did I build this?** I had an extra display and wanted to throw a clock display on it. I didn't like how current iterations on the internet looked and felt, so I made my own:
 something simple, minimalistic, yet functional. This was initially supposed to be a tool I would use while working on other projects...until this became my main project :)
 
-**Link**: https://studytempo.co/
-
 ## Tech Stack 🥞
 Front-End 📲
 * JavaScript, ReactJS, HTML, CSS
