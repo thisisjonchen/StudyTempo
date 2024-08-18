@@ -6,6 +6,8 @@ Say hello to StudyTempo: an AI-powered all-in-one productivity hub built for stu
 **Why did I build this?** I had an extra display and wanted to throw a functional "display" on it. I didn't like how current iterations on the internet looked and felt, so I made my own:
 something simple, minimalistic, yet functional.
 
+Check it out here: https://studytempo.co/ 
+
 ## Tech Stack 🥞
 Front-End 📲
 * React & Tailwind CSS
@@ -13,7 +15,7 @@ Front-End 📲
 Back-End ⚙️
 * Java, SpringBoot & Spring (Web, Data JPA, Security, Test)
 
-Server Deployment ☁️
+Deployment ☁️
 * AWS S3, EC2, Elastic Beanstalk, Docker
 
 Some more things I learned and used ✏️
