@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.studytempo</groupId>
 	<artifactId>studytempoapp</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>StudyTempo</name>
 	<description>An AI-powered all-in-one productivity hub for students to maintain their study tempo.</description>
 	<properties>
