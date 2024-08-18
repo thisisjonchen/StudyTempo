@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+const API_URL = process.env.REACT_APP_API_URL;
 
 // sends request to backend, which then returns an url for user to log in with
 // should only happen once (or until they log in again)

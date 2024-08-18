@@ -3,16 +3,19 @@ import Ping from "../../assets/ping.mp3";
 import React from "react";
 import {zeroPad} from "react-countdown";
 import useSound from "use-sound";
+import "./time.css"
 
-function CountdownControl({timerValue, setTimerValue, setTimer, countdownApi}) {
+const CountdownControl = ({timerValue, setTimerValue, setTimer, countdownApi}) => {
     return (
-        <div id="TimerControl" className="timerControl">
-            <button className="setTimerButton" onClick={() => {setTimerValue(900000); setTimer(Date.now() + 900000); countdownApi?.stop();}}>15</button>
-            <button className="setTimerButton" onClick={() => {setTimerValue(1500000); setTimer(Date.now() + 1500000); countdownApi?.stop();}}>25</button>
-            <button className="setTimerButton" onClick={() => {setTimerValue(1800000); setTimer(Date.now() + 1800000); countdownApi?.stop();}}>30</button>
-            <button className="setTimerButton" onClick={() => {setTimerValue(2700000); setTimer(Date.now() + 2700000); countdownApi?.stop();}}>45</button>
-            <button className="startButton" onClick={() => {setTimer(Date.now() + timerValue); countdownApi?.stop(); setTimeout(countdownApi?.start(), 1000)}}>Start</button>
-            <button className="stopButton" onClick={() => {
+        <div id="TimerControl" className="flex items-center gap-x-3 font-bold">
+            <div className="flex opacity-60 gap-x-3">
+                <button onClick={() => {setTimerValue(900000); setTimer(Date.now() + 900000); countdownApi?.stop();}}>15</button>
+                <button onClick={() => {setTimerValue(1500000); setTimer(Date.now() + 1500000); countdownApi?.stop();}}>25</button>
+                <button onClick={() => {setTimerValue(1800000); setTimer(Date.now() + 1800000); countdownApi?.stop();}}>30</button>
+                <button onClick={() => {setTimerValue(2700000); setTimer(Date.now() + 2700000); countdownApi?.stop();}}>45</button>
+            </div>
+            <button className="text-white bg-green-500 px-2 rounded-full" onClick={() => {setTimer(Date.now() + timerValue); countdownApi?.stop(); setTimeout(countdownApi?.start(), 1000)}}>Start</button>
+            <button className="text-white bg-red-500 w-6 h-6 rounded-full" onClick={() => {
                 setTimer(0);
                 countdownApi?.stop();
                 try {
@@ -25,7 +28,20 @@ function CountdownControl({timerValue, setTimerValue, setTimer, countdownApi}) {
     )
 }
 
-function TimerRenderer({minutes, seconds, completed, setTimer, timerMode, setTimerMode, autoRestart, breakToggle, countdownApi, volume, timerPing, timerValue}) {
+const TimerRenderer = (
+    {   minutes,
+        seconds,
+        completed,
+        setTimer,
+        timerMode,
+        setTimerMode,
+        autoRestart,
+        breakToggle,
+        countdownApi,
+        volume,
+        timerPing,
+        timerValue
+    }) => {
     const [ping] = useSound(Ping, {volume: timerPing === "true" ? volume : 0});
     if (minutes === 0 && seconds === 5) {
         document.getElementById("Timer").className="timer alert"; // changes timer clock to yellow
@@ -85,9 +101,10 @@ function TimerRenderer({minutes, seconds, completed, setTimer, timerMode, setTim
         return "";
     } else {
         return (
-            <h5 id="Timer" className="timer">
-                <img alt="Timer Icon" src={TimerIcon} className="timerIcon"/><span>{zeroPad(minutes)}</span>:<span className="secondTimer">{zeroPad(seconds)}</span>
-            </h5>
+            <div id="Timer" className="timer">
+                <img alt="Timer Icon" src={TimerIcon} className="w-5 h-5 mr-1 z-10 invert"/>
+                <h5 className="w-15">{zeroPad(minutes)}:{zeroPad(seconds)}</h5>
+            </div>
         );
     }
 }

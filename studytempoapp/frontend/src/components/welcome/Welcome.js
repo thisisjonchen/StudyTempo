@@ -1,6 +1,7 @@
-import StudyTempoLogo from "../../assets/stlogo.png";
+import StudyTempoLogo from "../../assets/st-logo.png";
+import React from "react";
 
-function Welcome({setUsername}) {
+const Welcome = ({setUsername}) => {
     const onSubmitUsername = (event) => {
         event.preventDefault();
 
@@ -14,14 +15,16 @@ function Welcome({setUsername}) {
     }
 
     return (
-        <div className="welcome">
-            <div className="stack">
-                <img alt="StudyTempo Logo" src={StudyTempoLogo} className="welcomeIcon"/>
-                <h5>Welcome to</h5>
-                <h1>StudyTempo</h1>
-                <form className="stack" onSubmit={onSubmitUsername}>
+        <div className="flex w-full h-screen items-center justify-center">
+            <div className="flex flex-col gap-y-4">
+                <div className="flex flex-col items-center">
+                    <img alt="StudyTempo Logo" src={StudyTempoLogo} className="w-20 pb-4"/>
+                    <h4>Welcome to</h4>
+                    <h3 className="text-2xl"><span className="font-bold">Study</span>Tempo</h3>
+                </div>
+                <form className="flex flex-col" onSubmit={onSubmitUsername}>
                     <label>
-                        <input type="text" name="username" placeholder="What's your name?"/>
+                        <input className="text-center rounded-xl" type="text" name="username" placeholder="What's your name?"/>
                     </label>
                 </form>
             </div>

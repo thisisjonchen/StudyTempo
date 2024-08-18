@@ -1,16 +1,22 @@
 import React from "react";
-import "./YouTube.css";
-import YouTubeLogo from "../../assets/YouTubeLogo.png"
+import YouTubeLogo from "../../assets/youtube-logo.png"
 
-function YouTube({screenMode, youtubeURL}) {
+const YouTube = ({darkPref, youtubeURL}) => {
     return (
-        <div id="YouTube" className={screenMode === "youtube" ? "youtubeMin" : "hide"}>
-            <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${youtubeURL}?version=3&amp;loop=1&amp;playlist=${youtubeURL}`} title="StandBy Video Player (YouTube)" allow="autoplay; clipboard-write; encrypted-media; web-share" allowFullScreen></iframe>
+        <div id="YouTube" className={`${darkPref === "true" ? "!invert !hue-rotate-180 border-[#262626]" : "border-[#d9d9d9]"} h-[65vh] relative items-center w-full border-inset border-[10px] overflow-hidden transition-all duration-500`}>
+            <iframe className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2"
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube.com/embed/${youtubeURL}?version=3&amp;loop=1&amp;rel=0&amp;playlist=${youtubeURL}`}
+                    allow="autoplay; clipboard-write; encrypted-media; web-share"
+                    allowFullScreen
+            >
+            </iframe>
         </div>
     )
 }
 
-function YouTubeInput({setYoutubeURL}) {
+const YouTubeInput = ({setYoutubeURL}) => {
     const onSubmitYTURL = (event) => {
         event.preventDefault();
 
@@ -35,17 +41,19 @@ function YouTubeInput({setYoutubeURL}) {
 
     return (
         <>
-            <div className="loginTab youtubeTab">
-                <form onSubmit={onSubmitYTURL}>
-                    <h5>StandBy Video</h5>
-                    <label className="centeredH">
+            <div className="flex p-5 rounded-3xl border border-gray-500 hover:cursor-pointer items-center">
+                <form onSubmit={onSubmitYTURL} className="w-full">
+                    <h5 className="text-xl font-semibold">StandBy Video</h5>
+                    <label className="flex gap-x-2">
                         <h6>></h6>
-                        <input type="text" name="youtubeURL" placeholder="Share → Copy URL → Enter YouTube URL Here :)"/>
+                        <input type="text" name="youtubeURL" placeholder="Enter YouTube URL Here" className="w-full !bg-transparent"/>
                     </label>
                 </form>
-                <button onClick={() => window.open("https://www.youtube.com/")}><img alt="YouTube Logo" src={YouTubeLogo} className="icon"/></button>
+                <button className="flex flex-shrink-0" onClick={() => window.open("https://www.youtube.com/")}>
+                    <img alt="YouTube Logo" src={YouTubeLogo} className="w-11 ml-auto"/>
+                </button>
             </div>
-                <h6 style={{fontWeight:"bold"}}>ⓘ For YT sound: double click on the video and adjust volume to your preference</h6>
+            <h6>ⓘ For YT sound: double click on the video and adjust volume to your preference</h6>
         </>
     )
 }

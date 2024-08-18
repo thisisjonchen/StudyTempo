@@ -1,6 +1,8 @@
-package com.studytempo.studytempoapp.SpotifyControllers;
+package com.studytempo.studytempoapp.controllers.spotify;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlayingContext;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistSimplified;
@@ -10,17 +12,21 @@ import se.michaelthelin.spotify.requests.data.player.ToggleShuffleForUsersPlayba
 import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
-import static com.studytempo.studytempoapp.SpotifyControllers.AuthController.spotifyApi;
-
 @RestController
-@CrossOrigin(origins ="http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/player")
 public class PlayerController {
+
+    private SpotifyApi spotifyApi;
+
+    @Autowired
+    public PlayerController(SpotifyApi spotifyApi) {
+        this.spotifyApi = spotifyApi;
+    }
 
     CurrentlyPlayingContext currentlyPlayingContext = null;
 
     // get user currently playing track id for use in getPlaylist
-    @GetMapping("current-playlist-id")
+    @GetMapping("/current-playlist-id")
     public String getUserCurrentPlaylistID() {
         try {
             String input = currentlyPlayingContext.getContext().getUri();
@@ -34,7 +40,7 @@ public class PlayerController {
         return "";
     }
 
-    @GetMapping("get-user-playlists")
+    @GetMapping("/get-user-playlists")
     public Paging<PlaylistSimplified> getUserPlaylists(@CookieValue("spotifyAccessToken") String spotifyAccessToken) {
         spotifyApi.setAccessToken(spotifyAccessToken);
         final GetListOfCurrentUsersPlaylistsRequest getListOfCurrentUsersPlaylistsRequest = spotifyApi
@@ -47,7 +53,7 @@ public class PlayerController {
             return playlists;
         }
         catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage() + " (GET USER PLAYLISTS)");
         }
         return null;
     }
@@ -69,10 +75,11 @@ public class PlayerController {
         }
     }
 
-    @PutMapping("play-playlist")
+    @PutMapping("/play-playlist")
     @ResponseBody
     public void playPlaylist(@RequestBody PlaylistRequest playlist, @CookieValue("spotifyAccessToken") String spotifyAccessToken) {
         spotifyApi.setAccessToken(spotifyAccessToken);
+        System.out.println(playlist.device_id);
         final StartResumeUsersPlaybackRequest startResumeUsersPlaybackRequest = spotifyApi.startResumeUsersPlayback()
                 .context_uri(playlist.context_uri)
                 .device_id(playlist.device_id)
@@ -82,16 +89,19 @@ public class PlayerController {
                 .device_id(playlist.device_id)
                 .build();
         try {
-            startResumeUsersPlaybackRequest.execute();
             toggleShuffleForUsersPlaybackRequest.execute();
+            Thread.sleep(500);
+            startResumeUsersPlaybackRequest.execute();
         }
         catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage() + " (PLAY PLAYLIST)");
         }
-        spotifyApi.setAccessToken("");
+        finally {
+            spotifyApi.setAccessToken("");
+        }
     }
 
-    @GetMapping("username")
+    @GetMapping("/username")
     public String getUsername(@CookieValue("spotifyAccessToken") String spotifyAccessToken) {
         if (spotifyAccessToken == null) {
             return "";
@@ -106,7 +116,7 @@ public class PlayerController {
             return spotifyUsername;
         }
         catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage() + " (USERNAME)");
         }
         spotifyApi.setAccessToken("");
         return "";
