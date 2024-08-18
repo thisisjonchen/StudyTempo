@@ -10,7 +10,8 @@ const Gemini = ({gemini, setGemini, darkPref}) => {
     const [prompt, setPrompt] = useState('');
     const [conversations, setConversations] = useState([]);
     const [loading, setLoading] = useState(false);
-    const username = localStorage.getItem("username")[0];
+    const username = localStorage.getItem("username");
+    const initial = username && username.length > 0 ? username[0] : null;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -97,7 +98,7 @@ const Gemini = ({gemini, setGemini, darkPref}) => {
                                 <div key={index} className="flex flex-col items-start w-full max-w-3xl gap-y-4 px-4 pb-4 rounded-md mx-auto">
                                     <span className="flex items-center dark:bg-gray-300 p-4 rounded-xl">
                                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-red-400 mr-2">
-                                            <p className="text-sm text-white font-bold">{username}</p>
+                                            <p className="text-sm text-white font-bold">{initial}</p>
                                         </div>
                                         <Markdown className="whitespace-pre-wrap">{conv.prompt}</Markdown>
                                     </span>

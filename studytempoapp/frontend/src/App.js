@@ -34,7 +34,7 @@ const StudyTempo = () => {
     // sets all localStorage to defaults
     const defaultSettings = {
         showTODO: "true",
-        darkPref: "true",
+        darkPref: "false",
         militaryTime: "false",
         screenLock: "false",
         screenMode: "spotify",
@@ -44,7 +44,7 @@ const StudyTempo = () => {
         timerPing: "true",
         volume: "0.5",
         shuffle: "true",
-        youtubeURL: "WuHSBSLK3_A"
+        youtubeURL: "WuHSBSLK3_A",
     };
 
     function HasVisited() {

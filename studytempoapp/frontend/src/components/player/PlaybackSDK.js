@@ -81,49 +81,50 @@ const PlaybackControl = () => {
 // ! Spotify Detailed Panel: Username, Currently Playing "Pane", and User Playlist Selector
 // returns and displays Spotify Profile Username
 const UserProfile = ({API_URL}) => {
-    const [spotifyUsername, setSpotifyUsername] = useState(localStorage.getItem("spotify-username"));
+    const [spotifyUsername, setSpotifyUsername] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const player = useSpotifyPlayer();
     const [refreshKey, setRefreshKey] = useState(0);
 
-    const fetchSpotifyUsername = async() => {
+    const fetchSpotifyUsername = async () => {
         setIsLoading(true);
-        if (localStorage.getItem("spotifyLoggedIn") === "true") {
-            await new Promise(resolve => setTimeout(resolve, 250));
-            try {
-                const response = await fetch(`${API_URL}/player/username`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        "Access-Control-Allow-Origin": "*",
-                        "Access-Control-Allow-Credentials": "true"
-                    }
-                });
-                const username = await response.text();
-                if (username.includes("{\"timestamp\"")) {
-                    setSpotifyUsername("Refreshing...");
-                    setTimeout(() => setRefreshKey(oldKey => oldKey + 1), 1000);
-                } else {
-                    setSpotifyUsername(username);
-                    localStorage.setItem("spotify-username", username);
+        await new Promise(resolve => setTimeout(resolve, 250));
+        try {
+            const response = await fetch(`${API_URL}/player/username`, {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Credentials": "true"
                 }
-            } catch (error) {
-                console.error("Error fetching Spotify username:", error);
-                setSpotifyUsername("Error fetching username");
+            });
+            const username = await response.text();
+            if (username.includes("{\"timestamp\"") || !username || username === "") {
+                setSpotifyUsername("Refreshing...");
+                setTimeout(() => setRefreshKey(oldKey => oldKey + 1), 1000);
+            } else {
+                setSpotifyUsername(username);
+                localStorage.setItem("spotifyUsername", username);
             }
+        } catch (error) {
+            console.error("Error fetching Spotify username:", error);
+            setSpotifyUsername("Error fetching username");
         }
         setIsLoading(false);
     };
 
     useEffect(() => {
-        if (!localStorage.getItem("spotify-username")) {
+        const storedUsername = localStorage.getItem("spotifyUsername");
+        if (storedUsername !== null) {
+            setSpotifyUsername(storedUsername);
+        } else if (getCookie("spotifyLoggedIn") === "true") {
             fetchSpotifyUsername();
         }
     }, [refreshKey]);
 
     const handleClick = () => {
         setIsLoading(true);
-        const spotifyLoggedIn = localStorage.getItem("spotifyLoggedIn");
+        const spotifyLoggedIn = getCookie("spotifyLoggedIn");
         if (spotifyLoggedIn === "false") {
             CreateSpotifyToken();
         } else {
@@ -232,7 +233,7 @@ const UserPlaylists = ({darkPref, shuffle, API_URL}) => {
                     Your Playlists
                 </h5>
                 <div className="flex flex-col gap-y-4">
-                    {userPlaylists ? userPlaylists.items.map((playlist) => <button className={`flex items-center border border-transparent [border-image:linear-gradient(to_right,#5b5b5b,transparent_90%)_1] font-semibold gap-x-2`} key={playlist.name} onClick={() => {
+                    {userPlaylists ? userPlaylists.items.map((playlist) => <button className={`flex items-center border border-transparent [border-image:linear-gradient(to_right,#5b5b5b,transparent_90%)_1] font-semibold gap-x-4`} key={playlist.name} onClick={() => {
                         fetch(
                             `${API_URL}/player/play-playlist`,
                             {
