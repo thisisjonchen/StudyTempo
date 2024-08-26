@@ -1,7 +1,7 @@
 # StudyTempo ✏️
 
 ## Description
-Say hello to StudyTempo: an AI-powered all-in-one productivity hub built for students to help maintain their _study tempo_.
+Say hello to StudyTempo: an all-in-one productivity hub built for students to help maintain their _study tempo_.
 
 **Why did I build this?** I had an extra display and wanted to throw a functional "display" on it. I didn't like how current iterations on the internet looked and felt, so I made my own:
 something simple, minimalistic, yet functional.
