@@ -7,6 +7,7 @@ Say hello to StudyTempo: an all-in-one productivity hub built for students to he
 something simple, minimalistic, yet functional.
 
 Check it out here: https://studytempo.co/ 
+Uptime Monitor: https://stats.uptimerobot.com/DGMrbpWSac
 
 ## Tech Stack 🥞
 Front-End 📲
