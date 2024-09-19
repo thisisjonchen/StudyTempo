@@ -6,7 +6,7 @@ Say hello to StudyTempo: an all-in-one productivity hub built for students to he
 **Why did I build this?** I had an extra display and wanted to throw a functional "display" on it. I didn't like how current iterations on the internet looked and felt, so I made my own:
 something simple, minimalistic, yet functional.
 
-Check it out here: https://studytempo.co/ 
+Check it out here: https://studytempo.co/ \
 Uptime Monitor: https://stats.uptimerobot.com/DGMrbpWSac
 
 ## Tech Stack 🥞
